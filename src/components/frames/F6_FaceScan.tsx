@@ -10,6 +10,7 @@ export function F6_FaceScan() {
   const [resultReady, setResultReady] = useState(false);
   const [cameraState, setCameraState] = useState<"idle" | "opening" | "active" | "blocked">("idle");
   const [generatedAvatar, setGeneratedAvatar] = useState(figurineUrl);
+  const [generationError, setGenerationError] = useState("");
   const [generationState, setGenerationState] = useState<
     "idle" | "scanning" | "generating" | "fallback" | "done"
   >("idle");
@@ -30,15 +31,17 @@ export function F6_FaceScan() {
 
   const captureAndGenerate = useCallback(async () => {
     setGenerationState("generating");
+    setGenerationError("");
     const photoDataUrl = capturePhoto();
     try {
       if (!photoDataUrl) throw new Error("No camera frame available.");
       const result = await generateAvatarFromPhoto(photoDataUrl);
       setGeneratedAvatar(result.imageUrl);
       setGenerationState(result.usedFallback ? "fallback" : "done");
-    } catch {
+    } catch (error) {
       setGeneratedAvatar(figurineUrl);
       saveGeneratedAvatar(figurineUrl);
+      setGenerationError(error instanceof Error ? error.message : "Avatar generation failed.");
       setGenerationState("fallback");
     } finally {
       setResultReady(true);
@@ -133,67 +136,6 @@ export function F6_FaceScan() {
           }}
         />
 
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div
-            className="relative w-44 h-52"
-            animate={scanStarted ? { rotateY: [0, 8, -8, 0] } : { rotateY: 0 }}
-            transition={{ duration: 6, repeat: scanStarted ? Infinity : 0, ease: "easeInOut" }}
-            style={{ transformStyle: "preserve-3d" }}
-          >
-            <svg viewBox="0 0 200 240" className="w-full h-full">
-              <defs>
-                <radialGradient id="faceGrad" cx="50%" cy="40%">
-                  <stop offset="0%" stopColor="#f6b4db" stopOpacity="0.6" />
-                  <stop offset="100%" stopColor="#6c5ce7" stopOpacity="0.2" />
-                </radialGradient>
-              </defs>
-              <ellipse
-                cx="100"
-                cy="120"
-                rx="65"
-                ry="90"
-                fill="url(#faceGrad)"
-                stroke="#a78bfa"
-                strokeWidth="1.5"
-              />
-              {Array.from({ length: 9 }).map((_, i) => (
-                <ellipse
-                  key={`v${i}`}
-                  cx="100"
-                  cy="120"
-                  rx={10 + i * 7}
-                  ry="90"
-                  fill="none"
-                  stroke="#a78bfa"
-                  strokeOpacity="0.25"
-                  strokeWidth="0.8"
-                />
-              ))}
-              {Array.from({ length: 10 }).map((_, i) => (
-                <line
-                  key={`h${i}`}
-                  x1="35"
-                  y1={40 + i * 18}
-                  x2="165"
-                  y2={40 + i * 18}
-                  stroke="#a78bfa"
-                  strokeOpacity="0.25"
-                  strokeWidth="0.8"
-                />
-              ))}
-              <circle cx="80" cy="105" r="4" fill="#f6b4db" />
-              <circle cx="120" cy="105" r="4" fill="#f6b4db" />
-              <path
-                d="M85 160 Q100 170 115 160"
-                fill="none"
-                stroke="#f6b4db"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-          </motion.div>
-        </div>
-
         {[
           { tl: "top-6 left-6", c: "border-t-2 border-l-2" },
           { tl: "top-6 right-6", c: "border-t-2 border-r-2" },
@@ -259,7 +201,9 @@ export function F6_FaceScan() {
         </div>
         {generationState === "fallback" && resultReady && (
           <div className="mt-2 text-center text-[10px] leading-[14px] text-brand-mute">
-            Demo result shown. Connect an avatar API endpoint to generate from the captured photo.
+            {generationError
+              ? `Demo result shown. API error: ${generationError}`
+              : "Demo result shown. Connect an avatar API endpoint to generate from the captured photo."}
           </div>
         )}
       </div>

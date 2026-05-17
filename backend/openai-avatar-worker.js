@@ -5,7 +5,7 @@ const corsHeaders = {
 };
 
 const defaultPrompt =
-  "Q版手办: 与真人同款穿搭、同款发型，圆润3D建模，哑光质感。真人照片: 与0版同款造型，冷白皮清透妆容。Generate a full-body transparent-background Q-style 3D collectible figurine that preserves the photographed person's outfit, hairstyle, glasses, facial impression, and overall pose. Premium matte vinyl toy render, oversized head, small body proportions, clean studio lighting, no text, no watermark.";
+  "Create a full-body transparent-background Q-style collectible figurine from the real camera photo. Preserve the photographed person's outfit, hairstyle, glasses, facial impression, face shape, and overall styling. Use rounded 3D modeling, matte vinyl toy material, cold fair translucent skin makeup, oversized head, small body proportions, premium studio render, clean edges, no text, no watermark.";
 
 export default {
   async fetch(request, env) {
@@ -28,7 +28,7 @@ export default {
 
     const imageBlob = dataUrlToBlob(image);
     const form = new FormData();
-    form.append("model", "gpt-image-1.5");
+    form.append("model", "gpt-image-1");
     form.append("image", imageBlob, "face-photo.jpg");
     form.append("prompt", prompt);
     form.append("background", "transparent");
@@ -53,7 +53,12 @@ export default {
       );
     }
 
-    return json({ image: `data:image/png;base64,${data.data?.[0]?.b64_json || ""}` });
+    const imageResult = data.data?.[0]?.b64_json;
+    if (!imageResult) {
+      return json({ error: "OpenAI response did not include an image." }, 502);
+    }
+
+    return json({ image: `data:image/png;base64,${imageResult}` });
   },
 };
 

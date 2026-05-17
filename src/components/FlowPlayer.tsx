@@ -16,17 +16,6 @@ type Rule = {
 const key = (flow: number, step: number) => `${flow}:${step}` as NodeKey;
 const home = key(0, 8);
 
-const flowStarts = [
-  { label: "Onboarding", target: key(0, 0) },
-  { label: "Warm-up", target: key(1, 1) },
-  { label: "Sensitive", target: key(2, 0) },
-  { label: "Control", target: key(3, 0) },
-  { label: "Second Self", target: key(4, 0) },
-  { label: "Relationships", target: key(5, 0) },
-  { label: "Challenge", target: key(6, 0) },
-  { label: "Spaces", target: key(7, 0) },
-];
-
 const graph: Record<NodeKey, Rule[]> = {
   [key(0, 0)]: [{ match: "GET STARTED", target: key(0, 1) }],
   [key(0, 1)]: [
@@ -54,7 +43,10 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "I am shy", target: key(0, 9) },
   ],
   [key(0, 6)]: [{ match: "Save", target: key(0, 7) }],
-  [key(0, 7)]: [{ match: "Got it", target: home }],
+  [key(0, 7)]: [
+    { match: "Back again", target: key(0, 5) },
+    { match: "Got it", target: home },
+  ],
   [key(0, 9)]: [{ match: "Lets Go", target: key(0, 7) }],
   [home]: [
     { match: "View draft", target: key(1, 5), label: "Open Alex message draft" },
@@ -639,19 +631,6 @@ export function FlowPlayer({ onOpenGallery }: Props) {
               </div>
             </motion.div>
           </AnimatePresence>
-        </div>
-      </div>
-
-      <div className="pb-6 px-6 max-w-4xl mx-auto w-full">
-        <div className="rounded-2xl bg-white/60 border border-white p-2 flex flex-wrap items-center justify-center gap-2 shadow-soft">
-          {flowStarts.map((item) => (
-            <span
-              key={item.label}
-              className={`px-3 py-1.5 rounded-xl text-[10px] font-bold ${node === item.target ? "bg-brand-ink text-white" : "bg-white/70 text-brand-mute border border-brand-bg"}`}
-            >
-              {item.label}
-            </span>
-          ))}
         </div>
       </div>
     </div>

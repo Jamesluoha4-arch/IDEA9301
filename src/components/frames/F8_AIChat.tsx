@@ -151,7 +151,14 @@ export function F8_AIChat() {
         </motion.div>
       </div>
 
-      <div className="absolute bottom-[84px] left-4 right-4 flex justify-end">
+      <div className="absolute bottom-[84px] left-4 right-4 flex justify-end gap-2">
+        <motion.button
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.97 }}
+          className="px-5 py-2.5 rounded-full bg-white border border-brand-bg text-brand-purple text-[12px] font-bold shadow-sm"
+        >
+          Back again
+        </motion.button>
         <motion.button
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.97 }}

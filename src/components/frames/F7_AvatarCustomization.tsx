@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import figurineUrl from "@/assets/chibi-figurine.png";
+import { readGeneratedAvatar } from "@/lib/avatar-generation";
 
 const tabs = ["Hairstyle", "Eyes", "Nose & Mouth"];
 
@@ -44,6 +44,7 @@ export function F7_AvatarCustomization() {
   const [hair, setHair] = useState(0);
   const [eyes, setEyes] = useState(0);
   const [mouth, setMouth] = useState(0);
+  const [avatarUrl] = useState(readGeneratedAvatar);
 
   const activeIndex = tab === "Hairstyle" ? hair : tab === "Eyes" ? eyes : mouth;
   const selectOption = (index: number) => {
@@ -94,7 +95,7 @@ export function F7_AvatarCustomization() {
           }}
         />
         <div className="absolute inset-0 flex items-center justify-center pt-2">
-          <FigurinePreview hair={hair} eyes={eyes} mouth={mouth} large />
+          <FigurinePreview avatarUrl={avatarUrl} hair={hair} eyes={eyes} mouth={mouth} large />
         </div>
       </div>
 
@@ -134,9 +135,9 @@ export function F7_AvatarCustomization() {
                     : "linear-gradient(135deg,#fbf7ff,#eef8ff)",
               }}
             >
-              {tab === "Hairstyle" && <HairCard index={i} />}
-              {tab === "Eyes" && <EyesCard index={i} />}
-              {tab === "Nose & Mouth" && <MouthCard index={i} />}
+              {tab === "Hairstyle" && <HairCard avatarUrl={avatarUrl} index={i} />}
+              {tab === "Eyes" && <EyesCard avatarUrl={avatarUrl} index={i} />}
+              {tab === "Nose & Mouth" && <MouthCard avatarUrl={avatarUrl} index={i} />}
               {selected && (
                 <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-white flex items-center justify-center shadow">
                   <svg
@@ -179,11 +180,13 @@ export function F7_AvatarCustomization() {
 }
 
 function FigurinePreview({
+  avatarUrl,
   hair,
   eyes,
   mouth,
   large = false,
 }: {
+  avatarUrl: string;
   hair: number;
   eyes: number;
   mouth: number;
@@ -195,7 +198,7 @@ function FigurinePreview({
   return (
     <div className={`relative ${large ? "w-[190px] h-[250px]" : "w-full h-full"}`}>
       <img
-        src={figurineUrl}
+        src={avatarUrl}
         alt=""
         className="absolute inset-0 w-full h-full object-contain drop-shadow-[0_12px_22px_rgba(108,92,231,0.2)]"
         style={{ filter: hairPresets[hair].filter }}
@@ -226,18 +229,18 @@ function FigurinePreview({
   );
 }
 
-function HairCard({ index }: { index: number }) {
+function HairCard({ avatarUrl, index }: { avatarUrl: string; index: number }) {
   return (
     <div className="absolute inset-0 flex items-center justify-center p-2">
-      <FigurinePreview hair={index} eyes={0} mouth={0} />
+      <FigurinePreview avatarUrl={avatarUrl} hair={index} eyes={0} mouth={0} />
     </div>
   );
 }
 
-function EyesCard({ index }: { index: number }) {
+function EyesCard({ avatarUrl, index }: { avatarUrl: string; index: number }) {
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
-      <FigurinePreview hair={0} eyes={index} mouth={0} />
+      <FigurinePreview avatarUrl={avatarUrl} hair={0} eyes={index} mouth={0} />
       <span className="absolute bottom-2 text-[8px] font-bold text-brand-mute">
         {eyePresets[index]}
       </span>
@@ -245,10 +248,10 @@ function EyesCard({ index }: { index: number }) {
   );
 }
 
-function MouthCard({ index }: { index: number }) {
+function MouthCard({ avatarUrl, index }: { avatarUrl: string; index: number }) {
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
-      <FigurinePreview hair={0} eyes={0} mouth={index} />
+      <FigurinePreview avatarUrl={avatarUrl} hair={0} eyes={0} mouth={index} />
       <span className="absolute bottom-2 text-[8px] font-bold text-brand-mute">
         {mouthPresets[index]}
       </span>

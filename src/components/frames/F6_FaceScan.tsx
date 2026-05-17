@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import figurineUrl from "@/assets/chibi-figurine.png";
+import { generateAvatarFromPhoto, saveGeneratedAvatar } from "@/lib/avatar-generation";
 
 export function F6_FaceScan() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -8,13 +9,53 @@ export function F6_FaceScan() {
   const [scanStarted, setScanStarted] = useState(false);
   const [resultReady, setResultReady] = useState(false);
   const [cameraState, setCameraState] = useState<"idle" | "opening" | "active" | "blocked">("idle");
+  const [generatedAvatar, setGeneratedAvatar] = useState(figurineUrl);
+  const [generationState, setGenerationState] = useState<
+    "idle" | "scanning" | "generating" | "fallback" | "done"
+  >("idle");
+
+  const capturePhoto = useCallback(() => {
+    const video = videoRef.current;
+    if (!video || !video.videoWidth || !video.videoHeight) return "";
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return "";
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL("image/jpeg", 0.9);
+  }, []);
+
+  const captureAndGenerate = useCallback(async () => {
+    setGenerationState("generating");
+    const photoDataUrl = capturePhoto();
+    try {
+      if (!photoDataUrl) throw new Error("No camera frame available.");
+      const result = await generateAvatarFromPhoto(photoDataUrl);
+      setGeneratedAvatar(result.imageUrl);
+      setGenerationState(result.usedFallback ? "fallback" : "done");
+    } catch {
+      setGeneratedAvatar(figurineUrl);
+      saveGeneratedAvatar(figurineUrl);
+      setGenerationState("fallback");
+    } finally {
+      setResultReady(true);
+      streamRef.current?.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+  }, [capturePhoto]);
 
   useEffect(() => {
     if (!scanStarted) return;
     setResultReady(false);
-    const timer = window.setTimeout(() => setResultReady(true), 2600);
+    setGenerationState("scanning");
+    const timer = window.setTimeout(() => {
+      void captureAndGenerate();
+    }, 1600);
     return () => window.clearTimeout(timer);
-  }, [scanStarted]);
+  }, [captureAndGenerate, scanStarted]);
 
   useEffect(() => {
     return () => {
@@ -202,13 +243,13 @@ export function F6_FaceScan() {
                 ))}
               </div>
               <div className="text-[12px] font-bold uppercase tracking-[0.18em] text-brand-purple">
-                Generating 3D Figurine
+                {generationState === "generating" ? "Generating 3D Figurine" : "Capturing Face"}
               </div>
             </div>
           )}
           {resultReady && (
             <motion.img
-              src={figurineUrl}
+              src={generatedAvatar}
               alt="Generated Q-style 3D figurine"
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -216,6 +257,11 @@ export function F6_FaceScan() {
             />
           )}
         </div>
+        {generationState === "fallback" && resultReady && (
+          <div className="mt-2 text-center text-[10px] leading-[14px] text-brand-mute">
+            Demo result shown. Connect an avatar API endpoint to generate from the captured photo.
+          </div>
+        )}
       </div>
 
       <div className="absolute bottom-6 left-6 right-6">

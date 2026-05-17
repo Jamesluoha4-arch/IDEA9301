@@ -50,7 +50,7 @@ export function F6_ShySupport() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          别担心，我会帮你
+          Don't worry, I've got you
         </motion.h2>
         <p className="mt-4 text-[15px] leading-[23px] text-brand-mute">
           You can move at your own pace. I will help create a gentle AI assistant that speaks for

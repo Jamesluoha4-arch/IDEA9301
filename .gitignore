@@ -16,6 +16,7 @@ dist-ssr
 .tanstack/**
 .nitro
 *.local
+src/assets/*-green.png
 
 # Wrangler / Cloudflare
 .wrangler/

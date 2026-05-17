@@ -1,25 +1,49 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { ChibiAvatar } from "@/components/ChibiAvatar";
+import figurineUrl from "@/assets/chibi-figurine.png";
 
 const tabs = ["Hairstyle", "Eyes", "Nose & Mouth"];
-const swatches = [
-  "#241d20",
-  "#3a2a22",
-  "#5b4231",
-  "#111827",
-  "#6b4f3f",
-  "#7c3aed",
-  "#a16207",
-  "#475569",
-  "#0f172a",
+
+const hairPresets = [
+  { name: "Original", filter: "none", bg: "#2f2826" },
+  { name: "Espresso", filter: "sepia(0.25) saturate(0.9) brightness(0.9)", bg: "#46352c" },
+  { name: "Ash Brown", filter: "sepia(0.35) saturate(0.75) brightness(1.02)", bg: "#6b5748" },
+  { name: "Ink", filter: "saturate(0.45) brightness(0.76)", bg: "#1f2937" },
+  { name: "Caramel", filter: "sepia(0.55) saturate(1.1) brightness(1.08)", bg: "#8b6548" },
+  { name: "Violet", filter: "hue-rotate(18deg) saturate(1.2)", bg: "#8b5cf6" },
+  { name: "Amber", filter: "sepia(0.85) saturate(1.35) brightness(1.05)", bg: "#b87917" },
+  { name: "Slate", filter: "saturate(0.4) hue-rotate(170deg) brightness(0.9)", bg: "#64748b" },
+  { name: "Midnight", filter: "saturate(0.55) brightness(0.72) contrast(1.1)", bg: "#172033" },
+];
+
+const eyePresets = [
+  "Wink",
+  "Soft",
+  "Bright",
+  "Calm",
+  "Glasses",
+  "Smile",
+  "Focus",
+  "Cute",
+  "Sleepy",
+];
+const mouthPresets = [
+  "Neutral",
+  "Smile",
+  "Tiny O",
+  "Serious",
+  "Soft",
+  "Shy",
+  "Cute",
+  "Flat",
+  "Mini",
 ];
 
 export function F7_AvatarCustomization() {
   const [tab, setTab] = useState("Hairstyle");
   const [hair, setHair] = useState(0);
-  const [eyes, setEyes] = useState(4);
-  const [mouth, setMouth] = useState(2);
+  const [eyes, setEyes] = useState(0);
+  const [mouth, setMouth] = useState(0);
 
   const activeIndex = tab === "Hairstyle" ? hair : tab === "Eyes" ? eyes : mouth;
   const selectOption = (index: number) => {
@@ -30,8 +54,8 @@ export function F7_AvatarCustomization() {
 
   const reset = () => {
     setHair(0);
-    setEyes(4);
-    setMouth(2);
+    setEyes(0);
+    setMouth(0);
   };
 
   return (
@@ -70,7 +94,7 @@ export function F7_AvatarCustomization() {
           }}
         />
         <div className="absolute inset-0 flex items-center justify-center pt-2">
-          <ChibiAvatar size={150} hair={hair} eyes={eyes} mouth={mouth} />
+          <FigurinePreview hair={hair} eyes={eyes} mouth={mouth} large />
         </div>
       </div>
 
@@ -102,17 +126,17 @@ export function F7_AvatarCustomization() {
               key={`${tab}-${i}`}
               type="button"
               onClick={() => selectOption(i)}
-              className={`relative aspect-square rounded-2xl overflow-hidden border-2 bg-white transition-all ${selected ? "border-brand-purple shadow-soft" : "border-brand-bg"}`}
+              className={`relative aspect-square rounded-2xl overflow-hidden border-2 transition-all ${selected ? "border-brand-purple shadow-soft" : "border-brand-bg"}`}
               style={{
                 background:
                   tab === "Hairstyle"
-                    ? `linear-gradient(135deg, ${swatches[i]}, ${swatches[i]}cc)`
+                    ? `linear-gradient(135deg, ${hairPresets[i].bg}, ${hairPresets[i].bg}cc)`
                     : "linear-gradient(135deg,#fbf7ff,#eef8ff)",
               }}
             >
-              {tab === "Hairstyle" && <HairThumb index={i} />}
-              {tab === "Eyes" && <EyesThumb index={i} />}
-              {tab === "Nose & Mouth" && <MouthThumb index={i} />}
+              {tab === "Hairstyle" && <HairCard index={i} />}
+              {tab === "Eyes" && <EyesCard index={i} />}
+              {tab === "Nose & Mouth" && <MouthCard index={i} />}
               {selected && (
                 <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-white flex items-center justify-center shadow">
                   <svg
@@ -154,101 +178,80 @@ export function F7_AvatarCustomization() {
   );
 }
 
-function HairThumb({ index }: { index: number }) {
-  const paths = [
-    "M8 42 C8 15 24 8 38 10 C54 12 60 23 56 43 C47 29 37 28 30 21 C23 31 15 28 8 42 Z",
-    "M9 38 C12 17 25 8 42 11 C52 13 58 24 55 43 C45 34 34 27 25 19 C20 29 15 35 9 38 Z",
-    "M7 43 C9 18 29 6 44 15 C57 22 59 36 52 49 C42 32 30 31 21 25 C18 34 12 37 7 43 Z",
-  ];
+function FigurinePreview({
+  hair,
+  eyes,
+  mouth,
+  large = false,
+}: {
+  hair: number;
+  eyes: number;
+  mouth: number;
+  large?: boolean;
+}) {
+  const eyeOffset = eyes % 3;
+  const mouthOffset = mouth % 3;
+
   return (
-    <svg viewBox="0 0 64 64" className="absolute inset-0 w-full h-full">
-      <path d={paths[index % paths.length]} fill="white" opacity="0.88" />
-    </svg>
+    <div className={`relative ${large ? "w-[190px] h-[250px]" : "w-full h-full"}`}>
+      <img
+        src={figurineUrl}
+        alt=""
+        className="absolute inset-0 w-full h-full object-contain drop-shadow-[0_12px_22px_rgba(108,92,231,0.2)]"
+        style={{ filter: hairPresets[hair].filter }}
+      />
+      <span
+        className="absolute rounded-full border-2 border-white/80 shadow-sm"
+        style={{
+          left: large ? `${82 + eyeOffset * 2}px` : "42%",
+          top: large ? `${82 + eyeOffset}px` : "31%",
+          width: large ? 9 : 5,
+          height: large ? 9 : 5,
+          background: eyes % 2 ? "#1f1f2e" : "#6c5ce7",
+          opacity: eyes === 0 ? 0 : 0.72,
+        }}
+      />
+      <span
+        className="absolute rounded-full bg-[#d66f66] shadow-sm"
+        style={{
+          left: large ? `${93 + mouthOffset}px` : "48%",
+          top: large ? `${111 + mouthOffset * 2}px` : "44%",
+          width: large ? 18 : 9,
+          height: mouth % 2 ? 4 : 7,
+          opacity: mouth === 0 ? 0 : 0.7,
+          transform: mouth % 2 ? "rotate(-4deg)" : "none",
+        }}
+      />
+    </div>
   );
 }
 
-function EyesThumb({ index }: { index: number }) {
+function HairCard({ index }: { index: number }) {
   return (
-    <svg viewBox="0 0 64 64" className="absolute inset-0 w-full h-full">
-      <circle cx="32" cy="32" r="23" fill="#fff" opacity="0.6" />
-      {index % 3 === 0 && (
-        <>
-          <ellipse cx="24" cy="32" rx="4" ry="6" fill="#1f1f2e" />
-          <ellipse cx="40" cy="32" rx="4" ry="6" fill="#1f1f2e" />
-        </>
-      )}
-      {index % 3 === 1 && (
-        <>
-          <path
-            d="M18 33 Q24 27 30 33"
-            stroke="#1f1f2e"
-            strokeWidth="3"
-            fill="none"
-            strokeLinecap="round"
-          />
-          <path
-            d="M34 33 Q40 27 46 33"
-            stroke="#1f1f2e"
-            strokeWidth="3"
-            fill="none"
-            strokeLinecap="round"
-          />
-        </>
-      )}
-      {index % 3 === 2 && (
-        <>
-          <rect
-            x="15"
-            y="26"
-            width="15"
-            height="10"
-            rx="4"
-            fill="none"
-            stroke="#1f1f2e"
-            strokeWidth="3"
-          />
-          <rect
-            x="34"
-            y="26"
-            width="15"
-            height="10"
-            rx="4"
-            fill="none"
-            stroke="#1f1f2e"
-            strokeWidth="3"
-          />
-        </>
-      )}
-    </svg>
+    <div className="absolute inset-0 flex items-center justify-center p-2">
+      <FigurinePreview hair={index} eyes={0} mouth={0} />
+    </div>
   );
 }
 
-function MouthThumb({ index }: { index: number }) {
+function EyesCard({ index }: { index: number }) {
   return (
-    <svg viewBox="0 0 64 64" className="absolute inset-0 w-full h-full">
-      <circle cx="32" cy="32" r="23" fill="#fff" opacity="0.6" />
-      {index % 4 === 0 && (
-        <path
-          d="M22 33 Q32 41 42 33"
-          stroke="#1f1f2e"
-          strokeWidth="3"
-          fill="none"
-          strokeLinecap="round"
-        />
-      )}
-      {index % 4 === 1 && (
-        <path d="M23 35 H41" stroke="#1f1f2e" strokeWidth="3" strokeLinecap="round" />
-      )}
-      {index % 4 === 2 && <ellipse cx="32" cy="35" rx="6" ry="8" fill="#8b2e3b" />}
-      {index % 4 === 3 && (
-        <path
-          d="M23 37 Q32 29 41 37"
-          stroke="#1f1f2e"
-          strokeWidth="3"
-          fill="none"
-          strokeLinecap="round"
-        />
-      )}
-    </svg>
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
+      <FigurinePreview hair={0} eyes={index} mouth={0} />
+      <span className="absolute bottom-2 text-[8px] font-bold text-brand-mute">
+        {eyePresets[index]}
+      </span>
+    </div>
+  );
+}
+
+function MouthCard({ index }: { index: number }) {
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
+      <FigurinePreview hair={0} eyes={0} mouth={index} />
+      <span className="absolute bottom-2 text-[8px] font-bold text-brand-mute">
+        {mouthPresets[index]}
+      </span>
+    </div>
   );
 }

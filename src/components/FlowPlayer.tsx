@@ -53,7 +53,8 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "Continue", target: key(0, 7) },
     { match: "I am shy", target: key(0, 9) },
   ],
-  [key(0, 6)]: [{ match: "Save", target: home }],
+  [key(0, 6)]: [{ match: "Save", target: key(0, 7) }],
+  [key(0, 7)]: [{ match: "Got it", target: home }],
   [key(0, 9)]: [{ match: "Lets Go", target: key(0, 7) }],
   [home]: [
     { match: "View draft", target: key(1, 5), label: "Open Alex message draft" },

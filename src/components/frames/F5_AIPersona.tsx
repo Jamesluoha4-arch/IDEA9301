@@ -46,9 +46,9 @@ export function F5_AIPersona() {
         </div>
 
         <div className="text-center">
-          <h2 className="text-[22px] font-bold text-brand-ink">Your AI Persona</h2>
+          <h2 className="text-[22px] font-bold text-brand-ink">The self you're giving me</h2>
           <p className="text-[13px] text-brand-mute mt-1">
-            Here is how your AI currently understands you.
+            Here is the personality I will start from.
           </p>
         </div>
 
@@ -197,7 +197,7 @@ export function F5_AIPersona() {
           whileHover={{ y: -2, scale: 1.01 }}
           whileTap={{ scale: 0.98 }}
         >
-          <span className="relative z-10">Confirm and Create AI Persona</span>
+          <span className="relative z-10">Confirm and Bring Me to Life</span>
           <motion.span
             className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
             animate={{ x: ["-100%", "100%"] }}

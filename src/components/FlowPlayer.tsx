@@ -33,7 +33,7 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "CANCEL", target: key(0, 2) },
   ],
   [key(0, 4)]: [
-    { match: "Confirm and Create AI Persona", target: key(0, 5) },
+    { match: ["Confirm and Create AI Persona", "Confirm and Bring Me to Life"], target: key(0, 5) },
     { match: "STEP 1 OF 3", target: key(0, 1) },
     { match: "STEP 2 OF 3", target: key(0, 2) },
   ],

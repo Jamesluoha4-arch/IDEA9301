@@ -71,9 +71,9 @@ export function F1_Welcome() {
         >
           Create an AI persona that
           <br />
-          understands your identity, voice,
+          you can name, shape, and grow
           <br />
-          and social style.
+          into your second self.
         </motion.p>
         <motion.p
           className="pt-4 text-[15px] text-brand-mute text-center leading-[22px]"
@@ -81,11 +81,11 @@ export function F1_Welcome() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          Your AI persona will help support social
+          I will learn how you want me to speak,
           <br />
-          discovery, conversations, and relationship
+          support conversations, and reflect your
           <br />
-          reflection.
+          personality with care.
         </motion.p>
       </div>
 

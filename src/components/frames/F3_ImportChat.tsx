@@ -109,10 +109,10 @@ export function F3_ImportChat() {
 
         <div>
           <h2 className="text-[24px] font-bold text-brand-ink leading-[32px]">
-            Import your chat history
+            Teach me your voice
           </h2>
           <p className="text-[15px] text-brand-mute leading-[22px] mt-2">
-            Help your AI understand how you naturally talk.
+            Share a little context so I can sound more like the version of me you want.
           </p>
         </div>
 

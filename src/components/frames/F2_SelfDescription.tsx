@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 
 export function F2_SelfDescription() {
+  const [name, setName] = useState("");
   const [text, setText] = useState("");
   const [recording, setRecording] = useState(false);
 
@@ -34,23 +35,34 @@ export function F2_SelfDescription() {
 
         {/* Header */}
         <div className="flex flex-col gap-2">
-          <h2 className="text-[24px] font-bold text-brand-ink leading-[32px]">Describe myself</h2>
+          <h2 className="text-[24px] font-bold text-brand-ink leading-[32px]">Give me a name</h2>
           <p className="text-[15px] text-brand-mute leading-[22px]">
-            Describe what kind of person you are, how you usually communicate, and what matters to
-            you.
+            Tell me what I should call you, then shape the kind of presence you want me to become.
           </p>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label className="text-[12px] font-bold tracking-[0.5px] uppercase text-brand-purple">
+            My name
+          </label>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Example: David"
+            className="w-full rounded-2xl border-2 border-brand-bg bg-brand-bg/40 px-4 py-4 outline-none text-[15px] font-semibold text-brand-ink placeholder:text-brand-mute/60 focus:border-brand-purple transition-colors"
+          />
         </div>
 
         {/* Textarea */}
         <motion.div
-          className="rounded-2xl border-2 border-brand-bg focus-within:border-brand-purple bg-brand-bg/40 transition-colors p-4 min-h-[200px]"
+          className="rounded-2xl border-2 border-brand-bg focus-within:border-brand-purple bg-brand-bg/40 transition-colors p-4 min-h-[168px]"
           whileHover={{ y: -2 }}
         >
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Example: I am thoughtful, a little quiet at first..."
-            className="w-full h-[160px] bg-transparent resize-none outline-none text-[14px] text-brand-ink placeholder:text-brand-mute/70 leading-[20px]"
+            placeholder="Example: Be calm, a little playful, and help me speak with more confidence..."
+            className="w-full h-[128px] bg-transparent resize-none outline-none text-[14px] text-brand-ink placeholder:text-brand-mute/70 leading-[20px]"
           />
         </motion.div>
 
@@ -95,9 +107,11 @@ export function F2_SelfDescription() {
           </motion.button>
           <div className="text-center">
             <div className="text-[15px] font-bold text-brand-ink">
-              {recording ? "Listening..." : "Record voice instead"}
+              {recording ? "I'm listening..." : "Tell me by voice instead"}
             </div>
-            <div className="text-[12px] text-brand-mute mt-1">You can speak naturally...</div>
+            <div className="text-[12px] text-brand-mute mt-1">
+              I will learn the tone you want me to carry.
+            </div>
           </div>
         </motion.div>
       </div>

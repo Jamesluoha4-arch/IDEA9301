@@ -14,7 +14,7 @@ type Rule = {
 };
 
 const key = (flow: number, step: number) => `${flow}:${step}` as NodeKey;
-const home = key(0, 8);
+const home = key(0, 7);
 
 const graph: Record<NodeKey, Rule[]> = {
   [key(0, 0)]: [{ match: "GET STARTED", target: key(0, 1) }],
@@ -38,16 +38,14 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "STEP 2 OF 3", target: key(0, 2) },
   ],
   [key(0, 5)]: [
-    { match: "Customize", target: key(0, 6) },
-    { match: "Continue", target: key(0, 7) },
-    { match: "I am shy", target: key(0, 9) },
+    { match: "Continue", target: key(0, 6) },
+    { match: "I am shy", target: key(0, 8) },
   ],
-  [key(0, 6)]: [{ match: "Save", target: key(0, 7) }],
-  [key(0, 7)]: [
+  [key(0, 6)]: [
     { match: "Back again", target: key(0, 5) },
     { match: "Got it", target: home },
   ],
-  [key(0, 9)]: [{ match: "Lets Go", target: key(0, 7) }],
+  [key(0, 8)]: [{ match: "Lets Go", target: key(0, 6) }],
   [home]: [
     { match: "View draft", target: key(1, 5), label: "Open Alex message draft" },
     { match: "Start New Chat", target: key(1, 1) },

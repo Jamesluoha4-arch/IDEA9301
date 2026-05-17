@@ -90,6 +90,20 @@ export function F6_FaceScan() {
     }
   };
 
+  const scanAgain = async () => {
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    setScanStarted(false);
+    setResultReady(false);
+    setGeneratedAvatar(figurineUrl);
+    setGenerationError("");
+    setGenerationState("idle");
+    setCameraState("idle");
+    window.setTimeout(() => {
+      void startScan();
+    }, 50);
+  };
+
   return (
     <div className="relative w-full h-full bg-white pt-12">
       <div className="absolute top-12 left-0 right-0 px-4 py-3 flex items-center gap-3 z-10 bg-white/80 backdrop-blur-md border-b border-brand-bg">
@@ -212,10 +226,11 @@ export function F6_FaceScan() {
         {resultReady ? (
           <div className="flex gap-3">
             <motion.button
+              onClick={scanAgain}
               whileTap={{ scale: 0.97 }}
               className="flex-1 py-3.5 rounded-2xl bg-brand-ink text-white text-[13px] font-bold"
             >
-              Customize
+              Scan again
             </motion.button>
             <motion.button
               whileHover={{ y: -2 }}

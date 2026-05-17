@@ -6,7 +6,6 @@ import { F4_ImportHistory } from "@/components/frames/F4_ImportHistory";
 import { F5_AIPersona } from "@/components/frames/F5_AIPersona";
 import { F6_FaceScan } from "@/components/frames/F6_FaceScan";
 import { F6_ShySupport } from "@/components/frames/F6_ShySupport";
-import { F7_AvatarCustomization } from "@/components/frames/F7_AvatarCustomization";
 import { F8_AIChat } from "@/components/frames/F8_AIChat";
 import { F09_Home } from "@/components/frames/F09_Home";
 import { F10_Social } from "@/components/frames/F10_Social";
@@ -101,7 +100,7 @@ export const flows: Flow[] = [
   {
     id: "f1",
     title: "Flow 1 · 创建 AI Second Self",
-    subtitle: "Welcome → 自我描述 → 导入聊天 → Persona → Avatar → Home",
+    subtitle: "Welcome → 自我描述 → 导入聊天 → Persona → Face Scan → Chat → Home",
     steps: [
       { label: "Welcome", hint: "Tap Get started", Component: F1_Welcome },
       { label: "Self description", hint: "填写个性 / 语音输入", Component: F2_SelfDescription },
@@ -109,7 +108,6 @@ export const flows: Flow[] = [
       { label: "Pick history", hint: "按时间或条数", Component: F4_ImportHistory },
       { label: "AI Persona 总结", hint: "确认风格、能量、标签", Component: F5_AIPersona },
       { label: "Face Scan", hint: "生成风格", Component: F6_FaceScan },
-      { label: "Avatar 定制", hint: "发型 / 眼睛 / 嘴巴", Component: F7_AvatarCustomization },
       { label: "AI Assistant Chat", hint: "首次对话", Component: F8_AIChat },
       { label: "Home Dashboard", hint: "进入主页", Component: F09_Home },
       { label: "Shy Support", hint: "Gentle start", Component: F6_ShySupport },

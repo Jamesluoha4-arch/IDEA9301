@@ -1,0 +1,136 @@
+import { motion } from "framer-motion";
+import { useState } from "react";
+
+export function F5_AIPersona() {
+  const [comm, setComm] = useState(35);
+  const [energy, setEnergy] = useState(55);
+  return (
+    <div className="relative w-full h-full bg-white pt-12 overflow-y-auto">
+      <div className="px-6 py-6 flex flex-col gap-5 pb-32">
+        {/* Progress */}
+        <div className="flex flex-col gap-2">
+          <div className="text-[12px] font-bold tracking-[0.6px] uppercase text-brand-purple">STEP 3 OF 3</div>
+          <div className="flex gap-2 h-2">
+            <div className="flex-1 rounded-full bg-brand-lavender/40" />
+            <div className="flex-1 rounded-full bg-brand-lavender/40" />
+            <motion.div className="flex-1 rounded-full gradient-brand" initial={{ scaleX: 0, transformOrigin: "left" }} animate={{ scaleX: 1 }} transition={{ duration: 0.6 }} />
+          </div>
+        </div>
+
+        <div className="text-center">
+          <h2 className="text-[22px] font-bold text-brand-ink">Your AI Persona</h2>
+          <p className="text-[13px] text-brand-mute mt-1">Here is how your AI currently understands you.</p>
+        </div>
+
+        {/* Avatar */}
+        <div className="flex justify-center">
+          <motion.div className="relative" whileHover={{ scale: 1.05 }}>
+            <motion.div
+              className="absolute inset-0 rounded-3xl gradient-brand blur-xl opacity-50"
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            />
+            <div className="relative w-20 h-20 rounded-3xl gradient-brand-soft border-2 border-white shadow-soft flex items-center justify-center">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <button className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full gradient-brand shadow-soft flex items-center justify-center">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
+            </button>
+          </motion.div>
+        </div>
+
+        {/* Personality Card */}
+        <motion.div
+          className="rounded-2xl bg-gradient-to-br from-white to-brand-bg/40 border border-brand-bg p-4 flex flex-col gap-4 shadow-soft"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="text-[15px] font-bold text-brand-ink border-b border-brand-bg pb-2">Personality Summary</div>
+
+          {/* Slider 1 */}
+          <div className="flex flex-col gap-1">
+            <div className="flex justify-between items-center">
+              <span className="text-[12px] font-bold text-brand-purple">Communication Style</span>
+              <motion.span key={comm} initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="text-[12px] font-bold text-brand-ink">{comm < 50 ? "Direct" : "Reflective"}</motion.span>
+            </div>
+            <BrandSlider value={comm} onChange={setComm} />
+            <div className="flex justify-between text-[10px] text-brand-mute"><span>Direct</span><span>Reflective</span></div>
+          </div>
+
+          {/* Slider 2 */}
+          <div className="flex flex-col gap-1">
+            <div className="flex justify-between items-center">
+              <span className="text-[12px] font-bold text-brand-purple">Social Energy</span>
+              <motion.span key={energy} initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="text-[12px] font-bold text-brand-ink">Balanced</motion.span>
+            </div>
+            <BrandSlider value={energy} onChange={setEnergy} />
+            <div className="flex justify-between text-[10px] text-brand-mute"><span>Introverted</span><span>Extroverted</span></div>
+          </div>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2">
+            {["Thoughtful", "Warm"].map((tag) => (
+              <motion.div key={tag} whileHover={{ y: -2 }} className="px-3 py-1 rounded-full gradient-brand-soft border border-brand-purple/30 text-[11px] font-bold text-brand-ink">
+                {tag}
+              </motion.div>
+            ))}
+            <button className="px-3 py-1 rounded-full border border-dashed border-brand-mute/40 text-[11px] text-brand-mute hover:border-brand-purple hover:text-brand-purple transition-colors flex items-center gap-1">
+              <span>+</span> Tag
+            </button>
+          </div>
+        </motion.div>
+
+        {/* Description */}
+        <div className="rounded-2xl bg-brand-bg/60 border border-brand-bg p-3.5">
+          <div className="text-[12px] font-bold text-brand-purple mb-1">Personality description:</div>
+          <p className="text-[12px] text-brand-ink leading-[18px] italic">
+            "You present as a highly organized and direct communicator who values efficiency. However, you also demonstrate a warm and thoughtful approach to problem-solving, preferring structured environments where expectations are clear."
+          </p>
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div className="absolute bottom-6 left-6 right-6">
+        <motion.button
+          className="w-full py-4 rounded-2xl gradient-brand text-white text-[14px] font-bold shadow-soft relative overflow-hidden"
+          whileHover={{ y: -2, scale: 1.01 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <span className="relative z-10">Confirm and Create AI Persona</span>
+          <motion.span
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1 }}
+          />
+        </motion.button>
+      </div>
+    </div>
+  );
+}
+
+function BrandSlider({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  return (
+    <div className="relative h-6 flex items-center">
+      <div className="absolute left-0 right-0 h-1.5 rounded-full bg-brand-bg" />
+      <div className="absolute left-0 h-1.5 rounded-full gradient-brand" style={{ width: `${value}%` }} />
+      <input
+        type="range"
+        min="0"
+        max="100"
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="absolute inset-0 w-full opacity-0 cursor-pointer"
+      />
+      <motion.div
+        className="absolute w-5 h-5 -ml-2.5 rounded-full gradient-brand border-2 border-white shadow-soft pointer-events-none"
+        style={{ left: `${value}%` }}
+        whileHover={{ scale: 1.15 }}
+      />
+    </div>
+  );
+}

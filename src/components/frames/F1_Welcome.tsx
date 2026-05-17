@@ -1,0 +1,104 @@
+import { motion } from "framer-motion";
+
+export function F1_Welcome() {
+  return (
+    <div className="relative w-full h-full overflow-hidden bg-gradient-to-b from-[#f1eefb] via-white to-white">
+      {/* Animated orb background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div
+          className="absolute -top-20 -left-10 w-[300px] h-[300px] rounded-full opacity-60"
+          style={{ background: "radial-gradient(circle, #a78bfa 0%, transparent 70%)" }}
+          animate={{ x: [0, 30, 0], y: [0, 20, 0], scale: [1, 1.1, 1] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-10 -right-10 w-[260px] h-[260px] rounded-full opacity-50"
+          style={{ background: "radial-gradient(circle, #f6b4db 0%, transparent 70%)" }}
+          animate={{ x: [0, -20, 0], y: [0, 30, 0], scale: [1, 1.15, 1] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-40 left-1/2 -translate-x-1/2 w-[200px] h-[200px] rounded-full opacity-40"
+          style={{ background: "radial-gradient(circle, #8ee3c4 0%, transparent 70%)" }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.6, 0.4] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+
+      {/* Persona orb (replaces animation placeholder) */}
+      <div className="absolute top-[80px] left-1/2 -translate-x-1/2 w-[180px] h-[180px] flex items-center justify-center">
+        <motion.div
+          className="absolute inset-0 rounded-full gradient-brand opacity-30 blur-2xl"
+          animate={{ scale: [1, 1.2, 1] }}
+          transition={{ duration: 3, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute inset-4 rounded-full border-2 border-brand-purple/40"
+          animate={{ scale: [1, 1.4, 1], opacity: [0.6, 0, 0.6] }}
+          transition={{ duration: 2.5, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute inset-8 rounded-full border-2 border-brand-pink/40"
+          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+          transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
+        />
+        <motion.div
+          className="relative w-[100px] h-[100px] rounded-full gradient-brand shadow-glow flex items-center justify-center"
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-white" />
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Content — preserve original positions */}
+      <div className="absolute left-6 right-6 top-[300px] flex flex-col items-center gap-2">
+        <motion.h1
+          className="text-[28px] font-bold text-brand-ink leading-[32px]"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          Welcome
+        </motion.h1>
+        <motion.p
+          className="pt-2 text-[20px] font-semibold text-brand-ink text-center leading-[28px]"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+        >
+          Create an AI persona that<br />understands your identity, voice,<br />and social style.
+        </motion.p>
+        <motion.p
+          className="pt-4 text-[15px] text-brand-mute text-center leading-[22px]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          Your AI persona will help support social<br />discovery, conversations, and relationship<br />reflection.
+        </motion.p>
+      </div>
+
+      {/* CTA */}
+      <div className="absolute left-6 right-6 top-[583px] flex flex-col items-center gap-4">
+        <motion.button
+          className="w-full py-[18px] rounded-2xl gradient-brand text-white text-[13px] font-bold tracking-[0.6px] uppercase shadow-soft relative overflow-hidden"
+          whileHover={{ scale: 1.02, y: -2 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <span className="relative z-10">GET STARTED</span>
+          <motion.span
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+          />
+        </motion.button>
+        <button className="text-[14px] text-brand-purple underline underline-offset-4 hover:text-brand-lavender transition-colors">
+          Learn how AI represents me
+        </button>
+      </div>
+    </div>
+  );
+}

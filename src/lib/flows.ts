@@ -5,6 +5,7 @@ import { F3_ImportChat } from "@/components/frames/F3_ImportChat";
 import { F4_ImportHistory } from "@/components/frames/F4_ImportHistory";
 import { F5_AIPersona } from "@/components/frames/F5_AIPersona";
 import { F6_FaceScan } from "@/components/frames/F6_FaceScan";
+import { F6_ShySupport } from "@/components/frames/F6_ShySupport";
 import { F7_AvatarCustomization } from "@/components/frames/F7_AvatarCustomization";
 import { F8_AIChat } from "@/components/frames/F8_AIChat";
 import { F09_Home } from "@/components/frames/F09_Home";
@@ -15,7 +16,11 @@ import { F13_Permissions } from "@/components/frames/F13_Permissions";
 import { F14_Chat, F15_ChatReaction, F16_ChatFinished } from "@/components/frames/F14_Chat";
 import { F17_SparkReplySheet } from "@/components/frames/F17_SparkReplySheet";
 import { F18_SensitiveCrossing } from "@/components/frames/F18_SensitiveCrossing";
-import { F19_AboutSensitiveCrossing, F20_StayHumanLed, F21_AskAILater } from "@/components/frames/F19_Modals";
+import {
+  F19_AboutSensitiveCrossing,
+  F20_StayHumanLed,
+  F21_AskAILater,
+} from "@/components/frames/F19_Modals";
 import { F22_SpacesRadar } from "@/components/frames/F22_SpacesRadar";
 import { F23_SpaceWarmupComplete } from "@/components/frames/F23_SpaceWarmupComplete";
 import { F24_PrivateBlocked } from "@/components/frames/F24_PrivateBlocked";
@@ -56,8 +61,17 @@ import { F60_ObserverMode } from "@/components/frames/F60_ObserverMode";
 import { F61_CopilotModeDetail } from "@/components/frames/F61_CopilotModeDetail";
 import { F62_AssistantMode } from "@/components/frames/F62_AssistantMode";
 import { F63_AutopilotMode } from "@/components/frames/F63_AutopilotMode";
-import { F64_InfluenceOff, F65_InfluenceSuggest, F66_InfluenceDraft, F67_InfluenceAct } from "@/components/frames/F64_InfluenceLevels";
-import { F68_WhyStrangers, F69_WhyFriends, F70_WhyClose } from "@/components/frames/F68_WhyThisLevel";
+import {
+  F64_InfluenceOff,
+  F65_InfluenceSuggest,
+  F66_InfluenceDraft,
+  F67_InfluenceAct,
+} from "@/components/frames/F64_InfluenceLevels";
+import {
+  F68_WhyStrangers,
+  F69_WhyFriends,
+  F70_WhyClose,
+} from "@/components/frames/F68_WhyThisLevel";
 import { F71_ContextRules } from "@/components/frames/F71_ContextRules";
 import { F72_QuickEdit } from "@/components/frames/F72_QuickEdit";
 import { F73_AICenterFullAlt } from "@/components/frames/F73_AICenterFullAlt";
@@ -98,6 +112,7 @@ export const flows: Flow[] = [
       { label: "Avatar 定制", hint: "发型 / 眼睛 / 嘴巴", Component: F7_AvatarCustomization },
       { label: "AI Assistant Chat", hint: "首次对话", Component: F8_AIChat },
       { label: "Home Dashboard", hint: "进入主页", Component: F09_Home },
+      { label: "Shy Support", hint: "Gentle start", Component: F6_ShySupport },
     ],
   },
   {
@@ -150,7 +165,11 @@ export const flows: Flow[] = [
       { label: "Why · Close", hint: "Off 示例", Component: F70_WhyClose },
       { label: "Context Rules", hint: "敏感场景限制", Component: F71_ContextRules },
       { label: "Quick Edit", hint: "默认级别 · apply", Component: F72_QuickEdit },
-      { label: "Co-pilot 最近行为", hint: "Drafted / Suggested / Blocked", Component: F41_CopilotMode },
+      {
+        label: "Co-pilot 最近行为",
+        hint: "Drafted / Suggested / Blocked",
+        Component: F41_CopilotMode,
+      },
     ],
   },
   {
@@ -161,7 +180,11 @@ export const flows: Flow[] = [
       { label: "Your Second Self", hint: "Assistant 状态", Component: F46_SecondSelf },
       { label: "Second Self · alt", hint: "Tagged reasons", Component: F47_SecondSelfAlt },
       { label: "Change Details", hint: "状态路径 · 洞察", Component: F48_ChangeDetails },
-      { label: "Change Detail · Draft", hint: "What happened / 影响", Component: F74_ChangeDetailDraft },
+      {
+        label: "Change Detail · Draft",
+        hint: "What happened / 影响",
+        Component: F74_ChangeDetailDraft,
+      },
       { label: "AI Trail · Spiral", hint: "时间线 · 曲线", Component: F81_AITrailSpiral },
       { label: "AI Trail · Lined", hint: "时间线 · 虚线", Component: F82_AITrailLined },
       { label: "进入 Control Center 调整", hint: "Change mode", Component: F36_AIControlCenter },
@@ -172,10 +195,18 @@ export const flows: Flow[] = [
     title: "Flow 6 · 关系维护",
     subtitle: "Signals → Profile → Check-in → Reconnect",
     steps: [
-      { label: "Relationships List", hint: "All / Cooling / Active", Component: F80_RelationshipsList },
+      {
+        label: "Relationships List",
+        hint: "All / Cooling / Active",
+        Component: F80_RelationshipsList,
+      },
       { label: "Today's Signals", hint: "3 关系需关注", Component: F79_RelationshipSignals },
       { label: "Alex Chen Profile", hint: "Cooling down", Component: F78_RelationshipProfile },
-      { label: "Relationship Check-in", hint: "Feeling · step · note", Component: F77_RelationshipCheckin },
+      {
+        label: "Relationship Check-in",
+        hint: "Feeling · step · note",
+        Component: F77_RelationshipCheckin,
+      },
       { label: "Check-in Saved", hint: "提醒已调整", Component: F76_CheckinSaved },
       { label: "Reconnect with Alex", hint: "自己 / 建议 / 草稿", Component: F75_ReconnectChoose },
     ],
@@ -220,7 +251,11 @@ export const flows: Flow[] = [
       { label: "Presence Reflection", hint: "语气 · 关系", Component: F32_PresenceReflection },
       { label: "Device Visibility", hint: "物理层", Component: F33_DeviceVisibility },
       { label: "Microphone Access", hint: "Voice flow", Component: F34_MicAccess },
-      { label: "AI Presence Insight", hint: "Device participation", Component: F35_PresenceInsight },
+      {
+        label: "AI Presence Insight",
+        hint: "Device participation",
+        Component: F35_PresenceInsight,
+      },
     ],
   },
 ];

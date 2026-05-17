@@ -69,7 +69,11 @@ export function F1_Welcome() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
         >
-          Create an AI persona that<br />understands your identity, voice,<br />and social style.
+          Create an AI persona that
+          <br />
+          understands your identity, voice,
+          <br />
+          and social style.
         </motion.p>
         <motion.p
           className="pt-4 text-[15px] text-brand-mute text-center leading-[22px]"
@@ -77,7 +81,11 @@ export function F1_Welcome() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          Your AI persona will help support social<br />discovery, conversations, and relationship<br />reflection.
+          Your AI persona will help support social
+          <br />
+          discovery, conversations, and relationship
+          <br />
+          reflection.
         </motion.p>
       </div>
 
@@ -95,9 +103,6 @@ export function F1_Welcome() {
             transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
           />
         </motion.button>
-        <button className="text-[14px] text-brand-purple underline underline-offset-4 hover:text-brand-lavender transition-colors">
-          Learn how AI represents me
-        </button>
       </div>
     </div>
   );

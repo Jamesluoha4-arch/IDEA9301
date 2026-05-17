@@ -28,15 +28,16 @@ const flowStarts = [
 ];
 
 const graph: Record<NodeKey, Rule[]> = {
-  [key(0, 0)]: [
-    { match: "GET STARTED", target: key(0, 1) },
-    { match: "Learn how AI represents me", target: key(4, 0) },
-  ],
+  [key(0, 0)]: [{ match: "GET STARTED", target: key(0, 1) }],
   [key(0, 1)]: [
     { match: ["CONTINUE", "SKIP FOR NOW"], target: key(0, 2) },
+    { match: "STEP 2 OF 3", target: key(0, 2) },
+    { match: "STEP 3 OF 3", target: key(0, 4) },
   ],
   [key(0, 2)]: [
     { match: ["CONNECT", "CONTINUE", "SKIP FOR NOW"], target: key(0, 3) },
+    { match: "STEP 1 OF 3", target: key(0, 1) },
+    { match: "STEP 3 OF 3", target: key(0, 4) },
   ],
   [key(0, 3)]: [
     { match: "IMPORT SELECTED", target: key(0, 4) },
@@ -44,13 +45,16 @@ const graph: Record<NodeKey, Rule[]> = {
   ],
   [key(0, 4)]: [
     { match: "Confirm and Create AI Persona", target: key(0, 5) },
+    { match: "STEP 1 OF 3", target: key(0, 1) },
+    { match: "STEP 2 OF 3", target: key(0, 2) },
   ],
   [key(0, 5)]: [
-    { match: "Continue", target: key(0, 6) },
+    { match: "Customize", target: key(0, 6) },
+    { match: "Continue", target: key(0, 7) },
+    { match: "I am shy", target: key(0, 9) },
   ],
-  [key(0, 6)]: [
-    { match: "Save", target: home },
-  ],
+  [key(0, 6)]: [{ match: "Save", target: home }],
+  [key(0, 9)]: [{ match: "Lets Go", target: key(0, 7) }],
   [home]: [
     { match: "View draft", target: key(1, 5), label: "Open Alex message draft" },
     { match: "Start New Chat", target: key(1, 1) },
@@ -81,11 +85,19 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "Got it", target: key(1, 5) },
   ],
   [key(1, 4)]: [
-    { match: ["Strict", "Balanced", "Flexible"], target: key(1, 5), label: "Save permissions and open message" },
+    {
+      match: ["Strict", "Balanced", "Flexible"],
+      target: key(1, 5),
+      label: "Save permissions and open message",
+    },
   ],
   [key(1, 5)]: [
     { match: "View more", target: key(1, 6) },
-    { match: ["Friendly", "Direct", "Warm"], target: key(1, 6), label: "Choose tone and open Spark Reply" },
+    {
+      match: ["Friendly", "Direct", "Warm"],
+      target: key(1, 6),
+      label: "Choose tone and open Spark Reply",
+    },
     { match: "Write your own message", target: key(2, 1), label: "Type a sensitive reply" },
   ],
   [key(1, 6)]: [
@@ -93,9 +105,7 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "Edit Before Sending", target: key(1, 5) },
     { match: "Back to Chat", target: key(1, 5) },
   ],
-  [key(1, 7)]: [
-    { match: "Reply", target: key(1, 8) },
-  ],
+  [key(1, 7)]: [{ match: "Reply", target: key(1, 8) }],
   [key(1, 8)]: [
     { match: "View more", target: key(1, 6) },
     { match: ["HOME", "Back to Home"], target: home },
@@ -112,15 +122,9 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "Stay in human-led mode", target: key(2, 3) },
     { match: "Ask again later", target: key(2, 4) },
   ],
-  [key(2, 2)]: [
-    { match: "Got it", target: key(2, 3) },
-  ],
-  [key(2, 3)]: [
-    { match: "Stay Human-led", target: key(2, 4) },
-  ],
-  [key(2, 4)]: [
-    { match: "Confirm", target: home },
-  ],
+  [key(2, 2)]: [{ match: "Got it", target: key(2, 3) }],
+  [key(2, 3)]: [{ match: "Stay Human-led", target: key(2, 4) }],
+  [key(2, 4)]: [{ match: "Confirm", target: home }],
 
   [key(3, 0)]: [
     { match: "Continue", target: key(6, 0) },
@@ -309,7 +313,9 @@ function normalize(text: string) {
 }
 
 function readClickText(target: HTMLElement) {
-  const actionable = target.closest("button,a,[role='button'],.cursor-pointer") as HTMLElement | null;
+  const actionable = target.closest(
+    "button,a,[role='button'],.cursor-pointer",
+  ) as HTMLElement | null;
   if (actionable) return actionable.innerText || actionable.textContent || "";
   return target.innerText || target.textContent || "";
 }
@@ -363,9 +369,14 @@ function PrototypeTabBar({ active }: { active: string }) {
       {items.map(({ Icon, label }) => {
         const selected = label === active;
         return (
-          <button key={label} className={`flex flex-col items-center gap-1 ${selected ? "text-brand-purple" : "text-brand-mute"}`}>
-            <div className={`w-8 h-8 rounded-2xl flex items-center justify-center ${selected ? "gradient-brand shadow-soft" : ""}`}>
-              <Icon size={14} strokeWidth={2} className={selected ? "text-white" : ""}/>
+          <button
+            key={label}
+            className={`flex flex-col items-center gap-1 ${selected ? "text-brand-purple" : "text-brand-mute"}`}
+          >
+            <div
+              className={`w-8 h-8 rounded-2xl flex items-center justify-center ${selected ? "gradient-brand shadow-soft" : ""}`}
+            >
+              <Icon size={14} strokeWidth={2} className={selected ? "text-white" : ""} />
             </div>
             {label}
           </button>
@@ -378,7 +389,9 @@ function PrototypeTabBar({ active }: { active: string }) {
 export function FlowPlayer({ onOpenGallery }: Props) {
   const [node, setNode] = useState<NodeKey>(key(0, 0));
   const [history, setHistory] = useState<NodeKey[]>([]);
-  const [selectedAiMode, setSelectedAiMode] = useState<"Observer" | "Co-pilot" | "Assistant" | "Auto-pilot">("Co-pilot");
+  const [selectedAiMode, setSelectedAiMode] = useState<
+    "Observer" | "Co-pilot" | "Assistant" | "Auto-pilot"
+  >("Co-pilot");
   const [direction, setDirection] = useState<1 | -1>(1);
   const [tapPulse, setTapPulse] = useState(false);
   const [flowIdx, stepIdx] = node.split(":").map(Number);
@@ -389,7 +402,11 @@ export function FlowPlayer({ onOpenGallery }: Props) {
   const displayScale = 0.66;
   const activeTab = activeTabFor(node);
 
-  const allNodes = useMemo(() => flows.flatMap((f, fi) => f.steps.map((s, si) => ({ key: key(fi, si), flow: f, step: s }))), []);
+  const allNodes = useMemo(
+    () =>
+      flows.flatMap((f, fi) => f.steps.map((s, si) => ({ key: key(fi, si), flow: f, step: s }))),
+    [],
+  );
   const currentIndex = allNodes.findIndex((item) => item.key === node);
 
   const navigate = (target: NodeKey) => {
@@ -435,18 +452,11 @@ export function FlowPlayer({ onOpenGallery }: Props) {
       [key(1, 1), key(7, 0), key(7, 3), key(7, 4)].includes(node);
     if (topRightBell) return key(7, 6);
 
-    const feedFab =
-      x > 350 * s &&
-      y > 760 * s &&
-      [key(7, 3), key(7, 4)].includes(node);
+    const feedFab = x > 350 * s && y > 760 * s && [key(7, 3), key(7, 4)].includes(node);
     if (feedFab) return key(7, 5);
 
     const interactionAvatar =
-      node === key(7, 6) &&
-      x > 8 * s &&
-      x < 86 * s &&
-      y > 88 * s &&
-      y < 510 * s;
+      node === key(7, 6) && x > 8 * s && x < 86 * s && y > 88 * s && y < 510 * s;
     if (interactionAvatar) return key(7, 7);
 
     return null;
@@ -536,35 +546,65 @@ export function FlowPlayer({ onOpenGallery }: Props) {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col" style={{ background: "linear-gradient(180deg, #e9e6f3 0%, #f3eaf6 50%, #eaf2f8 100%)" }}>
+    <div
+      className="min-h-screen w-full flex flex-col"
+      style={{ background: "linear-gradient(180deg, #e9e6f3 0%, #f3eaf6 50%, #eaf2f8 100%)" }}
+    >
       <div className="px-6 pt-6 pb-3 flex items-center gap-3 max-w-6xl mx-auto w-full">
         <div className="flex-1 min-w-0">
-          <div className="text-[10px] font-bold tracking-[0.35em] uppercase text-brand-purple">AI SECOND SELF · INTEGRATED APP PROTOTYPE</div>
+          <div className="text-[10px] font-bold tracking-[0.35em] uppercase text-brand-purple">
+            AI SECOND SELF · INTEGRATED APP PROTOTYPE
+          </div>
           <div className="text-[18px] font-bold text-brand-ink truncate">{flow.title}</div>
-          <div className="text-[12px] text-brand-mute truncate">{step.label}{step.hint ? ` · ${step.hint}` : ""}</div>
+          <div className="text-[12px] text-brand-mute truncate">
+            {step.label}
+            {step.hint ? ` · ${step.hint}` : ""}
+          </div>
         </div>
-        <button onClick={restart} className="px-3 py-2 rounded-xl bg-white/70 backdrop-blur border border-white text-[12px] font-bold text-brand-ink flex items-center gap-2 hover:bg-white">
-          <RotateCcw size={14}/> Restart
+        <button
+          onClick={restart}
+          className="px-3 py-2 rounded-xl bg-white/70 backdrop-blur border border-white text-[12px] font-bold text-brand-ink flex items-center gap-2 hover:bg-white"
+        >
+          <RotateCcw size={14} /> Restart
         </button>
-        <button onClick={onOpenGallery} className="px-3 py-2 rounded-xl bg-brand-ink text-white text-[12px] font-bold flex items-center gap-2">
-          <Home size={14}/> Gallery
+        <button
+          onClick={onOpenGallery}
+          className="px-3 py-2 rounded-xl bg-brand-ink text-white text-[12px] font-bold flex items-center gap-2"
+        >
+          <Home size={14} /> Gallery
         </button>
       </div>
 
       <div className="max-w-6xl mx-auto w-full px-6">
         <div className="rounded-2xl bg-white/70 border border-white px-4 py-3 flex flex-wrap items-center gap-2 shadow-soft">
           <div className="flex items-center gap-2 text-[10px] font-bold tracking-[0.18em] uppercase text-brand-mute">
-            <Layers size={13}/> Valid taps on this screen
+            <Layers size={13} /> Valid taps on this screen
           </div>
-          {rules.length ? rules.map((rule, i) => {
-            const label = rule.label ?? (Array.isArray(rule.match) ? rule.match[0] : rule.match);
-            return <span key={`${label}-${i}`} className="px-2.5 py-1 rounded-full bg-white border border-brand-bg text-[10px] font-bold text-brand-ink">{label}</span>;
-          }) : <span className="text-[11px] text-brand-mute">This screen keeps local controls only.</span>}
+          {rules.length ? (
+            rules.map((rule, i) => {
+              const label = rule.label ?? (Array.isArray(rule.match) ? rule.match[0] : rule.match);
+              return (
+                <span
+                  key={`${label}-${i}`}
+                  className="px-2.5 py-1 rounded-full bg-white border border-brand-bg text-[10px] font-bold text-brand-ink"
+                >
+                  {label}
+                </span>
+              );
+            })
+          ) : (
+            <span className="text-[11px] text-brand-mute">
+              This screen keeps local controls only.
+            </span>
+          )}
         </div>
       </div>
 
       <div className="flex-1 flex items-start justify-center px-6 py-5">
-        <div className="relative" style={{ width: 440 * displayScale, height: 1026 * displayScale }}>
+        <div
+          className="relative"
+          style={{ width: 440 * displayScale, height: 1026 * displayScale }}
+        >
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={node}
@@ -575,7 +615,11 @@ export function FlowPlayer({ onOpenGallery }: Props) {
               transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
               className="absolute inset-0 flex items-start justify-center"
             >
-              <div className="relative origin-top" style={{ transform: `scale(${displayScale})` }} onClickCapture={handlePrototypeTap}>
+              <div
+                className="relative origin-top"
+                style={{ transform: `scale(${displayScale})` }}
+                onClickCapture={handlePrototypeTap}
+              >
                 <PhoneFrame title={`${flow.id.toUpperCase()} · ${step.label}`} subtitle={step.hint}>
                   <StepComponent />
                   {activeTab && <PrototypeTabBar active={activeTab} />}
@@ -600,7 +644,10 @@ export function FlowPlayer({ onOpenGallery }: Props) {
       <div className="pb-6 px-6 max-w-4xl mx-auto w-full">
         <div className="rounded-2xl bg-white/60 border border-white p-2 flex flex-wrap items-center justify-center gap-2 shadow-soft">
           {flowStarts.map((item) => (
-            <span key={item.label} className={`px-3 py-1.5 rounded-xl text-[10px] font-bold ${node === item.target ? "bg-brand-ink text-white" : "bg-white/70 text-brand-mute border border-brand-bg"}`}>
+            <span
+              key={item.label}
+              className={`px-3 py-1.5 rounded-xl text-[10px] font-bold ${node === item.target ? "bg-brand-ink text-white" : "bg-white/70 text-brand-mute border border-brand-bg"}`}
+            >
               {item.label}
             </span>
           ))}

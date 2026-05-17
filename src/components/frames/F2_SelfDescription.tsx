@@ -10,16 +10,25 @@ export function F2_SelfDescription() {
       <div className="px-6 py-8 flex flex-col gap-8">
         {/* Progress */}
         <div className="flex flex-col gap-2">
-          <div className="text-[12px] font-bold tracking-[0.6px] uppercase text-brand-purple">STEP 1 OF 3</div>
+          <div className="text-[12px] font-bold tracking-[0.6px] uppercase text-brand-purple">
+            STEP 1 OF 3
+          </div>
           <div className="flex gap-2 h-2">
-            <motion.div
+            <motion.button
+              type="button"
               className="flex-1 rounded-full gradient-brand"
               initial={{ scaleX: 0, transformOrigin: "left" }}
               animate={{ scaleX: 1 }}
               transition={{ duration: 0.6 }}
-            />
-            <div className="flex-1 rounded-full bg-brand-bg" />
-            <div className="flex-1 rounded-full bg-brand-bg" />
+            >
+              <span className="sr-only">STEP 1 OF 3</span>
+            </motion.button>
+            <button type="button" className="flex-1 rounded-full bg-brand-bg">
+              <span className="sr-only">STEP 2 OF 3</span>
+            </button>
+            <button type="button" className="flex-1 rounded-full bg-brand-bg">
+              <span className="sr-only">STEP 3 OF 3</span>
+            </button>
           </div>
         </div>
 
@@ -27,7 +36,8 @@ export function F2_SelfDescription() {
         <div className="flex flex-col gap-2">
           <h2 className="text-[24px] font-bold text-brand-ink leading-[32px]">Describe myself</h2>
           <p className="text-[15px] text-brand-mute leading-[22px]">
-            Describe what kind of person you are, how you usually communicate, and what matters to you.
+            Describe what kind of person you are, how you usually communicate, and what matters to
+            you.
           </p>
         </div>
 
@@ -68,14 +78,25 @@ export function F2_SelfDescription() {
                 />
               </>
             )}
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <rect x="9" y="3" width="6" height="12" rx="3" />
               <path d="M5 11a7 7 0 0 0 14 0" />
               <line x1="12" y1="18" x2="12" y2="22" />
             </svg>
           </motion.button>
           <div className="text-center">
-            <div className="text-[15px] font-bold text-brand-ink">{recording ? "Listening..." : "Record voice instead"}</div>
+            <div className="text-[15px] font-bold text-brand-ink">
+              {recording ? "Listening..." : "Record voice instead"}
+            </div>
             <div className="text-[12px] text-brand-mute mt-1">You can speak naturally...</div>
           </div>
         </motion.div>

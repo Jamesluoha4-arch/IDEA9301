@@ -34,7 +34,7 @@ jobs:
       - name: Build static site
         run: npm run build
         env:
-          VITE_AVATAR_API_URL: ${{ vars.VITE_AVATAR_API_URL }}
+          VITE_AVATAR_API_URL: https://idea9301-avatar.jamesluoha4.workers.dev/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

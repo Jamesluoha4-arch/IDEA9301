@@ -1,6 +1,7 @@
 import { useMemo, useState, type MouseEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Fingerprint, Home, Layers, Music, RotateCcw, Smile, TrendingUp } from "lucide-react";
+import { Home, Layers, RotateCcw } from "lucide-react";
+import { FloatingBottomNav } from "@/components/frames/F09_Home";
 import { PhoneFrame } from "@/components/PhoneFrame";
 import { flows } from "@/lib/flows";
 
@@ -333,6 +334,13 @@ function tabFromText(text: string) {
   return null;
 }
 
+function tabFromElement(target: HTMLElement) {
+  const tab = target.closest("[data-prototype-tab]") as HTMLElement | null;
+  const value = tab?.dataset.prototypeTab;
+  if (value && value in tabTargets) return value;
+  return null;
+}
+
 function activeTabFor(node: NodeKey) {
   const [flowIdx, stepIdx] = node.split(":").map(Number);
   if (node === home) return "HOME";
@@ -344,37 +352,6 @@ function activeTabFor(node: NodeKey) {
   if (flowIdx === 6 && [4].includes(stepIdx)) return "PROFILE";
   if (flowIdx === 6 && [8, 9].includes(stepIdx)) return "AI";
   return null;
-}
-
-function PrototypeTabBar({ active }: { active: string }) {
-  const items = [
-    { Icon: Home, label: "HOME" },
-    { Icon: Music, label: "SOCIAL" },
-    { Icon: Smile, label: "AI" },
-    { Icon: Fingerprint, label: "PRESENCE" },
-    { Icon: TrendingUp, label: "PROFILE" },
-  ];
-
-  return (
-    <div className="absolute bottom-0 left-0 right-0 z-[90] glass border-t border-brand-bg py-2 px-3 grid grid-cols-5 text-[8px] font-bold tracking-wider">
-      {items.map(({ Icon, label }) => {
-        const selected = label === active;
-        return (
-          <button
-            key={label}
-            className={`flex flex-col items-center gap-1 ${selected ? "text-brand-purple" : "text-brand-mute"}`}
-          >
-            <div
-              className={`w-8 h-8 rounded-2xl flex items-center justify-center ${selected ? "gradient-brand shadow-soft" : ""}`}
-            >
-              <Icon size={14} strokeWidth={2} className={selected ? "text-white" : ""} />
-            </div>
-            {label}
-          </button>
-        );
-      })}
-    </div>
-  );
 }
 
 export function FlowPlayer({ onOpenGallery }: Props) {
@@ -459,6 +436,14 @@ export function FlowPlayer({ onOpenGallery }: Props) {
 
     const text = readClickText(target);
     const normalizedText = normalize(text);
+    const directTab = tabFromElement(target);
+    if (directTab) {
+      setTapPulse(true);
+      window.setTimeout(() => setTapPulse(false), 260);
+      navigate(tabTargets[directTab]);
+      return;
+    }
+
     if (isBackIconTap(event, text)) {
       setTapPulse(true);
       window.setTimeout(() => setTapPulse(false), 260);
@@ -613,7 +598,7 @@ export function FlowPlayer({ onOpenGallery }: Props) {
               >
                 <PhoneFrame title={`${flow.id.toUpperCase()} · ${step.label}`} subtitle={step.hint}>
                   <StepComponent />
-                  {activeTab && <PrototypeTabBar active={activeTab} />}
+                  {activeTab && <FloatingBottomNav active={activeTab} />}
                 </PhoneFrame>
                 <AnimatePresence>
                   {tapPulse && (

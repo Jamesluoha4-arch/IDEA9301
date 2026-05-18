@@ -209,6 +209,11 @@ export function F09_Home() {
 }
 
 export function BottomNav({ active }: { active: string }) {
+  void active;
+  return null;
+}
+
+export function FloatingBottomNav({ active }: { active: string }) {
   const items = [
     { Icon: Home, label: "HOME" },
     { Icon: Compass, label: "SOCIAL" },
@@ -219,7 +224,12 @@ export function BottomNav({ active }: { active: string }) {
   const isAvatarActive = activeKey === "AI";
 
   return (
-    <nav className="absolute bottom-3 left-5 right-5 z-20 h-[72px]">
+    <motion.nav
+      className="absolute bottom-3 left-5 right-5 z-[90] h-[72px]"
+      initial={{ y: 18, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="absolute inset-x-0 bottom-0 h-[62px] overflow-hidden rounded-[30px] border border-white/70 bg-white/62 px-4 py-2 shadow-[0_18px_45px_rgba(31,31,46,0.14),0_0_34px_rgba(108,92,231,0.18)] backdrop-blur-2xl">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/75 via-[#f7f6fb]/45 to-white/55" />
         <div className="pointer-events-none absolute -top-8 left-8 h-20 w-20 rounded-full bg-[#a78bfa]/22 blur-2xl" />
@@ -233,6 +243,7 @@ export function BottomNav({ active }: { active: string }) {
                 key={label}
                 whileTap={{ scale: 0.94 }}
                 style={{ gridColumn }}
+                data-prototype-tab={label.toLowerCase()}
                 className={`group flex h-[50px] flex-col items-center justify-center gap-1 rounded-2xl text-[8px] font-bold tracking-[0.01em] transition-colors ${
                   isActive ? "text-brand-purple" : "text-[#6f7285]"
                 }`}
@@ -251,7 +262,13 @@ export function BottomNav({ active }: { active: string }) {
                   />
                 </span>
                 <span>{label}</span>
-                {isActive && <span className="h-0.5 w-8 rounded-full bg-[#6c5ce7]" />}
+                {isActive && (
+                  <motion.span
+                    className="h-0.5 w-8 rounded-full bg-[#6c5ce7]"
+                    layoutId="bottom-nav-active-line"
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  />
+                )}
               </motion.button>
             );
           })}
@@ -262,8 +279,12 @@ export function BottomNav({ active }: { active: string }) {
         className={`absolute left-1/2 top-0 flex h-[74px] w-[74px] -translate-x-1/2 items-center justify-center rounded-full border-[3px] border-white bg-white shadow-[0_16px_36px_rgba(31,31,46,0.18),0_0_28px_rgba(108,92,231,0.28)] ${
           isAvatarActive ? "ring-4 ring-[#a78bfa]/30" : ""
         }`}
+        animate={{ y: [0, -2, 0] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         aria-label="Second Self"
+        data-prototype-tab="ai"
       >
+        <span className="sr-only">AI</span>
         <span className="absolute inset-1 rounded-full bg-gradient-to-br from-[#ece9ff] via-white to-[#ffeaf5]" />
         <img
           src={chibiAvatar}
@@ -271,6 +292,6 @@ export function BottomNav({ active }: { active: string }) {
           className="relative h-[64px] w-[64px] rounded-full object-cover object-top"
         />
       </motion.button>
-    </nav>
+    </motion.nav>
   );
 }

@@ -109,10 +109,11 @@ export function F3_ImportChat() {
 
         <div>
           <h2 className="text-[24px] font-bold text-brand-ink leading-[32px]">
-            Teach me your voice
+            Teach me only what you choose
           </h2>
           <p className="text-[15px] text-brand-mute leading-[22px] mt-2">
-            Share a little context so I can sound more like the version of me you want.
+            Share selected examples if you want me to learn your tone. Skipping still creates a
+            basic version of me.
           </p>
         </div>
 
@@ -142,8 +143,10 @@ export function F3_ImportChat() {
               <polyline points="9 15 12 12 15 15" />
             </svg>
           </motion.div>
-          <div className="text-[16px] font-bold text-brand-ink">Upload chat records</div>
-          <div className="text-[12px] text-brand-mute">TXT, PDF, CSV, screenshots</div>
+          <div className="text-[16px] font-bold text-brand-ink">Upload selected records</div>
+          <div className="text-[12px] text-brand-mute">
+            Only files you pick: TXT, PDF, CSV, screenshots
+          </div>
         </motion.div>
 
         {/* Sources */}
@@ -192,7 +195,8 @@ export function F3_ImportChat() {
             <line x1="12" y1="8" x2="12.01" y2="8" />
           </svg>
           <div className="text-[12px] text-brand-ink leading-[16px]">
-            You can review, delete, or limit what your AI can use.
+            You can review, delete, or limit what I use. I will never send messages or use private
+            data without your approval.
           </div>
         </div>
       </div>

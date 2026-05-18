@@ -46,9 +46,11 @@ export function F5_AIPersona() {
         </div>
 
         <div className="text-center">
-          <h2 className="text-[22px] font-bold text-brand-ink">The self you're giving me</h2>
+          <h2 className="text-[22px] font-bold text-brand-ink">
+            Review the personality you gave me
+          </h2>
           <p className="text-[13px] text-brand-mute mt-1">
-            Here is the personality I will start from.
+            Edit anything before I start helping in conversations.
           </p>
         </div>
 
@@ -100,7 +102,7 @@ export function F5_AIPersona() {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="text-[15px] font-bold text-brand-ink border-b border-brand-bg pb-2">
-            Personality Summary
+            Editable Personality Summary
           </div>
 
           {/* Slider 1 */}
@@ -183,9 +185,7 @@ export function F5_AIPersona() {
 
         {/* Description */}
         <div className="rounded-2xl bg-brand-bg/60 border border-brand-bg p-3.5">
-          <div className="text-[12px] font-bold text-brand-purple mb-1">
-            Personality description:
-          </div>
+          <div className="text-[12px] font-bold text-brand-purple mb-1">How I will speak:</div>
           <p className="text-[12px] text-brand-ink leading-[18px] italic">"{description}"</p>
         </div>
       </div>

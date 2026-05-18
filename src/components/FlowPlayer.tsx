@@ -50,12 +50,12 @@ const graph: Record<NodeKey, Rule[]> = {
   [home]: [
     { match: "View draft", target: key(1, 5), label: "Open Alex message draft" },
     { match: "Start New Chat", target: key(1, 1) },
-    { match: "Review Paths", target: key(1, 2) },
-    { match: "AI Suggestions", target: key(1, 5) },
-    { match: "Safety Center", target: key(3, 0) },
+    { match: ["Review Drafts", "Review Paths"], target: key(1, 2) },
+    { match: ["Conversation Help", "AI Suggestions"], target: key(1, 5) },
+    { match: ["AI Control", "Safety Center"], target: key(3, 0) },
     { match: "View all conversations", target: key(5, 0) },
     { match: "SOCIAL", target: key(1, 1) },
-    { match: "AI", target: key(4, 0) },
+    { match: "AI", target: key(3, 0) },
     { match: "PRESENCE", target: key(7, 8) },
     { match: "PROFILE", target: key(4, 0) },
   ],
@@ -267,7 +267,7 @@ const graph: Record<NodeKey, Rule[]> = {
   [key(7, 3)]: [
     { match: "SYNTH_UNIT_91", target: key(7, 7) },
     { match: "ERIK_S_08", target: key(7, 7) },
-    { match: "New Space", target: key(7, 5) },
+    { match: ["New Post", "New Space"], target: key(7, 5) },
     { match: "RAW_DATA", target: key(7, 6) },
     { match: "HUMAN_AUTH", target: key(7, 7) },
     { match: "AI_SYNTH", target: key(7, 4) },
@@ -280,7 +280,7 @@ const graph: Record<NodeKey, Rule[]> = {
   ],
   [key(7, 5)]: [{ match: "Publish", target: key(7, 6) }],
   [key(7, 6)]: [{ match: "Profile", target: key(7, 7) }],
-  [key(7, 7)]: [{ match: "AI Presence", target: key(7, 8) }],
+  [key(7, 7)]: [{ match: ["AI Activity", "AI Presence"], target: key(7, 8) }],
   [key(7, 8)]: [
     { match: "View Details", target: key(7, 9) },
     { match: "Adjust Visibility", target: key(7, 10) },
@@ -323,9 +323,9 @@ function findRule(rules: Rule[], text: string) {
 const tabTargets: Record<string, NodeKey> = {
   home,
   social: key(1, 1),
-  ai: key(6, 8),
+  ai: key(3, 0),
   presence: key(7, 8),
-  profile: key(6, 4),
+  profile: key(4, 0),
 };
 
 function tabFromText(text: string) {
@@ -347,9 +347,9 @@ function activeTabFor(node: NodeKey) {
   if (flowIdx === 1 && [1].includes(stepIdx)) return "SOCIAL";
   if (flowIdx === 7 && [0, 3, 4, 5, 6, 7].includes(stepIdx)) return "SOCIAL";
   if (flowIdx === 7 && stepIdx >= 8) return "PRESENCE";
-  if (flowIdx === 3) return "PROFILE";
+  if (flowIdx === 3) return "AI";
   if (flowIdx === 5 && [0, 1].includes(stepIdx)) return "PROFILE";
-  if (flowIdx === 6 && [4].includes(stepIdx)) return "PROFILE";
+  if (flowIdx === 4) return "PROFILE";
   if (flowIdx === 6 && [8, 9].includes(stepIdx)) return "AI";
   return null;
 }

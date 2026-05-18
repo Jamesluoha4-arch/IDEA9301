@@ -29,7 +29,9 @@ export function F8_AIChat() {
           </svg>
         </div>
         <div className="flex-1">
-          <div className="text-[15px] font-bold text-brand-ink tracking-wide">AI ASSISTANT</div>
+          <div className="text-[15px] font-bold text-brand-ink tracking-wide">
+            SECOND SELF READY
+          </div>
           <div className="flex items-center gap-1.5 text-[10px] text-brand-mint font-bold">
             <span className="w-1.5 h-1.5 rounded-full bg-brand-mint animate-pulse" />
             ACTIVE
@@ -70,12 +72,12 @@ export function F8_AIChat() {
           </div>
           <div className="flex flex-col gap-1 max-w-[80%]">
             <div className="text-[10px] font-bold tracking-[0.5px] uppercase text-brand-purple">
-              AI Assistant
+              Your Second Self
             </div>
             <div className="rounded-2xl rounded-tl-sm bg-white border border-brand-bg p-3 shadow-sm">
               <p className="text-[14px] text-brand-ink leading-[20px]">
-                Hello! I am ready to assist you today. How can I help you with your tasks or
-                questions?
+                I am ready. I can suggest topics, draft replies, and explain what data I used, but I
+                will not send anything without you.
               </p>
             </div>
           </div>
@@ -94,7 +96,7 @@ export function F8_AIChat() {
             </div>
             <div className="rounded-2xl rounded-tr-sm gradient-brand p-3 shadow-soft">
               <p className="text-[14px] text-white leading-[20px]">
-                Can you create a wireframe layout for a chat interface?
+                Great. Help me prepare conversations, but keep me in control.
               </p>
             </div>
           </div>
@@ -192,7 +194,7 @@ export function F8_AIChat() {
         <div className="flex-1 rounded-full bg-white border border-brand-bg px-4 py-3 shadow-sm">
           <input
             className="w-full bg-transparent outline-none text-[14px] placeholder:text-brand-mute"
-            placeholder="Message AI Assistant..."
+            placeholder="Message your Second Self..."
           />
         </div>
         <motion.button

@@ -18,11 +18,16 @@ const conversations = [
     name: "Sarah Jenkins",
     tag: "AI",
     time: "10:42 AM",
-    msg: "I've added that to your calendar. Le…",
+    msg: "Draft ready. Nothing has been sent yet.",
   },
-  { name: "Michael Chen", tag: "HUMAN", time: "Yesterday", msg: "Sounds good, we can review th…" },
-  { name: "David Rodriguez", tag: "AI", time: "Mon", msg: "Summarized the key points from th…" },
-  { name: "Design Team Sync", tag: "HUMAN", time: "Mon", msg: "I'll have those wireframes read…" },
+  {
+    name: "Michael Chen",
+    tag: "HUMAN",
+    time: "Yesterday",
+    msg: "Sounds good, we can review this.",
+  },
+  { name: "David Rodriguez", tag: "AI", time: "Mon", msg: "Suggested a gentler reply for you." },
+  { name: "Design Team Sync", tag: "HUMAN", time: "Mon", msg: "I'll have those wireframes ready." },
 ];
 
 export function F09_Home() {
@@ -45,9 +50,9 @@ export function F09_Home() {
             </span>
           </h1>
           <p className="text-[12px] text-brand-mute leading-[18px] mt-2">
-            Your Second Self is building better
+            I can help you prepare conversations,
             <br />
-            connections for you.
+            but you decide what gets sent.
           </p>
         </div>
         <div className="relative">
@@ -68,16 +73,16 @@ export function F09_Home() {
 
       <div className="mx-5 mt-5 bg-white rounded-2xl p-4 shadow-soft">
         <div className="flex items-center justify-between">
-          <div className="text-[15px] font-bold">Insights Quick Look</div>
+          <div className="text-[15px] font-bold">Today at a glance</div>
           <button className="flex items-center gap-1 text-[11px] text-brand-purple font-bold">
             This week <ChevronDown size={12} />
           </button>
         </div>
         <div className="grid grid-cols-3 gap-3 mt-4">
           {[
-            { l: "AI RATE", v: "64%", d: "↑ 12%", c: "from-brand-purple to-brand-lavender" },
-            { l: "SAFE OPENINGS", v: "18", d: "↑ 8%", c: "from-brand-mint to-brand-sky" },
-            { l: "SHARED SIGNALS", v: "7", d: "↑ 16%", c: "from-brand-pink to-brand-peach" },
+            { l: "DRAFTS READY", v: "3", d: "+1", c: "from-brand-purple to-brand-lavender" },
+            { l: "SAFE OPENINGS", v: "18", d: "+8%", c: "from-brand-mint to-brand-sky" },
+            { l: "PRIVATE DATA", v: "0", d: "used", c: "from-brand-pink to-brand-peach" },
           ].map((s, i) => (
             <div key={s.l}>
               <div className="text-[8px] tracking-[0.6px] text-brand-mute font-bold">{s.l}</div>
@@ -99,7 +104,7 @@ export function F09_Home() {
       </div>
 
       <div className="px-5 mt-6 flex items-center justify-between">
-        <div className="text-[16px] font-bold">AI Spark</div>
+        <div className="text-[16px] font-bold">Conversation Help</div>
         <button className="flex items-center gap-0.5 text-[11px] text-brand-purple font-bold">
           View all <ChevronRight size={12} />
         </button>
@@ -114,7 +119,7 @@ export function F09_Home() {
         <div className="flex-1 min-w-0">
           <div className="text-[13px] font-bold">Reconnect with Alex</div>
           <div className="text-[10px] text-brand-mute leading-[14px]">
-            It's been 2 weeks. Suggest a coffee meetup this Friday.
+            I drafted a low-pressure coffee invite. Review before sending.
           </div>
         </div>
         <motion.button
@@ -136,20 +141,20 @@ export function F09_Home() {
           },
           {
             Icon: BookOpen,
-            t: "Review Paths",
-            d: "See recent warm-up paths",
+            t: "Review Drafts",
+            d: "Check AI-written messages",
             g: "from-brand-sky to-brand-mint",
           },
           {
             Icon: Sun,
-            t: "AI Suggestions",
-            d: "Get personalized icebreakers",
+            t: "Conversation Help",
+            d: "Get topic ideas",
             g: "from-brand-pink to-brand-peach",
           },
           {
             Icon: Shield,
-            t: "Safety Center",
-            d: "Manage context & permissions",
+            t: "AI Control",
+            d: "Manage data and limits",
             g: "from-brand-lavender to-brand-pink",
           },
         ].map(({ Icon, t, d, g }) => (

@@ -1,12 +1,8 @@
 import { motion } from "framer-motion";
 import {
-  Activity,
   BookOpen,
   ChevronDown,
   ChevronRight,
-  Compass,
-  Fingerprint,
-  Home,
   Lightbulb,
   MessageSquare,
   Shield,
@@ -14,7 +10,8 @@ import {
   Sun,
   User,
 } from "lucide-react";
-import chibiAvatar from "@/assets/chibi-figurine.png";
+import { useEffect, useState } from "react";
+import { readGeneratedAvatar } from "@/lib/avatar-generation";
 
 const conversations = [
   {
@@ -215,26 +212,32 @@ export function BottomNav({ active }: { active: string }) {
 
 export function FloatingBottomNav({ active }: { active: string }) {
   const items = [
-    { Icon: Home, label: "HOME" },
-    { Icon: Compass, label: "SOCIAL" },
-    { Icon: Fingerprint, label: "PRESENCE" },
-    { Icon: Activity, label: "PROFILE" },
+    { Icon: HomeNavIcon, label: "HOME" },
+    { Icon: SocialNavIcon, label: "SOCIAL" },
+    { Icon: PresenceNavIcon, label: "PRESENCE" },
+    { Icon: ProfileNavIcon, label: "PROFILE" },
   ];
   const activeKey = active.toUpperCase();
   const isAvatarActive = activeKey === "AI";
+  const [avatarUrl, setAvatarUrl] = useState(readGeneratedAvatar);
+
+  useEffect(() => {
+    setAvatarUrl(readGeneratedAvatar());
+  }, [active]);
 
   return (
     <motion.nav
-      className="absolute bottom-3 left-5 right-5 z-[90] h-[72px]"
+      className="absolute bottom-2 left-4 right-4 z-[90] h-[88px]"
       initial={{ y: 18, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="absolute inset-x-0 bottom-0 h-[62px] overflow-hidden rounded-[30px] border border-white/70 bg-white/62 px-4 py-2 shadow-[0_18px_45px_rgba(31,31,46,0.14),0_0_34px_rgba(108,92,231,0.18)] backdrop-blur-2xl">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/75 via-[#f7f6fb]/45 to-white/55" />
-        <div className="pointer-events-none absolute -top-8 left-8 h-20 w-20 rounded-full bg-[#a78bfa]/22 blur-2xl" />
-        <div className="pointer-events-none absolute -bottom-12 right-6 h-24 w-24 rounded-full bg-[#6c5ce7]/14 blur-2xl" />
-        <div className="relative grid grid-cols-[1fr_1fr_78px_1fr_1fr] items-end gap-1">
+      <div className="absolute inset-x-0 bottom-0 h-[76px] overflow-hidden rounded-[38px] border border-white/75 bg-[#fbf9ff]/72 px-5 py-2.5 shadow-[0_20px_48px_rgba(31,31,46,0.12),0_0_34px_rgba(108,92,231,0.22)] backdrop-blur-2xl">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/82 via-[#f4efff]/62 to-white/78" />
+        <div className="pointer-events-none absolute left-1/2 top-0 h-[86px] w-[130px] -translate-x-1/2 rounded-full bg-[#a78bfa]/20 blur-2xl" />
+        <div className="pointer-events-none absolute -bottom-12 left-8 h-28 w-28 rounded-full bg-[#6c5ce7]/10 blur-2xl" />
+        <div className="pointer-events-none absolute -bottom-10 right-6 h-28 w-28 rounded-full bg-[#f6b4db]/12 blur-2xl" />
+        <div className="relative grid grid-cols-[1fr_1fr_90px_1fr_1fr] items-end gap-1">
           {items.map(({ Icon, label }, index) => {
             const isActive = activeKey === label;
             const gridColumn = index < 2 ? index + 1 : index + 2;
@@ -244,27 +247,21 @@ export function FloatingBottomNav({ active }: { active: string }) {
                 whileTap={{ scale: 0.94 }}
                 style={{ gridColumn }}
                 data-prototype-tab={label.toLowerCase()}
-                className={`group flex h-[50px] flex-col items-center justify-center gap-1 rounded-2xl text-[8px] font-bold tracking-[0.01em] transition-colors ${
-                  isActive ? "text-brand-purple" : "text-[#6f7285]"
+                className={`group flex h-[57px] flex-col items-center justify-center gap-1 rounded-2xl text-[10px] font-bold tracking-[-0.01em] transition-colors ${
+                  isActive ? "text-[#6c5ce7]" : "text-[#6f7285]"
                 }`}
               >
                 <span
-                  className={`relative flex h-7 w-7 items-center justify-center rounded-2xl transition-all ${
-                    isActive
-                      ? "text-[#6c5ce7] shadow-[0_10px_20px_rgba(108,92,231,0.16)]"
-                      : "text-[#6f7285] group-hover:bg-white/65"
+                  className={`relative flex h-8 w-8 items-center justify-center rounded-2xl transition-all ${
+                    isActive ? "text-[#6c5ce7]" : "text-[#6f7285] group-hover:text-[#56596b]"
                   }`}
                 >
-                  <Icon
-                    size={20}
-                    strokeWidth={isActive ? 2.6 : 2.1}
-                    fill={isActive ? "currentColor" : "none"}
-                  />
+                  <Icon active={isActive} />
                 </span>
-                <span>{label}</span>
+                <span>{label[0] + label.slice(1).toLowerCase()}</span>
                 {isActive && (
                   <motion.span
-                    className="h-0.5 w-8 rounded-full bg-[#6c5ce7]"
+                    className="h-0.5 w-12 rounded-full bg-[#6c5ce7]"
                     layoutId="bottom-nav-active-line"
                     transition={{ type: "spring", stiffness: 420, damping: 34 }}
                   />
@@ -276,8 +273,8 @@ export function FloatingBottomNav({ active }: { active: string }) {
       </div>
       <motion.button
         whileTap={{ scale: 0.94 }}
-        className={`absolute left-1/2 top-0 flex h-[74px] w-[74px] -translate-x-1/2 items-center justify-center rounded-full border-[3px] border-white bg-white shadow-[0_16px_36px_rgba(31,31,46,0.18),0_0_28px_rgba(108,92,231,0.28)] ${
-          isAvatarActive ? "ring-4 ring-[#a78bfa]/30" : ""
+        className={`absolute left-1/2 top-0 flex h-[88px] w-[88px] -translate-x-1/2 items-center justify-center rounded-full border-[6px] border-[#f1edff] bg-white shadow-[0_18px_42px_rgba(31,31,46,0.16),0_0_34px_rgba(108,92,231,0.25)] ${
+          isAvatarActive ? "ring-4 ring-[#a78bfa]/35" : ""
         }`}
         animate={{ y: [0, -2, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -285,13 +282,106 @@ export function FloatingBottomNav({ active }: { active: string }) {
         data-prototype-tab="ai"
       >
         <span className="sr-only">AI</span>
-        <span className="absolute inset-1 rounded-full bg-gradient-to-br from-[#ece9ff] via-white to-[#ffeaf5]" />
+        <span className="absolute inset-0 rounded-full bg-gradient-to-br from-[#f7f3ff] via-white to-[#fff4fb]" />
         <img
-          src={chibiAvatar}
+          src={avatarUrl}
           alt=""
-          className="relative h-[64px] w-[64px] rounded-full object-cover object-top"
+          className="relative h-[78px] w-[78px] rounded-full object-cover object-top"
         />
       </motion.button>
     </motion.nav>
+  );
+}
+
+function HomeNavIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true">
+      <path
+        d="M5.5 14.3 16 5.8l10.5 8.5v11.1a2.5 2.5 0 0 1-2.5 2.5h-5.2v-8.1h-5.6v8.1H8a2.5 2.5 0 0 1-2.5-2.5V14.3Z"
+        fill={active ? "currentColor" : "none"}
+        stroke="currentColor"
+        strokeWidth="3.1"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function SocialNavIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true">
+      <circle
+        cx="16"
+        cy="16"
+        r="11.2"
+        fill={active ? "currentColor" : "none"}
+        stroke="currentColor"
+        strokeWidth="3"
+      />
+      <path
+        d="M11.6 9.3c1.8 2.1 4 .2 5.7 1.5 1.7 1.2-.8 3.1.5 4.5 1 1.1 2.6.1 3.7 1.4 1.2 1.4.2 3.4-1.4 5.2M9.3 18.1c2.5-.4 4 .4 4.7 2.2.6 1.5-.4 2.5-.2 4.1"
+        fill="none"
+        stroke={active ? "#ffffff" : "currentColor"}
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function PresenceNavIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true">
+      <rect
+        x="5"
+        y="6"
+        width="22"
+        height="20"
+        rx="3.6"
+        fill={active ? "currentColor" : "none"}
+        stroke="currentColor"
+        strokeWidth="3"
+      />
+      <path
+        d="m10 21 5.2-5 3.4 3.1 5-6.1"
+        fill="none"
+        stroke={active ? "#ffffff" : "currentColor"}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M19.6 13h4v4"
+        fill="none"
+        stroke={active ? "#ffffff" : "currentColor"}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function ProfileNavIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true">
+      <circle
+        cx="16"
+        cy="10.2"
+        r="5.2"
+        fill={active ? "currentColor" : "none"}
+        stroke="currentColor"
+        strokeWidth="3"
+      />
+      <path
+        d="M6.4 27.1c1.4-5 5.2-8 9.6-8s8.2 3 9.6 8"
+        fill={active ? "currentColor" : "none"}
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }

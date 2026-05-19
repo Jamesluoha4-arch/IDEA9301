@@ -3,7 +3,7 @@ import fallbackFigurineUrl from "@/assets/chibi-figurine.png";
 export const generatedAvatarStorageKey = "second-self.generated-avatar";
 
 export const figurinePrompt =
-  "Create a full-body transparent-background Q-style collectible figurine from the real camera photo. Preserve the photographed person's outfit, hairstyle, glasses, facial impression, face shape, and overall styling. Use rounded 3D modeling, matte vinyl toy material, cold fair translucent skin makeup, oversized head, small body proportions, premium studio render, clean edges, no text, no watermark.";
+  "Create a full-body transparent-background Q-style collectible figurine based strictly on the uploaded real camera photo. Preserve the person's visible face shape, hairstyle, hair color, skin tone, facial impression, outfit, clothing colors, and overall styling from the photo. Do not invent or add any accessories. Do not add glasses unless the person is clearly wearing glasses in the uploaded photo. If the person is not wearing glasses, the figurine must not have glasses. Do not add hats, jewelry, facial hair, masks, or extra clothing unless clearly visible in the photo. Use rounded cute 3D toy proportions, matte vinyl figurine material, oversized head, small body, premium studio render, transparent background, clean edges, no text, no watermark.";
 
 export function getAvatarApiUrl() {
   const viteUrl = import.meta.env.VITE_AVATAR_API_URL;

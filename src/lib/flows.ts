@@ -9,6 +9,7 @@ import { F6_ShySupport } from "@/components/frames/F6_ShySupport";
 import { F8_AIChat } from "@/components/frames/F8_AIChat";
 import { F09_Home } from "@/components/frames/F09_Home";
 import { F10_Social } from "@/components/frames/F10_Social";
+import { F10_CandidateChat } from "@/components/frames/F10_CandidateChat";
 import { F11_WarmupComplete } from "@/components/frames/F11_WarmupComplete";
 import { F12_PrivacyLock } from "@/components/frames/F12_PrivacyLock";
 import { F13_Permissions } from "@/components/frames/F13_Permissions";
@@ -127,6 +128,7 @@ export const flows: Flow[] = [
       { label: "Spark Reply Sheet", hint: "推理 + 上下文", Component: F17_SparkReplySheet },
       { label: "Reactions", hint: "表情反应", Component: F15_ChatReaction },
       { label: "Warm-up Done", hint: "交接给真人", Component: F16_ChatFinished },
+      { label: "Candidate chat", hint: "AI recommended opener", Component: F10_CandidateChat },
     ],
   },
   {

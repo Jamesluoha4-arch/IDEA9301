@@ -374,7 +374,7 @@ function prototypeBackTarget(target: HTMLElement): NodeKey | null {
 function activeTabFor(node: NodeKey) {
   const [flowIdx, stepIdx] = node.split(":").map(Number);
   if (node === home) return "CHAT";
-  if (flowIdx === 1 && [1, 2, 3, 4, 5, 6, 7, 8].includes(stepIdx)) return "CHAT";
+  if (flowIdx === 1 && [1, 2, 3, 4, 5, 6, 7, 8, 9].includes(stepIdx)) return "CHAT";
   if (flowIdx === 7 && [0, 3, 4, 5, 6, 7].includes(stepIdx)) return "COMMUNITY";
   if (flowIdx === 7 && stepIdx >= 8) return "PRESENCE";
   if (flowIdx === 3) return "SETTINGS";
@@ -434,6 +434,13 @@ export function FlowPlayer({ onOpenGallery }: Props) {
 
     const text = readClickText(target);
     const normalizedText = normalize(text);
+    const candidateTarget = target.closest("[data-prototype-person]") as HTMLElement | null;
+    if (candidateTarget?.dataset.prototypePerson) {
+      window.sessionStorage.setItem(
+        "second-self.selected-candidate",
+        candidateTarget.dataset.prototypePerson,
+      );
+    }
     const directTarget = targetFromElement(target);
     if (directTarget) {
       setTapPulse(true);

@@ -130,7 +130,8 @@ export function F10_Social() {
         </div>
 
         <motion.div
-          data-prototype-target="1:5"
+          data-prototype-target="1:9"
+          data-prototype-person="Alex"
           whileTap={{ scale: 0.985 }}
           className="mx-5 mt-4 bg-white rounded-2xl p-4 shadow-soft border border-brand-bg cursor-pointer"
         >
@@ -170,7 +171,8 @@ export function F10_Social() {
               <motion.button
                 key={person.name}
                 type="button"
-                data-prototype-target="1:5"
+                data-prototype-target="1:9"
+                data-prototype-person={person.name}
                 whileTap={{ scale: 0.985 }}
                 className="w-full rounded-2xl border border-brand-bg bg-white/78 px-3 py-2.5 text-left shadow-[0_8px_18px_rgba(108,92,231,0.06)]"
               >
@@ -215,6 +217,8 @@ function OrbitingCandidate({
 
   return (
     <motion.div
+      data-prototype-target="1:9"
+      data-prototype-person={person.name}
       className="absolute left-1/2 top-1/2 z-20"
       style={{
         width: person.distance * 2,

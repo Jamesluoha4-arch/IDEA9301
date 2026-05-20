@@ -1,5 +1,5 @@
-import { type ReactNode } from "react";
-import { motion } from "framer-motion";
+import { useState, type ReactNode } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Bookmark,
   Bot,
@@ -14,8 +14,11 @@ import {
   TrendingUp,
   User,
 } from "lucide-react";
+import alexUrl from "@/assets/radar-avatar-1.png";
+import { SparkReplySheet, type StyleTab } from "./F10_CandidateChat";
+import { readGeneratedAvatar } from "@/lib/avatar-generation";
 
-const messages = [
+const initialMessages = [
   { from: "them", text: "Hey, are you also joining the new starter session this week?" },
   { from: "me", text: "Yeah, I am. Still getting used to everything, but excited to start." },
   { from: "them", text: "Same here. Have you figured out which team area you will sit with?" },
@@ -34,6 +37,26 @@ export function ChatScaffold({
   showSparkSuggestions?: boolean;
   overlay?: ReactNode;
 }) {
+  const [messages, setMessages] = useState(initialMessages);
+  const [input, setInput] = useState("");
+  const [selectedStyle, setSelectedStyle] = useState<StyleTab>("Friendly");
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const userAvatar = readGeneratedAvatar();
+  const selectedDrafts: Record<StyleTab, string> = {
+    Friendly: "That sounds good. Want to compare notes after the onboarding session?",
+    Direct: "Yes, let's compare notes after onboarding.",
+    Playful: "Deal. New-starter notes exchange after the session?",
+    Brief: "Sure. Let's compare notes after onboarding.",
+    Warm: "That would be great. I am still getting oriented too, so comparing notes would help.",
+  };
+  const visibleSuggestions = [selectedDrafts[selectedStyle], selectedDrafts.Warm];
+  const sendMessage = () => {
+    const text = input.trim();
+    if (!text) return;
+    setMessages((items) => [...items, { from: "me", text }]);
+    setInput("");
+  };
+
   return (
     <div className="relative w-full h-full pt-12 font-sans text-brand-ink overflow-hidden gradient-brand-soft">
       <div className="px-3 py-2 flex items-center gap-2 glass border-b border-brand-bg">
@@ -78,15 +101,21 @@ export function ChatScaffold({
               key={message.text}
               className={`flex items-end gap-2 ${isMe ? "flex-row-reverse" : ""}`}
             >
-              <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
-                  isMe ? "gradient-brand" : "gradient-pink-peach"
-                }`}
-              >
+              <div className="w-7 h-7 rounded-full bg-white shadow-sm overflow-hidden flex items-center justify-center shrink-0">
                 {isMe ? (
-                  <User size={12} className="text-white" />
+                  userAvatar ? (
+                    <img
+                      src={userAvatar}
+                      alt=""
+                      className="h-[130%] w-[130%] object-cover object-top"
+                    />
+                  ) : (
+                    <div className="w-full h-full gradient-brand flex items-center justify-center">
+                      <User size={12} className="text-white" />
+                    </div>
+                  )
                 ) : (
-                  <Bot size={12} className="text-white" />
+                  <img src={alexUrl} alt="" className="h-[130%] w-[130%] object-cover object-top" />
                 )}
               </div>
               <div className={`max-w-[75%] ${isMe ? "text-right" : ""} relative`}>
@@ -164,22 +193,28 @@ export function ChatScaffold({
             <div className="text-[8px] text-brand-mute font-bold">AI SUGGESTION ONLY</div>
           </div>
           <div className="mt-2 flex gap-1.5">
-            <button className="px-3 py-1 rounded-full gradient-brand text-white text-[10px] font-bold shadow-soft">
-              Friendly
-            </button>
-            <button className="px-3 py-1 rounded-full bg-white text-[10px] font-bold">
-              Direct
-            </button>
-            <button className="px-3 py-1 rounded-full bg-white text-[10px] font-bold">Warm</button>
+            {(["Friendly", "Direct", "Playful", "Brief", "Warm"] as StyleTab[]).map((style) => (
+              <button
+                key={style}
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setSelectedStyle(style);
+                }}
+                className={`px-3 py-1 rounded-full text-[10px] font-bold whitespace-nowrap ${
+                  selectedStyle === style ? "gradient-brand text-white shadow-soft" : "bg-white"
+                }`}
+              >
+                {style}
+              </button>
+            ))}
           </div>
           <div className="mt-2 space-y-1.5">
-            {[
-              "That sounds good. Want to compare notes after the onboarding session?",
-              "I am still getting oriented too. Happy to share anything useful I find.",
-            ].map((suggestion) => (
+            {visibleSuggestions.map((suggestion) => (
               <motion.div
                 whileHover={{ x: 2 }}
                 key={suggestion}
+                onClick={() => setInput(suggestion)}
                 className="bg-white rounded-xl px-2.5 py-2 flex items-start gap-2 shadow-sm"
               >
                 <Sparkles size={11} className="mt-0.5 text-brand-pink" />
@@ -188,7 +223,16 @@ export function ChatScaffold({
               </motion.div>
             ))}
           </div>
-          <div className="mt-1 text-[10px] text-center text-brand-purple font-bold">View more</div>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              setSheetOpen(true);
+            }}
+            className="mt-1 w-full text-[10px] text-center text-brand-purple font-bold"
+          >
+            View more
+          </button>
         </div>
       )}
 
@@ -197,11 +241,21 @@ export function ChatScaffold({
           <Plus size={16} className="text-brand-purple" />
         </div>
         <div className="flex-1 px-3 py-2 rounded-full bg-brand-bg flex items-center gap-2">
-          <div className="flex-1 text-[11px] text-brand-mute">Write your own message...</div>
+          <input
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") sendMessage();
+            }}
+            placeholder="Write your own message..."
+            className="flex-1 bg-transparent outline-none text-[11px] text-brand-ink placeholder:text-brand-mute"
+          />
           <Sparkles size={12} className="text-brand-purple" />
           <Smile size={12} className="text-brand-mute" />
         </div>
         <motion.button
+          type="button"
+          onClick={sendMessage}
           whileTap={{ scale: 0.9 }}
           className="w-9 h-9 rounded-full gradient-brand flex items-center justify-center shadow-soft"
         >
@@ -210,6 +264,20 @@ export function ChatScaffold({
       </div>
 
       {overlay}
+      <AnimatePresence>
+        {sheetOpen && (
+          <SparkReplySheet
+            selectedStyle={selectedStyle}
+            selectedDraft={selectedDrafts[selectedStyle]}
+            onStyleChange={setSelectedStyle}
+            onClose={() => setSheetOpen(false)}
+            onInsert={() => {
+              setInput(selectedDrafts[selectedStyle]);
+              setSheetOpen(false);
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -59,7 +59,7 @@ export function F2_SelfDescription() {
 
     setText((current) => {
       const existing = current.trim();
-      return existing ? `${existing} ${spoken}` : spoken;
+      return existing.includes(spoken) ? existing : existing ? `${existing} ${spoken}` : spoken;
     });
     finalTranscriptRef.current = "";
     interimTranscriptRef.current = "";
@@ -69,13 +69,7 @@ export function F2_SelfDescription() {
   const stopListening = () => {
     manuallyStoppingRef.current = true;
     recognitionRef.current?.stop();
-    const committed = commitVoiceText();
-    setVoiceStatus(
-      committed
-        ? "Done. I added your voice input above."
-        : "Stopped. I did not catch English words yet.",
-    );
-    setRecording(false);
+    setVoiceStatus("Stopped. I am adding what I heard...");
   };
 
   const startListening = () => {

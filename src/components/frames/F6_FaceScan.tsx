@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import figurineUrl from "@/assets/chibi-figurine.png";
-import { generateAvatarFromPhoto, saveGeneratedAvatar } from "@/lib/avatar-generation";
+import { generateAvatarFromPhoto } from "@/lib/avatar-generation";
 
 export function F6_FaceScan() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -37,11 +37,10 @@ export function F6_FaceScan() {
     try {
       if (!photoDataUrl) throw new Error("No camera frame available.");
       const result = await generateAvatarFromPhoto(photoDataUrl);
-      setGeneratedAvatar(result.imageUrl);
+      setGeneratedAvatar(result.imageUrl || figurineUrl);
       setGenerationState(result.usedFallback ? "fallback" : "done");
     } catch (error) {
       setGeneratedAvatar(figurineUrl);
-      saveGeneratedAvatar(figurineUrl);
       setGenerationError(error instanceof Error ? error.message : "Avatar generation failed.");
       setGenerationState("fallback");
     } finally {

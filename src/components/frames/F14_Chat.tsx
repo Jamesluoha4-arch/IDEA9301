@@ -53,14 +53,24 @@ export function ChatScaffold({
   const sendMessage = () => {
     const text = input.trim();
     if (!text) return;
-    setMessages((items) => [...items, { from: "me", text }]);
+    const lower = text.toLowerCase();
+    const reply =
+      lower.includes("coffee") || lower.includes("lunch")
+        ? "That feels easy and low-pressure. We can keep it casual and compare what we have learned so far."
+        : lower.includes("?")
+          ? "Good question. I would suggest we compare notes after the next onboarding session and keep it useful for both of us."
+          : "Good idea. Maybe we can compare notes after the session and keep the first message simple.";
+    setMessages((items) => [...items, { from: "me", text }, { from: "them", text: reply }]);
     setInput("");
   };
 
   return (
     <div className="relative w-full h-full pt-12 font-sans text-brand-ink overflow-hidden gradient-brand-soft">
       <div className="px-3 py-2 flex items-center gap-2 glass border-b border-brand-bg">
-        <div className="w-8 h-8 rounded-full bg-white shadow-soft flex items-center justify-center">
+        <div
+          data-prototype-back="1:1"
+          className="w-8 h-8 rounded-full bg-white shadow-soft flex items-center justify-center"
+        >
           <ChevronLeft size={14} className="text-brand-purple" />
         </div>
         <div className="flex-1 text-center">

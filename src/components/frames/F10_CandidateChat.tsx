@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Bookmark,
@@ -16,103 +16,233 @@ import {
   Users,
 } from "lucide-react";
 import alexUrl from "@/assets/radar-avatar-1.png";
-import miaUrl from "@/assets/radar-avatar-2.png";
-import samUrl from "@/assets/radar-avatar-3.png";
-import noraUrl from "@/assets/radar-avatar-4.png";
+import joeUrl from "@/assets/radar-avatar-2.png";
+import jamesUrl from "@/assets/radar-avatar-3.png";
+import sabrinaUrl from "@/assets/radar-avatar-4.png";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
 
 const styleTabs = ["Friendly", "Direct", "Playful", "Brief", "Warm"] as const;
 export type StyleTab = (typeof styleTabs)[number];
+type CandidateName = keyof typeof candidateOpeners;
+type ChatMessage = { from: "ai" | "me"; text: string };
+
+const chatListStorageKey = "second-self.chat-list";
+const openedCandidateStorageKey = "second-self.opened-candidate-chat";
 
 const candidateOpeners = {
   Alex: {
     title: "Alex AI",
     relationship: "Possible company coworker",
     avatar: alexUrl,
-    reason: "Same workplace context · shared onboarding signal",
+    reason: "Same workplace context - shared onboarding signal",
+    preview: "Same workplace context - shared onboarding signal - draft ready",
     drafts: {
       Friendly:
-        "Hi Alex, I noticed we may be in the same onboarding group. Want to compare notes on what has been most helpful so far?",
+        "Hi, {user}. I am Alex. I noticed we may be in the same onboarding group. Want to compare notes on what has been most helpful so far?",
       Direct:
-        "Hi Alex, looks like our onboarding overlaps. Want to exchange useful notes after the next session?",
+        "Hi, {user}. I am Alex. It looks like our onboarding overlaps. Want to exchange useful notes after the next session?",
       Playful:
-        "Hey Alex, fellow onboarding explorer here. Want to trade one survival tip after the next session?",
-      Brief: "Hi Alex, want to compare onboarding notes sometime today?",
-      Warm: "Hi Alex, I am also getting oriented this week. I would be happy to compare notes if that feels useful.",
+        "Hey {user}, I am Alex. Fellow onboarding explorer here. Want to trade one survival tip after the next session?",
+      Brief: "Hi, {user}. I am Alex. Want to compare onboarding notes sometime today?",
+      Warm: "Hi, {user}. I am Alex. I am also getting oriented this week. I would be happy to compare notes if that feels useful.",
     },
+    persona:
+      "warm, steady, and practical. Alex answers like a calm coworker who wants to make the first week easier.",
   },
-  Mia: {
-    title: "Mia AI",
+  Joe: {
+    title: "Joe AI",
     relationship: "Possible design buddy",
-    avatar: miaUrl,
-    reason: "Shared graduate cohort · similar portfolio interests",
+    avatar: joeUrl,
+    reason: "Shared graduate cohort - similar portfolio interests",
+    preview: "Shared graduate cohort - similar portfolio interests - intro ready",
     drafts: {
       Friendly:
-        "Hi Mia, I saw we may share a design background. Maybe we can trade one useful resource from onboarding this week.",
+        "Hi, {user}. I am Joe. I saw we may share a design background. Maybe we can trade one useful resource from onboarding this week.",
       Direct:
-        "Hi Mia, looks like we both connect to design work. Want to share onboarding resources?",
+        "Hi, {user}. I am Joe. It looks like we both connect to design work. Want to share onboarding resources?",
       Playful:
-        "Hi Mia, design-brain check-in: want to swap the best onboarding thing we found this week?",
-      Brief: "Hi Mia, want to swap one useful design onboarding resource?",
-      Warm: "Hi Mia, I noticed we may share a design background. I would love to exchange anything helpful we find this week.",
+        "Hi, {user}. I am Joe. Design-brain check-in: want to swap the best onboarding thing we found this week?",
+      Brief: "Hi, {user}. I am Joe. Want to swap one useful design onboarding resource?",
+      Warm: "Hi, {user}. I am Joe. I noticed we may share a design background. I would love to exchange anything helpful we find this week.",
     },
+    persona:
+      "creative, visual, and upbeat. Joe replies with design-minded curiosity and a light friendly tone.",
   },
-  Sam: {
-    title: "Sam AI",
+  James: {
+    title: "James AI",
     relationship: "Possible community match",
-    avatar: samUrl,
-    reason: "Same company space · lunch group overlap",
+    avatar: jamesUrl,
+    reason: "Same company space - lunch group overlap",
+    preview: "Same company space - lunch group overlap - topic idea ready",
     drafts: {
       Friendly:
-        "Hey Sam, looks like we may be in the same company space. Want to compare good lunch spots or first-week survival tips?",
-      Direct: "Hi Sam, our company spaces overlap. Want to compare first-week tips?",
-      Playful: "Hey Sam, new-starter radar says we might be nearby. Want to trade lunch intel?",
-      Brief: "Hey Sam, want to compare first-week tips?",
-      Warm: "Hi Sam, I am still learning the space too. It could be nice to compare what we find useful.",
-    },
-  },
-  Nora: {
-    title: "Nora AI",
-    relationship: "Possible project neighbor",
-    avatar: noraUrl,
-    reason: "Adjacent team context · shared onboarding task",
-    drafts: {
-      Friendly:
-        "Hi Nora, I noticed our onboarding tasks may overlap. I would be happy to trade notes if that helps us both get oriented faster.",
-      Direct: "Hi Nora, our onboarding tasks may overlap. Want to compare notes?",
+        "Hi, {user}. I am James. Looks like we may be in the same company space. Want to compare good lunch spots or first-week survival tips?",
+      Direct:
+        "Hi, {user}. I am James. Our company spaces overlap. Want to compare first-week tips?",
       Playful:
-        "Hi Nora, looks like our onboarding maps may cross. Want to solve a bit of it together?",
-      Brief: "Hi Nora, want to compare onboarding notes?",
-      Warm: "Hi Nora, I noticed we may be working near the same area. I would be glad to share any useful notes I find.",
+        "Hey {user}, I am James. New-starter radar says we might be nearby. Want to trade lunch intel?",
+      Brief: "Hi, {user}. I am James. Want to compare first-week tips?",
+      Warm: "Hi, {user}. I am James. I am still learning the space too. It could be nice to compare what we find useful.",
     },
+    persona:
+      "casual, practical, and sociable. James replies like someone who knows small shared rituals can open a bigger conversation.",
+  },
+  Sabrina: {
+    title: "Sabrina AI",
+    relationship: "Possible project neighbor",
+    avatar: sabrinaUrl,
+    reason: "Adjacent team context - shared onboarding task",
+    preview: "Adjacent team context - shared onboarding task - warm note ready",
+    drafts: {
+      Friendly:
+        "Hi, {user}. I am Sabrina. I noticed our onboarding tasks may overlap. I would be happy to trade notes if that helps us both get oriented faster.",
+      Direct: "Hi, {user}. I am Sabrina. Our onboarding tasks may overlap. Want to compare notes?",
+      Playful:
+        "Hi, {user}. I am Sabrina. Looks like our onboarding maps may cross. Want to solve a bit of it together?",
+      Brief: "Hi, {user}. I am Sabrina. Want to compare onboarding notes?",
+      Warm: "Hi, {user}. I am Sabrina. I noticed we may be working near the same area. I would be glad to share any useful notes I find.",
+    },
+    persona:
+      "thoughtful, organized, and polished. Sabrina replies with gentle structure and clear next steps.",
   },
 };
+
+function readUserName() {
+  if (typeof window === "undefined") return "David";
+  return window.localStorage.getItem("second-self-user-name")?.trim() || "David";
+}
+
+function personalize(text: string, userName = readUserName()) {
+  return text.replaceAll("{user}", userName);
+}
 
 function readCandidateName() {
   if (typeof window === "undefined") return "Alex";
   const value = window.sessionStorage.getItem("second-self.selected-candidate") || "Alex";
-  return value in candidateOpeners ? (value as keyof typeof candidateOpeners) : "Alex";
+  return value in candidateOpeners ? (value as CandidateName) : "Alex";
+}
+
+function readChatList(): ConversationItem[] {
+  try {
+    return JSON.parse(
+      window.sessionStorage.getItem(chatListStorageKey) || "[]",
+    ) as ConversationItem[];
+  } catch {
+    return [];
+  }
+}
+
+type ConversationItem = {
+  id: CandidateName;
+  name: CandidateName;
+  avatar: string;
+  preview: string;
+  relationship: string;
+  pinned: boolean;
+  updatedAt: number;
+};
+
+function sortConversations(items: ConversationItem[]) {
+  return [...items].sort((a, b) => {
+    if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+    return b.updatedAt - a.updatedAt;
+  });
+}
+
+function saveConversation(name: CandidateName, preview: string) {
+  const candidate = candidateOpeners[name];
+  const existing = readChatList().filter((item) => item.id !== name);
+  const previous = readChatList().find((item) => item.id === name);
+  const next = sortConversations([
+    {
+      id: name,
+      name,
+      avatar: candidate.avatar,
+      preview,
+      relationship: candidate.relationship,
+      pinned: previous?.pinned || false,
+      updatedAt: Date.now(),
+    },
+    ...existing,
+  ]);
+  window.sessionStorage.setItem(chatListStorageKey, JSON.stringify(next));
+  window.dispatchEvent(new Event("second-self-chat-list-updated"));
+}
+
+function buildPersonaReply(candidateName: CandidateName, userText: string, userName: string) {
+  const lower = userText.toLowerCase();
+  const asksQuestion = userText.includes("?") || userText.includes("？");
+
+  if (candidateName === "Joe") {
+    if (lower.includes("design") || lower.includes("portfolio")) {
+      return `Good point, ${userName}. I can share one onboarding resource that helped me frame my design notes, and you can tell me what feels useful from your side.`;
+    }
+    return asksQuestion
+      ? `I like that question, ${userName}. Maybe we can compare what each of us noticed and turn it into a small shared checklist.`
+      : `That makes sense. I am thinking we keep it easy: one useful resource, one thing we are unsure about, and one tiny design observation.`;
+  }
+
+  if (candidateName === "James") {
+    if (lower.includes("lunch") || lower.includes("coffee")) {
+      return `I'm in. A quick coffee or lunch check-in feels low pressure, and we can swap first-week tips while we are there.`;
+    }
+    return asksQuestion
+      ? `Yeah, that works. I would keep it simple and practical: compare what we know, then decide if it is worth following up.`
+      : `Nice. We can start casual and see where it goes. First week is easier when someone nearby is also figuring it out.`;
+  }
+
+  if (candidateName === "Sabrina") {
+    if (lower.includes("task") || lower.includes("project")) {
+      return `That sounds helpful, ${userName}. We could compare the task expectations first, then note what each of us still needs to clarify.`;
+    }
+    return asksQuestion
+      ? `I think so. I would suggest a gentle first step: share one note from onboarding and ask whether it matches their experience.`
+      : `That is a clear starting point. I can help keep it warm but structured, so it feels thoughtful rather than too formal.`;
+  }
+
+  if (lower.includes("nervous") || lower.includes("awkward")) {
+    return `Totally fair, ${userName}. We can keep it small: one friendly sentence, no pressure to continue unless it feels natural.`;
+  }
+  return asksQuestion
+    ? `Good idea. Maybe we can compare notes after the onboarding briefing and keep it useful for both of us.`
+    : `Good idea. Maybe we can compare notes after the session and keep the first message simple and easy to answer.`;
 }
 
 export function F10_CandidateChat() {
   const candidateName = readCandidateName();
   const candidate = candidateOpeners[candidateName];
+  const userName = readUserName();
   const [selectedStyle, setSelectedStyle] = useState<StyleTab>("Friendly");
-  const [messages, setMessages] = useState([{ from: "ai", text: candidate.drafts.Friendly }]);
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    { from: "ai", text: personalize(candidate.drafts.Friendly, userName) },
+  ]);
   const [input, setInput] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
   const userAvatar = readGeneratedAvatar();
 
-  const selectedDraft = candidate.drafts[selectedStyle];
+  useEffect(() => {
+    const openedName = window.sessionStorage.getItem(openedCandidateStorageKey);
+    if (openedName === candidateName) {
+      saveConversation(candidateName, personalize(candidate.drafts.Friendly, userName));
+      window.sessionStorage.removeItem(openedCandidateStorageKey);
+    }
+  }, [candidate.drafts.Friendly, candidateName, userName]);
+
+  const selectedDraft = personalize(candidate.drafts[selectedStyle], userName);
   const visibleSuggestions = useMemo(
-    () => [candidate.drafts[selectedStyle], candidate.drafts.Warm],
-    [candidate, selectedStyle],
+    () => [
+      personalize(candidate.drafts[selectedStyle], userName),
+      personalize(candidate.drafts.Warm, userName),
+    ],
+    [candidate, selectedStyle, userName],
   );
 
   const sendMessage = () => {
     const text = input.trim();
     if (!text) return;
-    setMessages((items) => [...items, { from: "me", text }]);
+    const reply = buildPersonaReply(candidateName, text, userName);
+    setMessages((items) => [...items, { from: "me", text }, { from: "ai", text: reply }]);
+    saveConversation(candidateName, reply);
     setInput("");
   };
 
@@ -364,7 +494,7 @@ export function SparkReplySheet({
             </span>
             Onboarding
           </div>
-          <div className="text-brand-purple">→</div>
+          <div className="text-brand-purple">-&gt;</div>
           <div className="flex flex-col items-center gap-1">
             <span className="w-10 h-10 rounded-full gradient-brand flex items-center justify-center text-white">
               <Check size={15} />

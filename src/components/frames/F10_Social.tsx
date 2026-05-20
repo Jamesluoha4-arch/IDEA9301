@@ -1,16 +1,16 @@
 import { motion } from "framer-motion";
 import { BriefcaseBusiness, CheckCircle2, Lock, Sparkles } from "lucide-react";
 import alexUrl from "@/assets/radar-avatar-1.png";
-import miaUrl from "@/assets/radar-avatar-2.png";
-import noraUrl from "@/assets/radar-avatar-3.png";
-import samUrl from "@/assets/radar-avatar-4.png";
+import joeUrl from "@/assets/radar-avatar-2.png";
+import jamesUrl from "@/assets/radar-avatar-3.png";
+import sabrinaUrl from "@/assets/radar-avatar-4.png";
 import { BottomNav } from "./F09_Home";
 
 const candidates = [
   {
     name: "Alex",
     role: "company coworker",
-    signal: "Same workplace context · shared onboarding signal · draft ready",
+    signal: "Same workplace context - shared onboarding signal - draft ready",
     match: "92%",
     size: 76,
     distance: 132,
@@ -20,39 +20,39 @@ const candidates = [
     ring: "from-brand-purple to-brand-pink",
   },
   {
-    name: "Mia",
+    name: "Joe",
     role: "possible design buddy",
-    signal: "Shared graduate cohort · similar portfolio interests · intro ready",
+    signal: "Shared graduate cohort - similar portfolio interests - intro ready",
     match: "74%",
     size: 52,
     distance: 104,
     angle: 132,
     duration: 42,
-    img: miaUrl,
+    img: joeUrl,
     ring: "from-brand-mint to-brand-sky",
   },
   {
-    name: "Sam",
+    name: "James",
     role: "possible community match",
-    signal: "Same company space · lunch group overlap · topic idea ready",
+    signal: "Same company space - lunch group overlap - topic idea ready",
     match: "61%",
     size: 44,
     distance: 118,
     angle: 224,
     duration: 48,
-    img: samUrl,
+    img: jamesUrl,
     ring: "from-brand-peach to-brand-pink",
   },
   {
-    name: "Nora",
+    name: "Sabrina",
     role: "possible project neighbor",
-    signal: "Adjacent team context · shared onboarding task · warm note ready",
+    signal: "Adjacent team context - shared onboarding task - warm note ready",
     match: "48%",
     size: 36,
     distance: 82,
     angle: 292,
     duration: 38,
-    img: noraUrl,
+    img: sabrinaUrl,
     ring: "from-brand-sky to-brand-mint",
   },
 ];
@@ -118,7 +118,7 @@ export function F10_Social() {
           </motion.div>
 
           {candidates.map((person, index) => (
-            <OrbitingCandidate key={person.name} person={person} index={index} />
+            <RadarCandidate key={person.name} person={person} index={index} />
           ))}
 
           <div className="absolute bottom-[34px] left-6 flex flex-col items-center z-30">
@@ -141,19 +141,19 @@ export function F10_Social() {
               STRONGEST POSSIBILITY FOUND
             </div>
           </div>
-          <div className="mt-1.5 text-[14px] font-bold">Alex · possible company coworker</div>
+          <div className="mt-1.5 text-[14px] font-bold">Alex - possible company coworker</div>
           <div className="text-[11px] text-brand-mute mt-1">{candidates[0].signal}</div>
-          <div className="mt-3 relative h-[126px] rounded-2xl bg-gradient-to-br from-[#fff7fb] to-[#eef7ff] border border-brand-bg flex items-center justify-center">
+          <div className="mt-3 relative h-[144px] rounded-2xl bg-gradient-to-br from-[#fff7fb] to-[#eef7ff] border border-brand-bg flex items-center justify-center overflow-visible">
             <img
               src={candidates[0].img}
               alt=""
-              className="h-[116px] w-[116px] object-contain drop-shadow-[0_12px_22px_rgba(108,92,231,0.20)]"
+              className="h-[136px] w-[136px] object-contain drop-shadow-[0_12px_22px_rgba(108,92,231,0.20)]"
             />
             <motion.div
               initial={{ opacity: 0, y: 6, scale: 0.92 }}
               animate={{ opacity: 1, y: [0, -2, 0], scale: 1 }}
               transition={{ duration: 2.4, repeat: Infinity, repeatType: "reverse" }}
-              className="absolute right-16 top-6 rounded-2xl bg-white px-3 py-1.5 text-[12px] font-bold text-brand-purple shadow-soft border border-brand-lavender/30"
+              className="absolute right-12 top-7 rounded-2xl bg-white px-3 py-1.5 text-[12px] font-bold text-brand-purple shadow-soft border border-brand-lavender/30"
             >
               Hi
             </motion.div>
@@ -194,7 +194,7 @@ export function F10_Social() {
                   </span>
                   <span className="min-w-0">
                     <span className="block text-[12px] font-bold text-brand-ink">
-                      {person.name} · {person.role}
+                      {person.name} - {person.role}
                     </span>
                     <span className="mt-0.5 block text-[10px] leading-[14px] text-brand-mute">
                       {person.signal}
@@ -212,13 +212,7 @@ export function F10_Social() {
   );
 }
 
-function OrbitingCandidate({
-  person,
-  index,
-}: {
-  person: (typeof candidates)[number];
-  index: number;
-}) {
+function RadarCandidate({ person, index }: { person: (typeof candidates)[number]; index: number }) {
   const x = Math.cos((person.angle * Math.PI) / 180) * person.distance;
   const y = Math.sin((person.angle * Math.PI) / 180) * person.distance;
   const isAlex = person.name === "Alex";
@@ -227,64 +221,46 @@ function OrbitingCandidate({
     <motion.div
       data-prototype-target="1:9"
       data-prototype-person={person.name}
-      className="absolute left-1/2 top-1/2 z-20"
+      className="absolute z-20 cursor-pointer"
       style={{
-        width: person.distance * 2,
-        height: person.distance * 2,
-        marginLeft: -person.distance,
-        marginTop: -person.distance,
+        left: `calc(50% + ${x - person.size / 2}px)`,
+        top: `calc(50% + ${y - person.size / 2}px)`,
+        width: person.size,
+        height: person.size,
       }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, rotate: 360 }}
+      initial={{ opacity: 0, scale: 0.45 }}
+      animate={{
+        opacity: 1,
+        scale: isAlex ? [1, 1.06, 1] : [1, 1.03, 1],
+        x: [0, isAlex ? 8 : 5, 0, isAlex ? -7 : -4, 0],
+        y: [0, isAlex ? -5 : -3, 0, isAlex ? 6 : 4, 0],
+      }}
       transition={{
         opacity: { duration: 0.45, delay: 0.75 + index * 0.55 },
-        rotate: { duration: person.duration, repeat: Infinity, ease: "linear" },
+        scale: { duration: 2.4 + index * 0.3, repeat: Infinity, delay: 0.75 + index * 0.55 },
+        x: { duration: person.duration / 5, repeat: Infinity, ease: "easeInOut" },
+        y: { duration: person.duration / 6, repeat: Infinity, ease: "easeInOut" },
       }}
     >
       <motion.div
-        className="absolute"
-        style={{
-          left: person.distance + x - person.size / 2,
-          top: person.distance + y - person.size / 2,
-          width: person.size,
-          height: person.size,
-        }}
-        initial={{ scale: 0.45 }}
-        animate={{ scale: isAlex ? [1, 1.06, 1] : [1, 1.03, 1] }}
-        transition={{
-          scale: {
-            duration: 2.4 + index * 0.3,
-            repeat: Infinity,
-            delay: 0.75 + index * 0.55,
-          },
-        }}
+        className={`absolute -inset-1 rounded-full bg-gradient-to-br ${person.ring} opacity-45 blur-sm`}
+        animate={{ opacity: [0.25, 0.6, 0.25] }}
+        transition={{ duration: 2.5, repeat: Infinity }}
+      />
+      <div className="relative h-full w-full rounded-full bg-white border-[3px] border-white shadow-soft overflow-hidden flex items-center justify-center">
+        <img src={person.img} alt="" className="h-[118%] w-[118%] object-cover object-top" />
+      </div>
+      <motion.div
+        className={`absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-white border shadow px-2 py-1 text-center ${
+          isAlex ? "-bottom-12 border-brand-purple/30" : "-bottom-8 border-brand-bg"
+        }`}
+        animate={{ y: [0, -2, 0] }}
+        transition={{ duration: 2.6, repeat: Infinity }}
       >
-        <motion.div
-          className="relative h-full w-full"
-          animate={{ rotate: -360 }}
-          transition={{ duration: person.duration, repeat: Infinity, ease: "linear" }}
-        >
-          <motion.div
-            className={`absolute -inset-1 rounded-full bg-gradient-to-br ${person.ring} opacity-45 blur-sm`}
-            animate={{ opacity: [0.25, 0.6, 0.25] }}
-            transition={{ duration: 2.5, repeat: Infinity }}
-          />
-          <div className="relative h-full w-full rounded-full bg-white border-[3px] border-white shadow-soft overflow-hidden flex items-center justify-center">
-            <img src={person.img} alt="" className="h-[118%] w-[118%] object-cover object-top" />
-          </div>
-          <motion.div
-            className={`absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-white border shadow px-2 py-1 text-center ${
-              isAlex ? "-bottom-12 border-brand-purple/30" : "-bottom-8 border-brand-bg"
-            }`}
-            animate={{ y: [0, -2, 0] }}
-            transition={{ duration: 2.6, repeat: Infinity }}
-          >
-            <div className={`${isAlex ? "text-[10px]" : "text-[8px]"} font-bold text-brand-ink`}>
-              {person.name} · {person.match}
-            </div>
-            {isAlex && <div className="text-[8px] text-brand-purple font-bold">{person.role}</div>}
-          </motion.div>
-        </motion.div>
+        <div className={`${isAlex ? "text-[10px]" : "text-[8px]"} font-bold text-brand-ink`}>
+          {person.name} - {person.match}
+        </div>
+        {isAlex && <div className="text-[8px] text-brand-purple font-bold">{person.role}</div>}
       </motion.div>
     </motion.div>
   );

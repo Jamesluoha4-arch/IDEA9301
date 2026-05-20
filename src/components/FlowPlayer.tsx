@@ -446,6 +446,10 @@ export function FlowPlayer({ onOpenGallery }: Props) {
         "second-self.selected-candidate",
         candidateTarget.dataset.prototypePerson,
       );
+      window.sessionStorage.setItem(
+        "second-self.opened-candidate-chat",
+        candidateTarget.dataset.prototypePerson,
+      );
     }
     const avatarNavMode = avatarNavModeFromElement(target);
     if (avatarNavMode) {

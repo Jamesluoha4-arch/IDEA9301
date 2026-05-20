@@ -7,11 +7,13 @@ import {
   Gift,
   IdCard,
   Menu,
+  Pin,
   MessageSquareWarning,
   Plus,
   QrCode,
   Search,
   Share2,
+  Trash2,
   UserRound,
   Users,
   X,
@@ -33,9 +35,44 @@ function todayText() {
   }).format(new Date());
 }
 
+type HomeConversation = {
+  id: string;
+  name: string;
+  avatar: string;
+  preview: string;
+  relationship: string;
+  pinned: boolean;
+  updatedAt: number;
+};
+
+const chatListStorageKey = "second-self.chat-list";
+
+function sortConversations(items: HomeConversation[]) {
+  return [...items].sort((a, b) => {
+    if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+    return b.updatedAt - a.updatedAt;
+  });
+}
+
+function readHomeConversations() {
+  try {
+    return sortConversations(
+      JSON.parse(window.sessionStorage.getItem(chatListStorageKey) || "[]") as HomeConversation[],
+    );
+  } catch {
+    return [];
+  }
+}
+
+function writeHomeConversations(items: HomeConversation[]) {
+  window.sessionStorage.setItem(chatListStorageKey, JSON.stringify(sortConversations(items)));
+  window.dispatchEvent(new Event("second-self-chat-list-updated"));
+}
+
 export function F09_Home() {
   const [name, setName] = useState(readUserName);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [conversations, setConversations] = useState<HomeConversation[]>(readHomeConversations);
   const dateLine = useMemo(todayText, []);
 
   useEffect(() => {
@@ -44,6 +81,31 @@ export function F09_Home() {
     window.addEventListener("storage", refreshName);
     return () => window.removeEventListener("storage", refreshName);
   }, []);
+
+  useEffect(() => {
+    const refreshConversations = () => setConversations(readHomeConversations());
+    refreshConversations();
+    window.addEventListener("second-self-chat-list-updated", refreshConversations);
+    window.addEventListener("storage", refreshConversations);
+    return () => {
+      window.removeEventListener("second-self-chat-list-updated", refreshConversations);
+      window.removeEventListener("storage", refreshConversations);
+    };
+  }, []);
+
+  const pinConversation = (id: string) => {
+    const next = conversations.map((item) =>
+      item.id === id ? { ...item, pinned: true, updatedAt: Date.now() } : item,
+    );
+    writeHomeConversations(next);
+    setConversations(sortConversations(next));
+  };
+
+  const deleteConversation = (id: string) => {
+    const next = conversations.filter((item) => item.id !== id);
+    writeHomeConversations(next);
+    setConversations(next);
+  };
 
   return (
     <div className="relative w-full h-full pt-12 overflow-y-auto pb-28 font-sans text-brand-ink gradient-brand-soft">
@@ -71,48 +133,56 @@ export function F09_Home() {
           </motion.button>
         </div>
 
-        <main className="absolute left-6 right-6 top-[240px] flex flex-col items-center text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-[34px] font-bold tracking-[-0.9px] leading-[42px]"
-          >
-            Hi,{" "}
-            <span className="bg-gradient-to-r from-[#6c5ce7] to-[#f6b4db] bg-clip-text text-transparent">
-              {name}
-            </span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.12 }}
-            className="mt-4 max-w-[310px] text-[15px] leading-[23px] text-brand-mute"
-          >
-            Today is {dateLine}. Let&apos;s begin a wonderful social journey together.
-          </motion.p>
+        {conversations.length > 0 ? (
+          <ConversationList
+            conversations={conversations}
+            onPin={pinConversation}
+            onDelete={deleteConversation}
+          />
+        ) : (
+          <main className="absolute left-6 right-6 top-[240px] flex flex-col items-center text-center">
+            <motion.h1
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-[34px] font-bold tracking-[-0.9px] leading-[42px]"
+            >
+              Hi,{" "}
+              <span className="bg-gradient-to-r from-[#6c5ce7] to-[#f6b4db] bg-clip-text text-transparent">
+                {name}
+              </span>
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.12 }}
+              className="mt-4 max-w-[310px] text-[15px] leading-[23px] text-brand-mute"
+            >
+              Today is {dateLine}. Let&apos;s begin a wonderful social journey together.
+            </motion.p>
 
-          <motion.button
-            data-prototype-target="1:1"
-            whileHover={{ y: -4, scale: 1.03 }}
-            whileTap={{ scale: 0.95 }}
-            className="mt-12 relative h-[92px] w-[92px] rounded-full border border-white/80 bg-white/56 backdrop-blur-2xl shadow-[0_22px_48px_rgba(108,92,231,0.20),0_0_42px_rgba(246,180,219,0.22)] flex items-center justify-center"
-            aria-label="Start a new chat"
-          >
-            <motion.span
-              className="absolute inset-0 rounded-full border border-brand-purple/25"
-              animate={{ scale: [0.9, 1.25, 0.9], opacity: [0.45, 0, 0.45] }}
-              transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut" }}
-            />
-            <motion.span
-              className="absolute inset-3 rounded-full bg-gradient-to-br from-brand-purple/22 via-white/20 to-brand-pink/18 blur-sm"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-            />
-            <span className="relative h-[58px] w-[58px] rounded-full gradient-brand flex items-center justify-center shadow-glow">
-              <Plus size={28} className="text-white" strokeWidth={2.5} />
-            </span>
-          </motion.button>
-        </main>
+            <motion.button
+              data-prototype-target="1:1"
+              whileHover={{ y: -4, scale: 1.03 }}
+              whileTap={{ scale: 0.95 }}
+              className="mt-12 relative h-[92px] w-[92px] rounded-full border border-white/80 bg-white/56 backdrop-blur-2xl shadow-[0_22px_48px_rgba(108,92,231,0.20),0_0_42px_rgba(246,180,219,0.22)] flex items-center justify-center"
+              aria-label="Start a new chat"
+            >
+              <motion.span
+                className="absolute inset-0 rounded-full border border-brand-purple/25"
+                animate={{ scale: [0.9, 1.25, 0.9], opacity: [0.45, 0, 0.45] }}
+                transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut" }}
+              />
+              <motion.span
+                className="absolute inset-3 rounded-full bg-gradient-to-br from-brand-purple/22 via-white/20 to-brand-pink/18 blur-sm"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+              />
+              <span className="relative h-[58px] w-[58px] rounded-full gradient-brand flex items-center justify-center shadow-glow">
+                <Plus size={28} className="text-white" strokeWidth={2.5} />
+              </span>
+            </motion.button>
+          </main>
+        )}
       </div>
 
       {menuOpen && (
@@ -125,6 +195,122 @@ export function F09_Home() {
 
       <BottomNav active="CHAT" />
     </div>
+  );
+}
+
+function ConversationList({
+  conversations,
+  onPin,
+  onDelete,
+}: {
+  conversations: HomeConversation[];
+  onPin: (id: string) => void;
+  onDelete: (id: string) => void;
+}) {
+  return (
+    <main className="absolute left-6 right-6 top-[132px]">
+      <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="mb-5">
+        <h1 className="text-[28px] font-bold tracking-[-0.6px]">Chats</h1>
+        <p className="mt-1 text-[12px] text-brand-mute">
+          Your Second Self saved the openings you explored.
+        </p>
+      </motion.div>
+      <div className="space-y-2">
+        {conversations.map((conversation, index) => (
+          <ConversationRow
+            key={conversation.id}
+            conversation={conversation}
+            index={index}
+            onPin={onPin}
+            onDelete={onDelete}
+          />
+        ))}
+      </div>
+    </main>
+  );
+}
+
+function ConversationRow({
+  conversation,
+  index,
+  onPin,
+  onDelete,
+}: {
+  conversation: HomeConversation;
+  index: number;
+  onPin: (id: string) => void;
+  onDelete: (id: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      className="relative h-[78px] overflow-hidden rounded-3xl shadow-[0_14px_34px_rgba(31,31,46,0.08)]"
+    >
+      <div className="absolute inset-y-0 right-0 flex overflow-hidden rounded-r-3xl">
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            onPin(conversation.id);
+            setOpen(false);
+          }}
+          className="w-[72px] bg-[#6c5ce7] text-white text-[12px] font-bold flex flex-col items-center justify-center gap-1"
+        >
+          <Pin size={15} />
+          Pin
+        </button>
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            onDelete(conversation.id);
+          }}
+          className="w-[72px] bg-[#ff6b6b] text-white text-[12px] font-bold flex flex-col items-center justify-center gap-1"
+        >
+          <Trash2 size={15} />
+          Delete
+        </button>
+      </div>
+      <motion.button
+        type="button"
+        data-prototype-target="1:9"
+        data-prototype-person={conversation.name}
+        drag="x"
+        dragConstraints={{ left: -144, right: 0 }}
+        dragElastic={0.04}
+        animate={{ x: open ? -144 : 0 }}
+        onDragEnd={(_, info) => setOpen(info.offset.x < -42)}
+        whileTap={{ scale: 0.985 }}
+        className="absolute inset-0 z-10 w-full rounded-3xl border border-white/80 bg-white/76 px-4 text-left backdrop-blur-2xl"
+      >
+        <div className="flex h-full items-center gap-3">
+          <span className="h-12 w-12 rounded-2xl bg-white shadow-sm overflow-hidden flex items-center justify-center shrink-0">
+            <img
+              src={conversation.avatar}
+              alt=""
+              className="h-[130%] w-[130%] object-cover object-top"
+            />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="flex items-center gap-1.5">
+              <span className="text-[14px] font-bold text-brand-ink">{conversation.name}</span>
+              {conversation.pinned && <Pin size={12} className="text-brand-purple" />}
+            </span>
+            <span className="mt-0.5 block text-[10px] font-bold text-brand-purple">
+              {conversation.relationship}
+            </span>
+            <span className="mt-1 block truncate text-[11px] text-brand-mute">
+              {conversation.preview}
+            </span>
+          </span>
+          <span className="text-[10px] text-brand-mute">Now</span>
+        </div>
+      </motion.button>
+    </motion.div>
   );
 }
 
@@ -254,12 +440,6 @@ function MenuBottomSheet({
       subtitle: "Scan a QR code to add a friend or join a space.",
       action: "Open Camera",
       Icon: QrCode,
-    },
-    "Recommend to Friends": {
-      title: "Recommend to Friends",
-      subtitle: "Invite friends to create their own Second Self.",
-      action: "Invite Friends",
-      Icon: Gift,
     },
     Feedback: {
       title: "Feedback",

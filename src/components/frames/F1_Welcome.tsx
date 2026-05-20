@@ -28,19 +28,32 @@ export function F1_Welcome() {
       {/* Persona orb (replaces animation placeholder) */}
       <div className="absolute top-[80px] left-1/2 -translate-x-1/2 w-[180px] h-[180px] flex items-center justify-center">
         <motion.div
-          className="absolute inset-0 rounded-full gradient-brand opacity-30 blur-2xl"
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 3, repeat: Infinity }}
+          className="absolute -inset-8 rounded-full opacity-50 blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(167,139,250,0.52) 0%, rgba(246,180,219,0.34) 42%, transparent 72%)",
+          }}
+          animate={{ scale: [1, 1.18, 1], opacity: [0.38, 0.62, 0.38] }}
+          transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute inset-4 rounded-full border-2 border-brand-purple/40"
-          animate={{ scale: [1, 1.4, 1], opacity: [0.6, 0, 0.6] }}
-          transition={{ duration: 2.5, repeat: Infinity }}
+          className="absolute -inset-4 rounded-full opacity-35 blur-2xl"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(142,227,196,0.5) 0%, rgba(167,216,255,0.2) 50%, transparent 76%)",
+          }}
+          animate={{ scale: [1.08, 0.92, 1.08], opacity: [0.25, 0.46, 0.25] }}
+          transition={{ duration: 5.4, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute inset-8 rounded-full border-2 border-brand-pink/40"
-          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-          transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
+          className="absolute inset-2 rounded-full border border-brand-purple/18"
+          animate={{ scale: [0.88, 1.32, 0.88], opacity: [0.32, 0, 0.32] }}
+          transition={{ duration: 3.2, repeat: Infinity, ease: "easeOut" }}
+        />
+        <motion.div
+          className="absolute inset-8 rounded-full border border-brand-pink/22"
+          animate={{ scale: [0.92, 1.5, 0.92], opacity: [0.28, 0, 0.28] }}
+          transition={{ duration: 3.2, repeat: Infinity, delay: 0.6, ease: "easeOut" }}
         />
         <motion.div
           className="relative w-[100px] h-[100px] rounded-full gradient-brand shadow-glow flex items-center justify-center"

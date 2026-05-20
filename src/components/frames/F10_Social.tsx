@@ -1,6 +1,57 @@
 import { motion } from "framer-motion";
-import { Bell, Lock, CheckCircle2, Share2, Bot, Sparkles } from "lucide-react";
+import { Bell, BriefcaseBusiness, CheckCircle2, Lock, Sparkles } from "lucide-react";
+import alexUrl from "@/assets/candidate-alex.svg";
+import miaUrl from "@/assets/candidate-mia.svg";
+import noraUrl from "@/assets/candidate-nora.svg";
+import samUrl from "@/assets/candidate-sam.svg";
 import { BottomNav } from "./F09_Home";
+
+const candidates = [
+  {
+    name: "Alex",
+    role: "company coworker",
+    match: "92%",
+    size: 76,
+    distance: 132,
+    angle: 18,
+    duration: 34,
+    img: alexUrl,
+    ring: "from-brand-purple to-brand-pink",
+  },
+  {
+    name: "Mia",
+    role: "design intern",
+    match: "74%",
+    size: 52,
+    distance: 104,
+    angle: 132,
+    duration: 42,
+    img: miaUrl,
+    ring: "from-brand-mint to-brand-sky",
+  },
+  {
+    name: "Sam",
+    role: "same community",
+    match: "61%",
+    size: 44,
+    distance: 118,
+    angle: 224,
+    duration: 48,
+    img: samUrl,
+    ring: "from-brand-peach to-brand-pink",
+  },
+  {
+    name: "Nora",
+    role: "shared topic",
+    match: "48%",
+    size: 36,
+    distance: 82,
+    angle: 292,
+    duration: 38,
+    img: noraUrl,
+    ring: "from-brand-sky to-brand-mint",
+  },
+];
 
 export function F10_Social() {
   return (
@@ -23,16 +74,16 @@ export function F10_Social() {
       <div className="px-5 mt-5 flex items-start justify-between gap-2">
         <div>
           <h2 className="text-[18px] font-bold leading-[24px]">
-            I found a safe
+            I am searching for
             <br />
             <span className="bg-gradient-to-r from-brand-purple to-brand-pink bg-clip-text text-transparent">
-              conversation opening
+              people you may like
             </span>
           </h2>
           <p className="text-[11px] text-brand-mute mt-1.5">
-            Built only from approved context.
+            Ranked by approved company context.
             <br />
-            You review before anything is sent.
+            Larger circles mean stronger possibility.
           </p>
         </div>
         <div className="px-2.5 py-1 rounded-full bg-white border border-brand-bg text-[10px] flex items-center gap-1 mt-1 text-brand-purple font-bold">
@@ -40,92 +91,60 @@ export function F10_Social() {
         </div>
       </div>
 
-      {/* Radar */}
       <div className="mx-5 mt-4 h-[280px] rounded-3xl bg-white shadow-soft relative overflow-hidden">
-        <div className="absolute inset-0 gradient-brand-soft opacity-50" />
-        {[1, 0.7, 0.45, 0.22].map((s, i) => (
+        <div className="absolute inset-0 gradient-brand-soft opacity-60" />
+        {[1, 0.72, 0.45, 0.24].map((s, i) => (
           <motion.div
             key={i}
-            className="absolute top-1/2 left-1/2 rounded-full border-2 border-dashed border-brand-lavender/40"
-            style={{ width: 240 * s, height: 240 * s, marginLeft: -120 * s, marginTop: -120 * s }}
-            animate={{ opacity: [0.3, 0.8, 0.3], rotate: 360 }}
-            transition={{
-              opacity: { duration: 3, repeat: Infinity, delay: i * 0.4 },
-              rotate: { duration: 30 + i * 10, repeat: Infinity, ease: "linear" },
-            }}
+            className="absolute top-1/2 left-1/2 rounded-full border-2 border-dashed border-brand-lavender/35"
+            style={{ width: 250 * s, height: 250 * s, marginLeft: -125 * s, marginTop: -125 * s }}
+            animate={{ opacity: [0.22, 0.7, 0.22], scale: [0.98, 1.04, 0.98] }}
+            transition={{ duration: 3.2 + i * 0.45, repeat: Infinity, delay: i * 0.35 }}
           />
         ))}
 
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 z-10">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 z-20">
           <motion.div
             animate={{ scale: [1, 1.08, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="w-12 h-12 rounded-full gradient-brand flex items-center justify-center shadow-glow"
+            className="w-14 h-14 rounded-full gradient-brand flex items-center justify-center shadow-glow"
           >
-            <Bot size={20} className="text-white" strokeWidth={2} />
+            <BriefcaseBusiness size={22} className="text-white" strokeWidth={2} />
           </motion.div>
           <div className="text-[9px] font-bold text-brand-purple">Your AI</div>
         </div>
 
         <motion.div
-          animate={{ y: [0, -4, 0] }}
-          transition={{ duration: 3, repeat: Infinity }}
-          className="absolute top-[50px] left-1/2 -translate-x-1/2 px-2 py-1 rounded-full bg-white shadow border border-brand-mint/40 text-[9px] flex items-center gap-1 text-brand-ink font-medium"
-        >
-          <CheckCircle2 size={9} className="text-brand-mint" /> memory ok
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, 3, 0] }}
-          transition={{ duration: 2.6, repeat: Infinity }}
-          className="absolute top-[90px] right-3 px-2 py-1 rounded-lg bg-white border border-brand-purple/30 text-[9px] font-bold shadow"
-        >
-          Alex
-        </motion.div>
-        <div className="absolute top-[125px] right-10 w-8 h-8 rounded-xl gradient-pink-peach flex items-center justify-center shadow">
-          <Bot size={14} strokeWidth={2} className="text-white" />
-        </div>
-        <motion.div
+          className="absolute top-[34px] left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white shadow border border-brand-mint/40 text-[9px] flex items-center gap-1 text-brand-ink font-medium z-30"
           animate={{ y: [0, -3, 0] }}
-          transition={{ duration: 2.2, repeat: Infinity }}
-          className="absolute top-[160px] right-2 px-2 py-1 rounded-full bg-white border border-brand-pink/40 text-[9px] flex items-center gap-1 font-medium shadow"
+          transition={{ duration: 3, repeat: Infinity }}
         >
-          <Share2 size={9} className="text-brand-pink" /> shared topic
+          <CheckCircle2 size={9} className="text-brand-mint" /> searching company signals
         </motion.div>
-        <div className="absolute bottom-[50px] left-6 flex flex-col items-center">
-          <div className="w-8 h-8 rounded-full border-2 border-dashed border-brand-mute flex items-center justify-center bg-white">
-            <Lock size={11} className="text-brand-mute" />
+
+        {candidates.map((person, index) => (
+          <OrbitingCandidate key={person.name} person={person} index={index} />
+        ))}
+
+        <div className="absolute bottom-[34px] left-6 flex flex-col items-center z-30">
+          <div className="w-9 h-9 rounded-full border-2 border-dashed border-brand-mute flex items-center justify-center bg-white">
+            <Lock size={12} className="text-brand-mute" />
           </div>
           <div className="text-[8px] text-brand-mute mt-0.5">private locked</div>
         </div>
-
-        {[
-          { t: 30, l: 50, c: "from-brand-sky to-brand-mint" },
-          { t: 70, l: 280, c: "from-brand-pink to-brand-peach" },
-          { t: 200, l: 40, c: "from-brand-lavender to-brand-purple" },
-          { t: 215, l: 320, c: "from-brand-mint to-brand-sky" },
-          { t: 230, l: 200, c: "from-brand-peach to-brand-pink" },
-        ].map((p, i) => (
-          <motion.div
-            key={i}
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 2 + i * 0.3, repeat: Infinity }}
-            className={`absolute w-7 h-7 rounded-full bg-gradient-to-br ${p.c} flex items-center justify-center shadow opacity-70`}
-            style={{ top: p.t, left: p.l }}
-          >
-            <Bot size={11} className="text-white" />
-          </motion.div>
-        ))}
       </div>
 
       <div className="mx-5 mt-4 bg-white rounded-2xl p-4 shadow-soft border border-brand-bg">
         <div className="flex items-center gap-2">
           <Sparkles size={12} className="text-brand-purple" />
           <div className="text-[9px] tracking-[0.6px] text-brand-purple font-bold">
-            PERSONA SIGNAL FOUND
+            STRONGEST POSSIBILITY FOUND
           </div>
         </div>
-        <div className="mt-1.5 text-[14px] font-bold">Alex · safe conversation opening</div>
-        <div className="text-[11px] text-brand-mute mt-1">Draft ready · not sent</div>
+        <div className="mt-1.5 text-[14px] font-bold">Alex · possible company coworker</div>
+        <div className="text-[11px] text-brand-mute mt-1">
+          Same workplace context · shared onboarding signal · draft ready
+        </div>
         <motion.button
           whileTap={{ scale: 0.98 }}
           whileHover={{ y: -1 }}
@@ -135,7 +154,83 @@ export function F10_Social() {
         </motion.button>
       </div>
 
-      <BottomNav active="SOCIAL" />
+      <BottomNav active="CHAT" />
     </div>
+  );
+}
+
+function OrbitingCandidate({
+  person,
+  index,
+}: {
+  person: (typeof candidates)[number];
+  index: number;
+}) {
+  const x = Math.cos((person.angle * Math.PI) / 180) * person.distance;
+  const y = Math.sin((person.angle * Math.PI) / 180) * person.distance;
+  const isAlex = person.name === "Alex";
+
+  return (
+    <motion.div
+      className="absolute left-1/2 top-1/2 z-20"
+      style={{
+        width: person.distance * 2,
+        height: person.distance * 2,
+        marginLeft: -person.distance,
+        marginTop: -person.distance,
+      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1, rotate: 360 }}
+      transition={{
+        opacity: { duration: 0.45, delay: 0.75 + index * 0.55 },
+        rotate: { duration: person.duration, repeat: Infinity, ease: "linear" },
+      }}
+    >
+      <motion.div
+        className="absolute"
+        style={{
+          left: person.distance + x - person.size / 2,
+          top: person.distance + y - person.size / 2,
+          width: person.size,
+          height: person.size,
+        }}
+        initial={{ scale: 0.45 }}
+        animate={{ scale: isAlex ? [1, 1.06, 1] : [1, 1.03, 1] }}
+        transition={{
+          scale: {
+            duration: 2.4 + index * 0.3,
+            repeat: Infinity,
+            delay: 0.75 + index * 0.55,
+          },
+        }}
+      >
+        <motion.div
+          className="relative h-full w-full"
+          animate={{ rotate: -360 }}
+          transition={{ duration: person.duration, repeat: Infinity, ease: "linear" }}
+        >
+          <motion.div
+            className={`absolute -inset-1 rounded-full bg-gradient-to-br ${person.ring} opacity-45 blur-sm`}
+            animate={{ opacity: [0.25, 0.6, 0.25] }}
+            transition={{ duration: 2.5, repeat: Infinity }}
+          />
+          <div className="relative h-full w-full rounded-full bg-white border-[3px] border-white shadow-soft overflow-hidden flex items-center justify-center">
+            <img src={person.img} alt="" className="h-[118%] w-[118%] object-cover object-top" />
+          </div>
+          <motion.div
+            className={`absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-white border shadow px-2 py-1 text-center ${
+              isAlex ? "-bottom-12 border-brand-purple/30" : "-bottom-8 border-brand-bg"
+            }`}
+            animate={{ y: [0, -2, 0] }}
+            transition={{ duration: 2.6, repeat: Infinity }}
+          >
+            <div className={`${isAlex ? "text-[10px]" : "text-[8px]"} font-bold text-brand-ink`}>
+              {person.name} · {person.match}
+            </div>
+            {isAlex && <div className="text-[8px] text-brand-purple font-bold">{person.role}</div>}
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }

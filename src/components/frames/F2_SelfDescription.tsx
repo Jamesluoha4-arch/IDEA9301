@@ -1,10 +1,161 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+type SpeechRecognitionResultEvent = Event & {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+};
+
+type SpeechRecognitionErrorEvent = Event & {
+  error: string;
+};
+
+type SpeechRecognitionLike = EventTarget & {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: ((event: SpeechRecognitionResultEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+};
+
+type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
+
+declare global {
+  interface Window {
+    SpeechRecognition?: SpeechRecognitionConstructor;
+    webkitSpeechRecognition?: SpeechRecognitionConstructor;
+  }
+}
 
 export function F2_SelfDescription() {
   const [name, setName] = useState("");
   const [text, setText] = useState("");
   const [recording, setRecording] = useState(false);
+  const [voiceStatus, setVoiceStatus] = useState("I will learn the tone you want me to carry.");
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const finalTranscriptRef = useRef("");
+  const interimTranscriptRef = useRef("");
+  const manuallyStoppingRef = useRef(false);
+
+  useEffect(() => {
+    window.localStorage.setItem("second-self-user-name", name.trim());
+  }, [name]);
+
+  const cleanEnglish = (value: string) =>
+    Array.from(value)
+      .filter((char) => char.charCodeAt(0) <= 127)
+      .join("")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  const commitVoiceText = () => {
+    const spoken = cleanEnglish(
+      `${finalTranscriptRef.current} ${interimTranscriptRef.current}`.trim(),
+    );
+    if (!spoken) return false;
+
+    setText((current) => {
+      const existing = current.trim();
+      return existing ? `${existing} ${spoken}` : spoken;
+    });
+    finalTranscriptRef.current = "";
+    interimTranscriptRef.current = "";
+    return true;
+  };
+
+  const stopListening = () => {
+    manuallyStoppingRef.current = true;
+    recognitionRef.current?.stop();
+    const committed = commitVoiceText();
+    setVoiceStatus(
+      committed
+        ? "Done. I added your voice input above."
+        : "Stopped. I did not catch English words yet.",
+    );
+    setRecording(false);
+  };
+
+  const startListening = () => {
+    if (recording) {
+      stopListening();
+      return;
+    }
+
+    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!Recognition) {
+      setVoiceStatus("Voice input is not supported in this browser. Please use Chrome or Edge.");
+      return;
+    }
+
+    const recognition = new Recognition();
+    recognitionRef.current = recognition;
+    recognition.lang = "en-US";
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    finalTranscriptRef.current = "";
+    interimTranscriptRef.current = "";
+    manuallyStoppingRef.current = false;
+    setVoiceStatus("Listening in English...");
+    setRecording(true);
+
+    recognition.onresult = (event) => {
+      let interim = "";
+      for (let i = event.resultIndex; i < event.results.length; i += 1) {
+        const phrase = event.results[i][0]?.transcript ?? "";
+        if (event.results[i].isFinal) {
+          finalTranscriptRef.current = `${finalTranscriptRef.current} ${phrase}`.trim();
+        } else {
+          interim += phrase;
+        }
+      }
+      interimTranscriptRef.current = interim;
+      const preview = cleanEnglish(`${finalTranscriptRef.current} ${interim}`.trim());
+      if (preview) setVoiceStatus(`Heard: "${preview}"`);
+    };
+
+    recognition.onerror = (event) => {
+      const committed = commitVoiceText();
+      setRecording(false);
+      recognitionRef.current = null;
+      if (manuallyStoppingRef.current || event.error === "aborted") {
+        setVoiceStatus(committed ? "Done. I added your voice input above." : "Stopped.");
+        return;
+      }
+      if (committed) {
+        setVoiceStatus("Done. I added your voice input above.");
+        return;
+      }
+      setVoiceStatus(
+        event.error === "not-allowed"
+          ? "Microphone permission was blocked. Please allow microphone access and try again."
+          : "I could not hear clearly. Please try again in English.",
+      );
+    };
+
+    recognition.onend = () => {
+      const committed = commitVoiceText();
+      setRecording(false);
+      recognitionRef.current = null;
+      setVoiceStatus((current) =>
+        committed
+          ? "Done. I added your voice input above."
+          : current === "Listening in English..."
+            ? "Tap again when you want to continue speaking."
+            : current,
+      );
+    };
+
+    try {
+      recognition.start();
+    } catch {
+      setRecording(false);
+      recognitionRef.current = null;
+      setVoiceStatus("Voice input could not start. Please try again.");
+    }
+  };
 
   return (
     <div className="relative w-full h-full bg-white pt-12">
@@ -72,7 +223,7 @@ export function F2_SelfDescription() {
           whileHover={{ scale: 1.01 }}
         >
           <motion.button
-            onClick={() => setRecording((r) => !r)}
+            onClick={startListening}
             className="relative w-16 h-16 rounded-2xl gradient-brand flex items-center justify-center shadow-soft"
             whileTap={{ scale: 0.92 }}
           >
@@ -109,9 +260,7 @@ export function F2_SelfDescription() {
             <div className="text-[15px] font-bold text-brand-ink">
               {recording ? "I'm listening..." : "Tell me by voice instead"}
             </div>
-            <div className="text-[12px] text-brand-mute mt-1">
-              I will learn the tone you want me to carry.
-            </div>
+            <div className="text-[12px] text-brand-mute mt-1">{voiceStatus}</div>
           </div>
         </motion.div>
       </div>

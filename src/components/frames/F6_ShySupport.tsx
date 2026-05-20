@@ -5,6 +5,7 @@ export function F6_ShySupport() {
     <div className="relative w-full h-full bg-gradient-to-b from-[#f3efff] via-white to-white pt-12 overflow-hidden">
       <div className="absolute top-12 left-0 right-0 px-4 py-3 flex items-center gap-3 z-10">
         <motion.button
+          data-prototype-back="0:5"
           whileTap={{ scale: 0.9 }}
           className="w-9 h-9 rounded-full bg-white/80 border border-brand-bg flex items-center justify-center shadow-sm"
         >
@@ -25,16 +26,37 @@ export function F6_ShySupport() {
       </div>
 
       <div className="absolute top-[98px] left-0 right-0 h-[310px] flex items-center justify-center">
-        <div className="relative w-[190px] h-[190px] flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-[#8ee3c4]/30 blur-2xl" />
-          <div className="absolute inset-3 rounded-full bg-[#f6b4db]/35 blur-2xl" />
+        <div className="relative w-[210px] h-[210px] flex items-center justify-center">
           <motion.div
-            className="absolute inset-0 rounded-full border border-brand-purple/15"
-            animate={{ scale: [0.9, 1.18, 0.9], opacity: [0.35, 0.12, 0.35] }}
-            transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -inset-6 rounded-full opacity-50 blur-3xl"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(167,139,250,0.52) 0%, rgba(246,180,219,0.34) 42%, transparent 72%)",
+            }}
+            animate={{ scale: [1, 1.18, 1], opacity: [0.38, 0.62, 0.38] }}
+            transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
-            className="absolute w-[116px] h-[116px] rounded-full bg-gradient-to-br from-brand-purple via-brand-lavender to-brand-pink opacity-80 shadow-glow"
+            className="absolute -inset-2 rounded-full opacity-35 blur-2xl"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(142,227,196,0.5) 0%, rgba(167,216,255,0.2) 50%, transparent 76%)",
+            }}
+            animate={{ scale: [1.08, 0.92, 1.08], opacity: [0.25, 0.46, 0.25] }}
+            transition={{ duration: 5.4, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute inset-2 rounded-full border border-brand-purple/18"
+            animate={{ scale: [0.88, 1.32, 0.88], opacity: [0.32, 0, 0.32] }}
+            transition={{ duration: 3.2, repeat: Infinity, ease: "easeOut" }}
+          />
+          <motion.div
+            className="absolute inset-8 rounded-full border border-brand-pink/22"
+            animate={{ scale: [0.92, 1.5, 0.92], opacity: [0.28, 0, 0.28] }}
+            transition={{ duration: 3.2, repeat: Infinity, delay: 0.6, ease: "easeOut" }}
+          />
+          <motion.div
+            className="absolute w-[100px] h-[100px] rounded-full bg-gradient-to-br from-brand-purple via-brand-lavender to-brand-pink opacity-82 shadow-glow"
             animate={{ y: [0, -5, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           />

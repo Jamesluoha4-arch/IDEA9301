@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function F5_AIPersona() {
   const [comm, setComm] = useState(35);
@@ -10,6 +10,13 @@ export function F5_AIPersona() {
   const commLabel = comm < 38 ? "Direct" : comm > 68 ? "Reflective" : "Balanced";
   const energyLabel = energy < 38 ? "Introverted" : energy > 68 ? "Extroverted" : "Balanced";
   const description = getDescription(commLabel, energyLabel);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      "second-self-personality",
+      JSON.stringify({ comm: commLabel, energy: energyLabel, tags }),
+    );
+  }, [commLabel, energyLabel, tags]);
 
   const submitTag = () => {
     const next = draftTag.trim();
@@ -151,9 +158,17 @@ export function F5_AIPersona() {
               <motion.div
                 key={tag}
                 whileHover={{ y: -2 }}
-                className="px-3 py-1 rounded-full gradient-brand-soft border border-brand-purple/30 text-[11px] font-bold text-brand-ink"
+                className="pl-3 pr-1.5 py-1 rounded-full gradient-brand-soft border border-brand-purple/30 text-[11px] font-bold text-brand-ink flex items-center gap-1.5"
               >
-                {tag}
+                <span>{tag}</span>
+                <button
+                  type="button"
+                  onClick={() => setTags((items) => items.filter((item) => item !== tag))}
+                  className="w-4 h-4 rounded-full bg-white/80 border border-brand-purple/20 text-brand-purple leading-none flex items-center justify-center text-[11px]"
+                  aria-label={`Remove ${tag}`}
+                >
+                  ×
+                </button>
               </motion.div>
             ))}
             {addingTag ? (

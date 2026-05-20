@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import figurineUrl from "@/assets/chibi-figurine.png";
 import { generateAvatarFromPhoto, saveGeneratedAvatar } from "@/lib/avatar-generation";
@@ -108,6 +109,7 @@ export function F6_FaceScan() {
     <div className="relative w-full h-full bg-white pt-12">
       <div className="absolute top-12 left-0 right-0 px-4 py-3 flex items-center gap-3 z-10 bg-white/80 backdrop-blur-md border-b border-brand-bg">
         <motion.button
+          data-prototype-back="0:4"
           whileTap={{ scale: 0.9 }}
           className="w-9 h-9 rounded-full bg-brand-bg flex items-center justify-center"
         >
@@ -219,6 +221,27 @@ export function F6_FaceScan() {
               ? `Demo result shown. API error: ${generationError}`
               : "Demo result shown. Connect an avatar API endpoint to generate from the captured photo."}
           </div>
+        )}
+        {generationState === "generating" && !resultReady && (
+          <motion.button
+            data-prototype-target="0:6"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileTap={{ scale: 0.97 }}
+            className="mt-4 w-full rounded-2xl border border-brand-lavender/35 bg-white/78 backdrop-blur-xl px-4 py-3 flex items-center justify-between gap-3 text-left shadow-soft"
+          >
+            <div>
+              <div className="text-[13px] font-bold text-brand-ink">
+                Explore first. I&apos;ll call you when it&apos;s ready.
+              </div>
+              <div className="mt-0.5 text-[10px] text-brand-mute">
+                Your avatar is still being created in the background.
+              </div>
+            </div>
+            <span className="w-9 h-9 rounded-full gradient-brand flex items-center justify-center shrink-0">
+              <ArrowRight size={17} className="text-white" strokeWidth={2.5} />
+            </span>
+          </motion.button>
         )}
       </div>
 

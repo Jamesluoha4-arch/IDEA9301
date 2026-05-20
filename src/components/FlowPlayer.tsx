@@ -54,10 +54,11 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: ["Conversation Help", "AI Suggestions"], target: key(1, 5) },
     { match: ["AI Control", "Safety Center"], target: key(3, 0) },
     { match: "View all conversations", target: key(5, 0) },
-    { match: "SOCIAL", target: key(1, 1) },
-    { match: "AI", target: key(3, 0) },
+    { match: ["CHAT", "SOCIAL"], target: key(1, 5) },
+    { match: ["COMMUNITY", "社区"], target: key(7, 3) },
+    { match: "AI", target: home },
     { match: "PRESENCE", target: key(7, 8) },
-    { match: "PROFILE", target: key(4, 0) },
+    { match: ["SETTINGS", "PROFILE"], target: key(3, 0) },
   ],
 
   [key(1, 1)]: [
@@ -306,10 +307,10 @@ function normalize(text: string) {
 
 function readClickText(target: HTMLElement) {
   const actionable = target.closest(
-    "button,a,[role='button'],.cursor-pointer",
+    "button,a,[role='button'],.cursor-pointer,[data-prototype-tab]",
   ) as HTMLElement | null;
   if (actionable) return actionable.innerText || actionable.textContent || "";
-  return target.innerText || target.textContent || "";
+  return "";
 }
 
 function findRule(rules: Rule[], text: string) {
@@ -322,15 +323,31 @@ function findRule(rules: Rule[], text: string) {
 
 const tabTargets: Record<string, NodeKey> = {
   home,
+  chat: home,
+  community: key(7, 3),
   social: key(1, 1),
-  ai: key(3, 0),
+  ai: home,
   presence: key(7, 8),
-  profile: key(4, 0),
+  settings: key(3, 0),
+  profile: key(3, 0),
 };
 
 function tabFromText(text: string) {
   const n = normalize(text);
-  if (["home", "social", "ai", "presence", "profile"].includes(n)) return n;
+  if (
+    [
+      "home",
+      "chat",
+      "community",
+      "社区",
+      "social",
+      "ai",
+      "presence",
+      "settings",
+      "profile",
+    ].includes(n)
+  )
+    return n === "社区" ? "community" : n;
   return null;
 }
 
@@ -341,16 +358,29 @@ function tabFromElement(target: HTMLElement) {
   return null;
 }
 
+function targetFromElement(target: HTMLElement): NodeKey | null {
+  const targetNode = target.closest("[data-prototype-target]") as HTMLElement | null;
+  const value = targetNode?.dataset.prototypeTarget;
+  return value && value.includes(":") ? (value as NodeKey) : null;
+}
+
+function prototypeBackTarget(target: HTMLElement): NodeKey | null {
+  const back = target.closest("[data-prototype-back]") as HTMLElement | null;
+  if (!back) return null;
+  const targetNode = back.dataset.prototypeBack;
+  return targetNode && targetNode.includes(":") ? (targetNode as NodeKey) : null;
+}
+
 function activeTabFor(node: NodeKey) {
   const [flowIdx, stepIdx] = node.split(":").map(Number);
-  if (node === home) return "HOME";
-  if (flowIdx === 1 && [1].includes(stepIdx)) return "SOCIAL";
-  if (flowIdx === 7 && [0, 3, 4, 5, 6, 7].includes(stepIdx)) return "SOCIAL";
+  if (node === home) return "CHAT";
+  if (flowIdx === 1 && [1, 2, 3, 4, 5, 6, 7, 8].includes(stepIdx)) return "CHAT";
+  if (flowIdx === 7 && [0, 3, 4, 5, 6, 7].includes(stepIdx)) return "COMMUNITY";
   if (flowIdx === 7 && stepIdx >= 8) return "PRESENCE";
-  if (flowIdx === 3) return "AI";
-  if (flowIdx === 5 && [0, 1].includes(stepIdx)) return "PROFILE";
-  if (flowIdx === 4) return "PROFILE";
-  if (flowIdx === 6 && [8, 9].includes(stepIdx)) return "AI";
+  if (flowIdx === 3) return "SETTINGS";
+  if (flowIdx === 5 && [0, 1].includes(stepIdx)) return "CHAT";
+  if (flowIdx === 4) return "SETTINGS";
+  if (flowIdx === 6 && [8, 9].includes(stepIdx)) return "SETTINGS";
   return null;
 }
 
@@ -398,64 +428,40 @@ export function FlowPlayer({ onOpenGallery }: Props) {
     setNode(key(0, 0));
   };
 
-  const isBackIconTap = (event: MouseEvent<HTMLDivElement>, text: string) => {
-    if (normalize(text)) return false;
-    if (node === key(0, 0)) return false;
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    return x < 72 * displayScale && y > 40 * displayScale && y < 160 * displayScale;
-  };
-
-  const targetFromIconRegion = (event: MouseEvent<HTMLDivElement>): NodeKey | null => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const s = displayScale;
-
-    const topRightBell =
-      x > 350 * s &&
-      y > 54 * s &&
-      y < 118 * s &&
-      [key(1, 1), key(7, 0), key(7, 3), key(7, 4)].includes(node);
-    if (topRightBell) return key(7, 6);
-
-    const feedFab = x > 350 * s && y > 760 * s && [key(7, 3), key(7, 4)].includes(node);
-    if (feedFab) return key(7, 5);
-
-    const interactionAvatar =
-      node === key(7, 6) && x > 8 * s && x < 86 * s && y > 88 * s && y < 510 * s;
-    if (interactionAvatar) return key(7, 7);
-
-    return null;
-  };
-
   const handlePrototypeTap = (event: MouseEvent<HTMLDivElement>) => {
     const target = event.target as HTMLElement;
     if (target.closest("input,textarea,select")) return;
 
     const text = readClickText(target);
     const normalizedText = normalize(text);
-    const directTab = tabFromElement(target);
-    if (directTab) {
+    const directTarget = targetFromElement(target);
+    if (directTarget) {
       setTapPulse(true);
       window.setTimeout(() => setTapPulse(false), 260);
-      navigate(tabTargets[directTab]);
+      navigate(directTarget);
       return;
     }
 
-    if (isBackIconTap(event, text)) {
+    const backTarget = prototypeBackTarget(target);
+    if (backTarget) {
+      setTapPulse(true);
+      window.setTimeout(() => setTapPulse(false), 260);
+      navigate(backTarget);
+      return;
+    }
+
+    if (target.closest("[data-prototype-back]")) {
       setTapPulse(true);
       window.setTimeout(() => setTapPulse(false), 260);
       goBack();
       return;
     }
 
-    const iconTarget = targetFromIconRegion(event);
-    if (iconTarget) {
+    const directTab = tabFromElement(target);
+    if (directTab) {
       setTapPulse(true);
       window.setTimeout(() => setTapPulse(false), 260);
-      navigate(iconTarget);
+      navigate(tabTargets[directTab]);
       return;
     }
 
@@ -524,19 +530,10 @@ export function FlowPlayer({ onOpenGallery }: Props) {
   return (
     <div
       className="min-h-screen w-full flex flex-col"
-      style={{ background: "linear-gradient(180deg, #e9e6f3 0%, #f3eaf6 50%, #eaf2f8 100%)" }}
+      style={{ background: "linear-gradient(180deg, #f7f6fb 0%, #fbfaff 54%, #f5f8fc 100%)" }}
     >
       <div className="px-6 pt-6 pb-3 flex items-center gap-3 max-w-6xl mx-auto w-full">
-        <div className="flex-1 min-w-0">
-          <div className="text-[10px] font-bold tracking-[0.35em] uppercase text-brand-purple">
-            AI SECOND SELF · INTEGRATED APP PROTOTYPE
-          </div>
-          <div className="text-[18px] font-bold text-brand-ink truncate">{flow.title}</div>
-          <div className="text-[12px] text-brand-mute truncate">
-            {step.label}
-            {step.hint ? ` · ${step.hint}` : ""}
-          </div>
-        </div>
+        <div className="flex-1" />
         <button
           onClick={restart}
           className="px-3 py-2 rounded-xl bg-white/70 backdrop-blur border border-white text-[12px] font-bold text-brand-ink flex items-center gap-2 hover:bg-white"

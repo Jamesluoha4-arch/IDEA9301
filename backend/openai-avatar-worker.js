@@ -5,7 +5,7 @@ const corsHeaders = {
 };
 
 const defaultPrompt =
-  "Create a full-body transparent-background Q-style collectible figurine based strictly on the uploaded real camera photo. Preserve the person's visible face shape, hairstyle, hair color, skin tone, facial impression, outfit, clothing colors, and overall styling from the photo. Do not invent or add any accessories. Do not add glasses unless the person is clearly wearing glasses in the uploaded photo. If the person is not wearing glasses, the figurine must not have glasses. Do not add hats, jewelry, facial hair, masks, or extra clothing unless clearly visible in the photo. Use rounded cute 3D toy proportions, matte vinyl figurine material, oversized head, small body, premium studio render, transparent background, clean edges, no text, no watermark.";
+  "Transform the person in the reference photo into a head-focused chibi 3D vinyl sticker character inspired by a cute designer collectible toy aesthetic. The generated avatar should focus on the head and upper shoulders only, because it will be used for live facial expression tracking. Closely follow the real person in the reference image, including face shape, skin tone, facial features, expression, hairstyle, hair accessories, and visible clothing around the neck or shoulders. Do not add glasses by default. Only include glasses if the person is clearly wearing glasses in the reference photo. If the person is not wearing glasses, the generated character must not wear glasses. Only include accessories, facial decorations, jewelry, hats, or other items if they are clearly visible in the reference photo. Do not invent or add any extra accessories that are not present in the original image. The final character should look like a cute designer toy sticker: big rounded head, glossy 3D vinyl texture, soft rounded shapes, expressive face, clean eyes and mouth suitable for expression animation, and high-quality collectible figure details. Create a single complete head avatar only, centered in the image, with no text, no logo, and no extra objects. Use a clean plain light background. The final image should feel close to the real person while having a cute designer toy aesthetic.";
 
 export default {
   async fetch(request, env) {
@@ -21,21 +21,26 @@ export default {
       return json({ error: "OPENAI_API_KEY is not configured." }, 500);
     }
 
-    const { image, prompt = defaultPrompt } = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return json({ error: "Invalid JSON body." }, 400);
+    }
+
+    const { image } = body;
     if (!image || typeof image !== "string") {
       return json({ error: "Missing image data URL." }, 400);
     }
 
     const imageBlob = dataUrlToBlob(image);
     const form = new FormData();
-    form.append("model", "gpt-image-1");
-    form.append("image", imageBlob, "face-photo.jpg");
-    form.append("prompt", prompt);
-    form.append("background", "transparent");
+    form.append("model", "gpt-image-2");
+    form.append("image[]", imageBlob, "face-photo.jpg");
+    form.append("prompt", defaultPrompt);
     form.append("output_format", "png");
-    form.append("size", "1024x1536");
+    form.append("size", "1024x1024");
     form.append("quality", "medium");
-    form.append("input_fidelity", "high");
 
     const response = await fetch("https://api.openai.com/v1/images/edits", {
       method: "POST",
@@ -45,7 +50,12 @@ export default {
       body: form,
     });
 
-    const data = await response.json();
+    let data;
+    try {
+      data = await response.json();
+    } catch {
+      return json({ error: "OpenAI returned a non-JSON response." }, 502);
+    }
     if (!response.ok) {
       return json(
         { error: data.error?.message || "OpenAI image generation failed." },

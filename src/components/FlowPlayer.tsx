@@ -364,6 +364,12 @@ function targetFromElement(target: HTMLElement): NodeKey | null {
   return value && value.includes(":") ? (value as NodeKey) : null;
 }
 
+function avatarNavModeFromElement(target: HTMLElement) {
+  const node = target.closest("[data-avatar-nav-mode]") as HTMLElement | null;
+  const value = node?.dataset.avatarNavMode;
+  return value === "pending" || value === "default" ? value : null;
+}
+
 function prototypeBackTarget(target: HTMLElement): NodeKey | null {
   const back = target.closest("[data-prototype-back]") as HTMLElement | null;
   if (!back) return null;
@@ -440,6 +446,10 @@ export function FlowPlayer({ onOpenGallery }: Props) {
         "second-self.selected-candidate",
         candidateTarget.dataset.prototypePerson,
       );
+    }
+    const avatarNavMode = avatarNavModeFromElement(target);
+    if (avatarNavMode) {
+      window.sessionStorage.setItem("second-self.avatar-nav-mode", avatarNavMode);
     }
     const directTarget = targetFromElement(target);
     if (directTarget) {
@@ -528,6 +538,12 @@ export function FlowPlayer({ onOpenGallery }: Props) {
 
     const rule = findRule(rules, text);
     if (!rule) return;
+    if (rule.target === home && node === key(0, 6)) {
+      const existingMode = window.sessionStorage.getItem("second-self.avatar-nav-mode");
+      if (existingMode !== "pending") {
+        window.sessionStorage.setItem("second-self.avatar-nav-mode", "default");
+      }
+    }
 
     setTapPulse(true);
     window.setTimeout(() => setTapPulse(false), 260);

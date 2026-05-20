@@ -46,18 +46,23 @@ export function F6_ShySupport() {
             transition={{ duration: 5.4, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
-            className="absolute inset-2 rounded-full border border-brand-purple/18"
-            animate={{ scale: [0.88, 1.32, 0.88], opacity: [0.32, 0, 0.32] }}
-            transition={{ duration: 3.2, repeat: Infinity, ease: "easeOut" }}
+            className="absolute -inset-1 rounded-full border-2 border-brand-purple/28"
+            animate={{ scale: [0.72, 1.58, 0.72], opacity: [0.48, 0, 0.48] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: "easeOut" }}
           />
           <motion.div
-            className="absolute inset-8 rounded-full border border-brand-pink/22"
-            animate={{ scale: [0.92, 1.5, 0.92], opacity: [0.28, 0, 0.28] }}
-            transition={{ duration: 3.2, repeat: Infinity, delay: 0.6, ease: "easeOut" }}
+            className="absolute inset-5 rounded-full border-2 border-brand-pink/30"
+            animate={{ scale: [0.78, 1.78, 0.78], opacity: [0.42, 0, 0.42] }}
+            transition={{ duration: 2.8, repeat: Infinity, delay: 0.45, ease: "easeOut" }}
+          />
+          <motion.div
+            className="absolute inset-12 rounded-full border border-brand-mint/35"
+            animate={{ scale: [0.82, 2.05, 0.82], opacity: [0.35, 0, 0.35] }}
+            transition={{ duration: 3.1, repeat: Infinity, delay: 0.9, ease: "easeOut" }}
           />
           <motion.div
             className="absolute w-[100px] h-[100px] rounded-full bg-gradient-to-br from-brand-purple via-brand-lavender to-brand-pink opacity-82 shadow-glow"
-            animate={{ y: [0, -5, 0] }}
+            animate={{ y: [0, -8, 0], scale: [1, 1.13, 1] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           />
           <div className="relative w-[58px] h-[58px] rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center">

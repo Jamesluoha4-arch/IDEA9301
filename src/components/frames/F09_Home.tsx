@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import defaultAvatarUrl from "@/assets/chibi-figurine.png";
 import { generatedAvatarStorageKey, readGeneratedAvatar } from "@/lib/avatar-generation";
 
 function readUserName() {
@@ -486,13 +487,18 @@ export function FloatingBottomNav({ active }: { active: string }) {
   ];
   const activeKey = active.toUpperCase();
   const isAvatarActive = activeKey === "AI";
-  const [avatarUrl, setAvatarUrl] = useState(
-    () => window.sessionStorage.getItem(generatedAvatarStorageKey) || "",
-  );
+  const resolveAvatarUrl = () => {
+    const generated = window.sessionStorage.getItem(generatedAvatarStorageKey) || "";
+    if (generated) return generated;
+    return window.sessionStorage.getItem("second-self.avatar-nav-mode") === "default"
+      ? defaultAvatarUrl
+      : "";
+  };
+  const [avatarUrl, setAvatarUrl] = useState(() => resolveAvatarUrl());
   const [avatarBubble, setAvatarBubble] = useState(false);
 
   useEffect(() => {
-    setAvatarUrl(window.sessionStorage.getItem(generatedAvatarStorageKey) || "");
+    setAvatarUrl(resolveAvatarUrl());
   }, [active]);
 
   useEffect(() => {

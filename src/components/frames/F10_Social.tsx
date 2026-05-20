@@ -59,127 +59,141 @@ const candidates = [
 
 export function F10_Social() {
   return (
-    <div className="relative w-full h-full pt-16 pb-20 font-sans text-brand-ink gradient-brand-soft">
-      <div className="px-5 flex items-start justify-between gap-2">
-        <div>
-          <h2 className="text-[18px] font-bold leading-[24px]">
-            I am searching for
-            <br />
-            <span className="bg-gradient-to-r from-brand-purple to-brand-pink bg-clip-text text-transparent">
-              people who may surprise you
-            </span>
-          </h2>
-          <p className="text-[11px] text-brand-mute mt-1.5">
-            Ranked by approved company context.
-            <br />
-            Larger circles mean stronger possibility.
-          </p>
+    <div className="relative w-full h-full font-sans text-brand-ink gradient-brand-soft overflow-hidden">
+      <div className="absolute inset-0 overflow-y-auto pt-16 pb-28 prototype-scroll">
+        <div className="px-5 flex items-start justify-between gap-2">
+          <div>
+            <h2 className="text-[18px] font-bold leading-[24px]">
+              I am searching for
+              <br />
+              <span className="bg-gradient-to-r from-brand-purple to-brand-pink bg-clip-text text-transparent">
+                people who may surprise you
+              </span>
+            </h2>
+            <p className="text-[11px] text-brand-mute mt-1.5">
+              Ranked by approved company context.
+              <br />
+              Larger circles mean stronger possibility.
+            </p>
+          </div>
+          <div className="px-2.5 py-1 rounded-full bg-white border border-brand-bg text-[10px] flex items-center gap-1 mt-1 text-brand-purple font-bold">
+            <CheckCircle2 size={10} /> Approved only
+          </div>
         </div>
-        <div className="px-2.5 py-1 rounded-full bg-white border border-brand-bg text-[10px] flex items-center gap-1 mt-1 text-brand-purple font-bold">
-          <CheckCircle2 size={10} /> Approved only
-        </div>
-      </div>
 
-      <div className="mx-5 mt-4 h-[280px] rounded-3xl bg-white shadow-soft relative overflow-hidden">
-        <div className="absolute inset-0 gradient-brand-soft opacity-60" />
-        {[1, 0.72, 0.45, 0.24].map((s, i) => (
-          <motion.div
-            key={i}
-            className="absolute top-1/2 left-1/2 rounded-full border-2 border-dashed border-brand-lavender/35"
-            style={{ width: 250 * s, height: 250 * s, marginLeft: -125 * s, marginTop: -125 * s }}
-            animate={{ opacity: [0.22, 0.7, 0.22], scale: [0.98, 1.04, 0.98] }}
-            transition={{ duration: 3.2 + i * 0.45, repeat: Infinity, delay: i * 0.35 }}
-          />
-        ))}
+        <div className="mx-5 mt-4 h-[280px] rounded-3xl bg-white shadow-soft relative overflow-hidden">
+          <div className="absolute inset-0 gradient-brand-soft opacity-60" />
+          {[1, 0.72, 0.45, 0.24].map((s, i) => (
+            <motion.div
+              key={i}
+              className="absolute top-1/2 left-1/2 rounded-full border-2 border-dashed border-brand-lavender/35"
+              style={{
+                width: 250 * s,
+                height: 250 * s,
+                marginLeft: -125 * s,
+                marginTop: -125 * s,
+              }}
+              animate={{ opacity: [0.22, 0.7, 0.22], scale: [0.98, 1.04, 0.98] }}
+              transition={{ duration: 3.2 + i * 0.45, repeat: Infinity, delay: i * 0.35 }}
+            />
+          ))}
 
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 z-20">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 z-20">
+            <motion.div
+              animate={{ scale: [1, 1.08, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="w-14 h-14 rounded-full gradient-brand flex items-center justify-center shadow-glow"
+            >
+              <BriefcaseBusiness size={22} className="text-white" strokeWidth={2} />
+            </motion.div>
+            <div className="text-[9px] font-bold text-brand-purple">Your AI</div>
+          </div>
+
           <motion.div
-            animate={{ scale: [1, 1.08, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-14 h-14 rounded-full gradient-brand flex items-center justify-center shadow-glow"
+            className="absolute top-[34px] left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white shadow border border-brand-mint/40 text-[9px] flex items-center gap-1 text-brand-ink font-medium z-30"
+            animate={{ y: [0, -3, 0] }}
+            transition={{ duration: 3, repeat: Infinity }}
           >
-            <BriefcaseBusiness size={22} className="text-white" strokeWidth={2} />
+            <CheckCircle2 size={9} className="text-brand-mint" /> searching company signals
           </motion.div>
-          <div className="text-[9px] font-bold text-brand-purple">Your AI</div>
+
+          {candidates.map((person, index) => (
+            <OrbitingCandidate key={person.name} person={person} index={index} />
+          ))}
+
+          <div className="absolute bottom-[34px] left-6 flex flex-col items-center z-30">
+            <div className="w-9 h-9 rounded-full border-2 border-dashed border-brand-mute flex items-center justify-center bg-white">
+              <Lock size={12} className="text-brand-mute" />
+            </div>
+            <div className="text-[8px] text-brand-mute mt-0.5">private locked</div>
+          </div>
         </div>
 
         <motion.div
-          className="absolute top-[34px] left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white shadow border border-brand-mint/40 text-[9px] flex items-center gap-1 text-brand-ink font-medium z-30"
-          animate={{ y: [0, -3, 0] }}
-          transition={{ duration: 3, repeat: Infinity }}
+          data-prototype-target="1:5"
+          whileTap={{ scale: 0.985 }}
+          className="mx-5 mt-4 bg-white rounded-2xl p-4 shadow-soft border border-brand-bg cursor-pointer"
         >
-          <CheckCircle2 size={9} className="text-brand-mint" /> searching company signals
+          <div className="flex items-center gap-2">
+            <Sparkles size={12} className="text-brand-purple" />
+            <div className="text-[9px] tracking-[0.6px] text-brand-purple font-bold">
+              STRONGEST POSSIBILITY FOUND
+            </div>
+          </div>
+          <div className="mt-1.5 text-[14px] font-bold">Alex · possible company coworker</div>
+          <div className="text-[11px] text-brand-mute mt-1">{candidates[0].signal}</div>
+          <div className="mt-3 h-[92px] rounded-2xl bg-gradient-to-br from-[#fff7fb] to-[#eef7ff] border border-brand-bg flex items-center justify-center overflow-hidden">
+            <img
+              src={candidates[0].img}
+              alt=""
+              className="h-[132px] w-[132px] object-contain drop-shadow-[0_12px_22px_rgba(108,92,231,0.20)]"
+            />
+          </div>
+          <motion.button
+            whileTap={{ scale: 0.98 }}
+            whileHover={{ y: -1 }}
+            className="mt-3 w-full py-3 rounded-full gradient-brand text-white text-[13px] font-bold shadow-soft"
+          >
+            Review path
+          </motion.button>
         </motion.div>
 
-        {candidates.map((person, index) => (
-          <OrbitingCandidate key={person.name} person={person} index={index} />
-        ))}
-
-        <div className="absolute bottom-[34px] left-6 flex flex-col items-center z-30">
-          <div className="w-9 h-9 rounded-full border-2 border-dashed border-brand-mute flex items-center justify-center bg-white">
-            <Lock size={12} className="text-brand-mute" />
+        <div className="mx-5 mt-3 bg-white/86 backdrop-blur-xl rounded-2xl p-4 shadow-soft border border-white/80">
+          <div className="flex items-center gap-2">
+            <Sparkles size={12} className="text-brand-purple" />
+            <div className="text-[9px] tracking-[0.6px] text-brand-purple font-bold">
+              OTHER RESULTS
+            </div>
           </div>
-          <div className="text-[8px] text-brand-mute mt-0.5">private locked</div>
-        </div>
-      </div>
-
-      <motion.div
-        data-prototype-target="1:5"
-        whileTap={{ scale: 0.985 }}
-        className="mx-5 mt-4 bg-white rounded-2xl p-4 shadow-soft border border-brand-bg cursor-pointer"
-      >
-        <div className="flex items-center gap-2">
-          <Sparkles size={12} className="text-brand-purple" />
-          <div className="text-[9px] tracking-[0.6px] text-brand-purple font-bold">
-            STRONGEST POSSIBILITY FOUND
-          </div>
-        </div>
-        <div className="mt-1.5 text-[14px] font-bold">Alex · possible company coworker</div>
-        <div className="text-[11px] text-brand-mute mt-1">{candidates[0].signal}</div>
-        <motion.button
-          whileTap={{ scale: 0.98 }}
-          whileHover={{ y: -1 }}
-          className="mt-3 w-full py-3 rounded-full gradient-brand text-white text-[13px] font-bold shadow-soft"
-        >
-          Review path
-        </motion.button>
-      </motion.div>
-
-      <div className="mx-5 mt-3 bg-white/86 backdrop-blur-xl rounded-2xl p-4 shadow-soft border border-white/80">
-        <div className="flex items-center gap-2">
-          <Sparkles size={12} className="text-brand-purple" />
-          <div className="text-[9px] tracking-[0.6px] text-brand-purple font-bold">
-            OTHER RESULTS
-          </div>
-        </div>
-        <div className="mt-2.5 space-y-2">
-          {candidates.slice(1).map((person) => (
-            <motion.button
-              key={person.name}
-              type="button"
-              data-prototype-target="1:5"
-              whileTap={{ scale: 0.985 }}
-              className="w-full rounded-2xl border border-brand-bg bg-white/78 px-3 py-2.5 text-left shadow-[0_8px_18px_rgba(108,92,231,0.06)]"
-            >
-              <div className="flex items-center gap-3">
-                <span className="h-10 w-10 rounded-full bg-white border border-white shadow-sm overflow-hidden flex items-center justify-center shrink-0">
-                  <img
-                    src={person.img}
-                    alt=""
-                    className="h-[124%] w-[124%] object-cover object-top"
-                  />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-[12px] font-bold text-brand-ink">
-                    {person.name} · {person.role}
+          <div className="mt-2.5 space-y-2">
+            {candidates.slice(1).map((person) => (
+              <motion.button
+                key={person.name}
+                type="button"
+                data-prototype-target="1:5"
+                whileTap={{ scale: 0.985 }}
+                className="w-full rounded-2xl border border-brand-bg bg-white/78 px-3 py-2.5 text-left shadow-[0_8px_18px_rgba(108,92,231,0.06)]"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="h-10 w-10 rounded-full bg-white border border-white shadow-sm overflow-hidden flex items-center justify-center shrink-0">
+                    <img
+                      src={person.img}
+                      alt=""
+                      className="h-[124%] w-[124%] object-cover object-top"
+                    />
                   </span>
-                  <span className="mt-0.5 block text-[10px] leading-[14px] text-brand-mute">
-                    {person.signal}
+                  <span className="min-w-0">
+                    <span className="block text-[12px] font-bold text-brand-ink">
+                      {person.name} · {person.role}
+                    </span>
+                    <span className="mt-0.5 block text-[10px] leading-[14px] text-brand-mute">
+                      {person.signal}
+                    </span>
                   </span>
-                </span>
-              </div>
-            </motion.button>
-          ))}
+                </div>
+              </motion.button>
+            ))}
+          </div>
         </div>
       </div>
 

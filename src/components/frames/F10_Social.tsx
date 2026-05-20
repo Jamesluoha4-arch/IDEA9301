@@ -10,6 +10,7 @@ const candidates = [
   {
     name: "Alex",
     role: "company coworker",
+    signal: "Same workplace context · shared onboarding signal · draft ready",
     match: "92%",
     size: 76,
     distance: 132,
@@ -20,7 +21,8 @@ const candidates = [
   },
   {
     name: "Mia",
-    role: "design intern",
+    role: "possible design buddy",
+    signal: "Shared graduate cohort · similar portfolio interests · intro ready",
     match: "74%",
     size: 52,
     distance: 104,
@@ -31,7 +33,8 @@ const candidates = [
   },
   {
     name: "Sam",
-    role: "same community",
+    role: "possible community match",
+    signal: "Same company space · lunch group overlap · topic idea ready",
     match: "61%",
     size: 44,
     distance: 118,
@@ -42,7 +45,8 @@ const candidates = [
   },
   {
     name: "Nora",
-    role: "shared topic",
+    role: "possible project neighbor",
+    signal: "Adjacent team context · shared onboarding task · warm note ready",
     match: "48%",
     size: 36,
     distance: 82,
@@ -62,7 +66,7 @@ export function F10_Social() {
             I am searching for
             <br />
             <span className="bg-gradient-to-r from-brand-purple to-brand-pink bg-clip-text text-transparent">
-              people you may like
+              people who may surprise you
             </span>
           </h2>
           <p className="text-[11px] text-brand-mute mt-1.5">
@@ -119,7 +123,11 @@ export function F10_Social() {
         </div>
       </div>
 
-      <div className="mx-5 mt-4 bg-white rounded-2xl p-4 shadow-soft border border-brand-bg">
+      <motion.div
+        data-prototype-target="1:5"
+        whileTap={{ scale: 0.985 }}
+        className="mx-5 mt-4 bg-white rounded-2xl p-4 shadow-soft border border-brand-bg cursor-pointer"
+      >
         <div className="flex items-center gap-2">
           <Sparkles size={12} className="text-brand-purple" />
           <div className="text-[9px] tracking-[0.6px] text-brand-purple font-bold">
@@ -127,9 +135,7 @@ export function F10_Social() {
           </div>
         </div>
         <div className="mt-1.5 text-[14px] font-bold">Alex · possible company coworker</div>
-        <div className="text-[11px] text-brand-mute mt-1">
-          Same workplace context · shared onboarding signal · draft ready
-        </div>
+        <div className="text-[11px] text-brand-mute mt-1">{candidates[0].signal}</div>
         <motion.button
           whileTap={{ scale: 0.98 }}
           whileHover={{ y: -1 }}
@@ -137,6 +143,44 @@ export function F10_Social() {
         >
           Review path
         </motion.button>
+      </motion.div>
+
+      <div className="mx-5 mt-3 bg-white/86 backdrop-blur-xl rounded-2xl p-4 shadow-soft border border-white/80">
+        <div className="flex items-center gap-2">
+          <Sparkles size={12} className="text-brand-purple" />
+          <div className="text-[9px] tracking-[0.6px] text-brand-purple font-bold">
+            OTHER RESULTS
+          </div>
+        </div>
+        <div className="mt-2.5 space-y-2">
+          {candidates.slice(1).map((person) => (
+            <motion.button
+              key={person.name}
+              type="button"
+              data-prototype-target="1:5"
+              whileTap={{ scale: 0.985 }}
+              className="w-full rounded-2xl border border-brand-bg bg-white/78 px-3 py-2.5 text-left shadow-[0_8px_18px_rgba(108,92,231,0.06)]"
+            >
+              <div className="flex items-center gap-3">
+                <span className="h-10 w-10 rounded-full bg-white border border-white shadow-sm overflow-hidden flex items-center justify-center shrink-0">
+                  <img
+                    src={person.img}
+                    alt=""
+                    className="h-[124%] w-[124%] object-cover object-top"
+                  />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[12px] font-bold text-brand-ink">
+                    {person.name} · {person.role}
+                  </span>
+                  <span className="mt-0.5 block text-[10px] leading-[14px] text-brand-mute">
+                    {person.signal}
+                  </span>
+                </span>
+              </div>
+            </motion.button>
+          ))}
+        </div>
       </div>
 
       <BottomNav active="CHAT" />

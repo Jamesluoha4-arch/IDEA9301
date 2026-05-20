@@ -32,7 +32,7 @@ const candidates = [
     ring: "from-brand-mint to-brand-sky",
   },
   {
-    name: "James",
+    name: "Sabrina",
     role: "possible community match",
     signal: "Same company space - lunch group overlap - topic idea ready",
     match: "61%",
@@ -44,7 +44,7 @@ const candidates = [
     ring: "from-brand-peach to-brand-pink",
   },
   {
-    name: "Sabrina",
+    name: "James",
     role: "possible project neighbor",
     signal: "Adjacent team context - shared onboarding task - warm note ready",
     match: "48%",

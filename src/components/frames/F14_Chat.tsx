@@ -68,7 +68,7 @@ export function ChatScaffold({
     <div className="relative w-full h-full pt-12 font-sans text-brand-ink overflow-hidden gradient-brand-soft">
       <div className="px-3 py-2 flex items-center gap-2 glass border-b border-brand-bg">
         <div
-          data-prototype-back="1:1"
+          data-prototype-back="0:7"
           className="w-8 h-8 rounded-full bg-white shadow-soft flex items-center justify-center"
         >
           <ChevronLeft size={14} className="text-brand-purple" />
@@ -86,7 +86,7 @@ export function ChatScaffold({
 
       <div
         className="px-3 py-3 flex flex-col gap-3 overflow-y-auto prototype-scroll"
-        style={{ height: "calc(100% - 220px)" }}
+        style={{ height: "calc(100% - 308px)" }}
       >
         <div className="bg-white rounded-2xl p-3 flex items-start gap-2 shadow-soft border border-brand-purple/20">
           <div className="w-7 h-7 rounded-lg gradient-brand flex items-center justify-center shrink-0">
@@ -195,7 +195,7 @@ export function ChatScaffold({
       </div>
 
       {showSparkSuggestions && (
-        <div className="absolute bottom-[64px] left-0 right-0 glass border-t border-brand-bg px-3 pt-3 pb-2">
+        <div className="absolute bottom-[150px] left-0 right-0 glass border-t border-brand-bg px-3 pt-3 pb-2">
           <div className="flex items-center justify-between">
             <div className="text-[12px] font-bold flex items-center gap-1.5">
               <Sparkles size={12} className="text-brand-purple" /> SPARK REPLY SUGGESTIONS
@@ -246,7 +246,7 @@ export function ChatScaffold({
         </div>
       )}
 
-      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-brand-bg px-3 py-2.5 flex items-center gap-2">
+      <div className="absolute bottom-[86px] left-0 right-0 bg-white border-t border-brand-bg px-3 py-2.5 flex items-center gap-2">
         <div className="w-8 h-8 rounded-full bg-brand-bg flex items-center justify-center">
           <Plus size={16} className="text-brand-purple" />
         </div>

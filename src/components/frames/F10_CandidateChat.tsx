@@ -17,8 +17,8 @@ import {
 } from "lucide-react";
 import alexUrl from "@/assets/radar-avatar-1.png";
 import joeUrl from "@/assets/radar-avatar-2.png";
-import jamesUrl from "@/assets/radar-avatar-3.png";
-import sabrinaUrl from "@/assets/radar-avatar-4.png";
+import sabrinaUrl from "@/assets/radar-avatar-3.png";
+import jamesUrl from "@/assets/radar-avatar-4.png";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
 
 const styleTabs = ["Friendly", "Direct", "Playful", "Brief", "Warm"] as const;
@@ -46,8 +46,6 @@ const candidateOpeners = {
       Brief: "Hi, {user}. I am Alex. Want to compare onboarding notes sometime today?",
       Warm: "Hi, {user}. I am Alex. I am also getting oriented this week. I would be happy to compare notes if that feels useful.",
     },
-    persona:
-      "warm, steady, and practical. Alex answers like a calm coworker who wants to make the first week easier.",
   },
   Joe: {
     title: "Joe AI",
@@ -65,45 +63,39 @@ const candidateOpeners = {
       Brief: "Hi, {user}. I am Joe. Want to swap one useful design onboarding resource?",
       Warm: "Hi, {user}. I am Joe. I noticed we may share a design background. I would love to exchange anything helpful we find this week.",
     },
-    persona:
-      "creative, visual, and upbeat. Joe replies with design-minded curiosity and a light friendly tone.",
   },
-  James: {
-    title: "James AI",
+  Sabrina: {
+    title: "Sabrina AI",
     relationship: "Possible community match",
-    avatar: jamesUrl,
+    avatar: sabrinaUrl,
     reason: "Same company space - lunch group overlap",
     preview: "Same company space - lunch group overlap - topic idea ready",
     drafts: {
       Friendly:
-        "Hi, {user}. I am James. Looks like we may be in the same company space. Want to compare good lunch spots or first-week survival tips?",
+        "Hi, {user}. I am Sabrina. Looks like we may be in the same company space. Want to compare good lunch spots or first-week survival tips?",
       Direct:
-        "Hi, {user}. I am James. Our company spaces overlap. Want to compare first-week tips?",
+        "Hi, {user}. I am Sabrina. Our company spaces overlap. Want to compare first-week tips?",
       Playful:
-        "Hey {user}, I am James. New-starter radar says we might be nearby. Want to trade lunch intel?",
-      Brief: "Hi, {user}. I am James. Want to compare first-week tips?",
-      Warm: "Hi, {user}. I am James. I am still learning the space too. It could be nice to compare what we find useful.",
+        "Hey {user}, I am Sabrina. New-starter radar says we might be nearby. Want to trade lunch intel?",
+      Brief: "Hi, {user}. I am Sabrina. Want to compare first-week tips?",
+      Warm: "Hi, {user}. I am Sabrina. I am still learning the space too. It could be nice to compare what we find useful.",
     },
-    persona:
-      "casual, practical, and sociable. James replies like someone who knows small shared rituals can open a bigger conversation.",
   },
-  Sabrina: {
-    title: "Sabrina AI",
+  James: {
+    title: "James AI",
     relationship: "Possible project neighbor",
-    avatar: sabrinaUrl,
+    avatar: jamesUrl,
     reason: "Adjacent team context - shared onboarding task",
     preview: "Adjacent team context - shared onboarding task - warm note ready",
     drafts: {
       Friendly:
-        "Hi, {user}. I am Sabrina. I noticed our onboarding tasks may overlap. I would be happy to trade notes if that helps us both get oriented faster.",
-      Direct: "Hi, {user}. I am Sabrina. Our onboarding tasks may overlap. Want to compare notes?",
+        "Hi, {user}. I am James. I noticed our onboarding tasks may overlap. I would be happy to trade notes if that helps us both get oriented faster.",
+      Direct: "Hi, {user}. I am James. Our onboarding tasks may overlap. Want to compare notes?",
       Playful:
-        "Hi, {user}. I am Sabrina. Looks like our onboarding maps may cross. Want to solve a bit of it together?",
-      Brief: "Hi, {user}. I am Sabrina. Want to compare onboarding notes?",
-      Warm: "Hi, {user}. I am Sabrina. I noticed we may be working near the same area. I would be glad to share any useful notes I find.",
+        "Hi, {user}. I am James. Looks like our onboarding maps may cross. Want to solve a bit of it together?",
+      Brief: "Hi, {user}. I am James. Want to compare onboarding notes?",
+      Warm: "Hi, {user}. I am James. I noticed we may be working near the same area. I would be glad to share any useful notes I find.",
     },
-    persona:
-      "thoughtful, organized, and polished. Sabrina replies with gentle structure and clear next steps.",
   },
 };
 
@@ -122,16 +114,6 @@ function readCandidateName() {
   return value in candidateOpeners ? (value as CandidateName) : "Alex";
 }
 
-function readChatList(): ConversationItem[] {
-  try {
-    return JSON.parse(
-      window.sessionStorage.getItem(chatListStorageKey) || "[]",
-    ) as ConversationItem[];
-  } catch {
-    return [];
-  }
-}
-
 type ConversationItem = {
   id: CandidateName;
   name: CandidateName;
@@ -142,6 +124,16 @@ type ConversationItem = {
   updatedAt: number;
 };
 
+function readChatList(): ConversationItem[] {
+  try {
+    return JSON.parse(
+      window.sessionStorage.getItem(chatListStorageKey) || "[]",
+    ) as ConversationItem[];
+  } catch {
+    return [];
+  }
+}
+
 function sortConversations(items: ConversationItem[]) {
   return [...items].sort((a, b) => {
     if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
@@ -151,8 +143,9 @@ function sortConversations(items: ConversationItem[]) {
 
 function saveConversation(name: CandidateName, preview: string) {
   const candidate = candidateOpeners[name];
-  const existing = readChatList().filter((item) => item.id !== name);
-  const previous = readChatList().find((item) => item.id === name);
+  const oldItems = readChatList();
+  const existing = oldItems.filter((item) => item.id !== name);
+  const previous = oldItems.find((item) => item.id === name);
   const next = sortConversations([
     {
       id: name,
@@ -179,33 +172,33 @@ function buildPersonaReply(candidateName: CandidateName, userText: string, userN
     }
     return asksQuestion
       ? `I like that question, ${userName}. Maybe we can compare what each of us noticed and turn it into a small shared checklist.`
-      : `That makes sense. I am thinking we keep it easy: one useful resource, one thing we are unsure about, and one tiny design observation.`;
-  }
-
-  if (candidateName === "James") {
-    if (lower.includes("lunch") || lower.includes("coffee")) {
-      return `I'm in. A quick coffee or lunch check-in feels low pressure, and we can swap first-week tips while we are there.`;
-    }
-    return asksQuestion
-      ? `Yeah, that works. I would keep it simple and practical: compare what we know, then decide if it is worth following up.`
-      : `Nice. We can start casual and see where it goes. First week is easier when someone nearby is also figuring it out.`;
+      : "That makes sense. I am thinking we keep it easy: one useful resource, one thing we are unsure about, and one tiny design observation.";
   }
 
   if (candidateName === "Sabrina") {
+    if (lower.includes("lunch") || lower.includes("coffee")) {
+      return "I'm in. A quick coffee or lunch check-in feels low pressure, and we can swap first-week tips while we are there.";
+    }
+    return asksQuestion
+      ? "Yeah, that works. I would keep it simple and practical: compare what we know, then decide if it is worth following up."
+      : "Nice. We can start casual and see where it goes. First week is easier when someone nearby is also figuring it out.";
+  }
+
+  if (candidateName === "James") {
     if (lower.includes("task") || lower.includes("project")) {
       return `That sounds helpful, ${userName}. We could compare the task expectations first, then note what each of us still needs to clarify.`;
     }
     return asksQuestion
-      ? `I think so. I would suggest a gentle first step: share one note from onboarding and ask whether it matches their experience.`
-      : `That is a clear starting point. I can help keep it warm but structured, so it feels thoughtful rather than too formal.`;
+      ? "I think so. I would suggest a gentle first step: share one note from onboarding and ask whether it matches their experience."
+      : "That is a clear starting point. I can help keep it warm but structured, so it feels thoughtful rather than too formal.";
   }
 
   if (lower.includes("nervous") || lower.includes("awkward")) {
     return `Totally fair, ${userName}. We can keep it small: one friendly sentence, no pressure to continue unless it feels natural.`;
   }
   return asksQuestion
-    ? `Good idea. Maybe we can compare notes after the onboarding briefing and keep it useful for both of us.`
-    : `Good idea. Maybe we can compare notes after the session and keep the first message simple and easy to answer.`;
+    ? "Good idea. Maybe we can compare notes after the onboarding briefing and keep it useful for both of us."
+    : "Good idea. Maybe we can compare notes after the session and keep the first message simple and easy to answer.";
 }
 
 export function F10_CandidateChat() {
@@ -251,7 +244,7 @@ export function F10_CandidateChat() {
       <div className="px-3 py-2 flex items-center gap-2 glass border-b border-brand-bg">
         <button
           type="button"
-          data-prototype-back="1:1"
+          data-prototype-back="0:7"
           className="w-8 h-8 rounded-full bg-white shadow-soft flex items-center justify-center"
         >
           <ChevronLeft size={14} className="text-brand-purple" />
@@ -269,7 +262,7 @@ export function F10_CandidateChat() {
 
       <div
         className="px-3 py-3 flex flex-col gap-3 overflow-y-auto prototype-scroll"
-        style={{ height: "calc(100% - 238px)" }}
+        style={{ height: "calc(100% - 326px)" }}
       >
         <div className="bg-white rounded-2xl p-3 flex items-start gap-2 shadow-soft border border-brand-purple/20">
           <div className="w-7 h-7 rounded-lg gradient-brand flex items-center justify-center shrink-0">
@@ -334,7 +327,7 @@ export function F10_CandidateChat() {
         })}
       </div>
 
-      <div className="absolute bottom-[64px] left-0 right-0 glass border-t border-brand-bg px-3 pt-3 pb-2">
+      <div className="absolute bottom-[150px] left-0 right-0 glass border-t border-brand-bg px-3 pt-3 pb-2">
         <div className="flex items-center justify-between">
           <div className="text-[12px] font-bold flex items-center gap-1.5">
             <Sparkles size={12} className="text-brand-purple" /> SPARK REPLY SUGGESTIONS
@@ -379,7 +372,7 @@ export function F10_CandidateChat() {
         </button>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-brand-bg px-3 py-2.5 flex items-center gap-2">
+      <div className="absolute bottom-[86px] left-0 right-0 bg-white border-t border-brand-bg px-3 py-2.5 flex items-center gap-2">
         <div className="w-8 h-8 rounded-full bg-brand-bg flex items-center justify-center">
           <Plus size={16} className="text-brand-purple" />
         </div>

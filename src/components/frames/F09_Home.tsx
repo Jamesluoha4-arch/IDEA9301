@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { animate, motion, useMotionValue, useTransform } from "framer-motion";
 import {
   Bell,
   BriefcaseBusiness,
@@ -46,6 +46,7 @@ type HomeConversation = {
 };
 
 const chatListStorageKey = "second-self.chat-list";
+const chatNameMigrationKey = "second-self.chat-list-name-migration-v2";
 
 function sortConversations(items: HomeConversation[]) {
   return [...items].sort((a, b) => {
@@ -56,9 +57,23 @@ function sortConversations(items: HomeConversation[]) {
 
 function readHomeConversations() {
   try {
-    return sortConversations(
-      JSON.parse(window.sessionStorage.getItem(chatListStorageKey) || "[]") as HomeConversation[],
-    );
+    const raw = JSON.parse(
+      window.sessionStorage.getItem(chatListStorageKey) || "[]",
+    ) as HomeConversation[];
+    if (!window.sessionStorage.getItem(chatNameMigrationKey)) {
+      const migrated = raw.map((item) => {
+        if (item.name === "James") return { ...item, id: "Sabrina", name: "Sabrina" };
+        if (item.name === "Sabrina") return { ...item, id: "James", name: "James" };
+        return item;
+      });
+      window.sessionStorage.setItem(
+        chatListStorageKey,
+        JSON.stringify(sortConversations(migrated)),
+      );
+      window.sessionStorage.setItem(chatNameMigrationKey, "done");
+      return sortConversations(migrated);
+    }
+    return sortConversations(raw);
   } catch {
     return [];
   }
@@ -225,6 +240,18 @@ function ConversationList({
             onDelete={onDelete}
           />
         ))}
+        <motion.button
+          type="button"
+          data-prototype-target="1:1"
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.985 }}
+          className="mt-3 flex h-[82px] w-full items-center justify-center rounded-3xl border border-white/80 bg-white/46 text-brand-purple shadow-[0_14px_34px_rgba(108,92,231,0.10)] backdrop-blur-2xl"
+          aria-label="Find another connection"
+        >
+          <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/80 bg-white/70 shadow-soft">
+            <Plus size={24} strokeWidth={2.5} />
+          </span>
+        </motion.button>
       </div>
     </main>
   );
@@ -242,6 +269,17 @@ function ConversationRow({
   onDelete: (id: string) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const rowX = useMotionValue(0);
+  const actionX = useTransform(rowX, [-144, 0], [0, 144]);
+
+  useEffect(() => {
+    const controls = animate(rowX, open ? -144 : 0, {
+      type: "spring",
+      stiffness: 420,
+      damping: 34,
+    });
+    return controls.stop;
+  }, [open, rowX]);
 
   return (
     <motion.div
@@ -250,7 +288,10 @@ function ConversationRow({
       transition={{ delay: index * 0.05 }}
       className="relative h-[78px] overflow-hidden rounded-3xl shadow-[0_14px_34px_rgba(31,31,46,0.08)]"
     >
-      <div className="absolute inset-y-0 right-0 flex overflow-hidden rounded-r-3xl">
+      <motion.div
+        style={{ x: actionX }}
+        className="absolute inset-y-0 right-0 flex overflow-hidden rounded-r-3xl"
+      >
         <button
           type="button"
           onClick={(event) => {
@@ -274,18 +315,24 @@ function ConversationRow({
           <Trash2 size={15} />
           Delete
         </button>
-      </div>
+      </motion.div>
       <motion.button
         type="button"
         data-prototype-target="1:9"
         data-prototype-person={conversation.name}
         drag="x"
         dragConstraints={{ left: -144, right: 0 }}
-        dragElastic={0.04}
-        animate={{ x: open ? -144 : 0 }}
-        onDragEnd={(_, info) => setOpen(info.offset.x < -42)}
+        dragElastic={0.02}
+        style={{ x: rowX }}
+        onDragEnd={(_, info) => {
+          if (info.offset.x < -42 || info.velocity.x < -260) {
+            setOpen(true);
+            return;
+          }
+          setOpen(false);
+        }}
         whileTap={{ scale: 0.985 }}
-        className="absolute inset-0 z-10 w-full rounded-3xl border border-white/80 bg-white/76 px-4 text-left backdrop-blur-2xl"
+        className="absolute inset-0 z-10 w-full rounded-3xl border border-white/80 bg-white/95 px-4 text-left backdrop-blur-2xl"
       >
         <div className="flex h-full items-center gap-3">
           <span className="h-12 w-12 rounded-2xl bg-white shadow-sm overflow-hidden flex items-center justify-center shrink-0">

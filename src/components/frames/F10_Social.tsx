@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import { Bell, BriefcaseBusiness, CheckCircle2, Lock, Sparkles } from "lucide-react";
-import alexUrl from "@/assets/candidate-alex.svg";
-import miaUrl from "@/assets/candidate-mia.svg";
-import noraUrl from "@/assets/candidate-nora.svg";
-import samUrl from "@/assets/candidate-sam.svg";
+import { BriefcaseBusiness, CheckCircle2, Lock, Sparkles } from "lucide-react";
+import alexUrl from "@/assets/radar-avatar-1.png";
+import miaUrl from "@/assets/radar-avatar-2.png";
+import noraUrl from "@/assets/radar-avatar-3.png";
+import samUrl from "@/assets/radar-avatar-4.png";
 import { BottomNav } from "./F09_Home";
 
 const candidates = [
@@ -55,23 +55,8 @@ const candidates = [
 
 export function F10_Social() {
   return (
-    <div className="relative w-full h-full pt-12 pb-20 font-sans text-brand-ink gradient-brand-soft">
-      <div className="px-5 pt-2">
-        <h1 className="text-[24px] font-bold tracking-[-0.5px]">Social</h1>
-        <div className="mt-4 flex items-center gap-2">
-          <button className="px-4 py-1.5 rounded-full gradient-brand text-white text-[12px] font-bold shadow-soft">
-            Conversations
-          </button>
-          <button className="px-4 py-1.5 rounded-full bg-white border border-brand-bg text-[12px] font-bold">
-            Spaces
-          </button>
-          <div className="ml-auto w-9 h-9 rounded-full bg-white shadow-soft flex items-center justify-center">
-            <Bell size={15} className="text-brand-purple" />
-          </div>
-        </div>
-      </div>
-
-      <div className="px-5 mt-5 flex items-start justify-between gap-2">
+    <div className="relative w-full h-full pt-16 pb-20 font-sans text-brand-ink gradient-brand-soft">
+      <div className="px-5 flex items-start justify-between gap-2">
         <div>
           <h2 className="text-[18px] font-bold leading-[24px]">
             I am searching for

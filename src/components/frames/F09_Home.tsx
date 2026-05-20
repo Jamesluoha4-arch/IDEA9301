@@ -480,7 +480,7 @@ export function BottomNav({ active }: { active: string }) {
 export function FloatingBottomNav({ active }: { active: string }) {
   const items = [
     { Icon: ChatNavIcon, key: "CHAT", label: "Chat", tab: "chat" },
-    { Icon: CommunityNavIcon, key: "COMMUNITY", label: "Community", tab: "community" },
+    { Icon: CommunityNavIcon, key: "COMMUNITY", label: "Space", tab: "community" },
     { Icon: PresenceNavIcon, key: "PRESENCE", label: "Presence", tab: "presence" },
     { Icon: SettingsNavIcon, key: "SETTINGS", label: "Settings", tab: "settings" },
   ];

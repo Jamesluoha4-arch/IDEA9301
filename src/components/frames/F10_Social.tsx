@@ -143,12 +143,20 @@ export function F10_Social() {
           </div>
           <div className="mt-1.5 text-[14px] font-bold">Alex · possible company coworker</div>
           <div className="text-[11px] text-brand-mute mt-1">{candidates[0].signal}</div>
-          <div className="mt-3 h-[92px] rounded-2xl bg-gradient-to-br from-[#fff7fb] to-[#eef7ff] border border-brand-bg flex items-center justify-center overflow-hidden">
+          <div className="mt-3 relative h-[126px] rounded-2xl bg-gradient-to-br from-[#fff7fb] to-[#eef7ff] border border-brand-bg flex items-center justify-center">
             <img
               src={candidates[0].img}
               alt=""
-              className="h-[132px] w-[132px] object-contain drop-shadow-[0_12px_22px_rgba(108,92,231,0.20)]"
+              className="h-[116px] w-[116px] object-contain drop-shadow-[0_12px_22px_rgba(108,92,231,0.20)]"
             />
+            <motion.div
+              initial={{ opacity: 0, y: 6, scale: 0.92 }}
+              animate={{ opacity: 1, y: [0, -2, 0], scale: 1 }}
+              transition={{ duration: 2.4, repeat: Infinity, repeatType: "reverse" }}
+              className="absolute right-16 top-6 rounded-2xl bg-white px-3 py-1.5 text-[12px] font-bold text-brand-purple shadow-soft border border-brand-lavender/30"
+            >
+              Hi
+            </motion.div>
           </div>
           <motion.button
             whileTap={{ scale: 0.98 }}

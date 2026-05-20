@@ -4,9 +4,12 @@ import {
   Bot,
   ChevronLeft,
   Layers,
+  Plus,
   Send,
   ShieldCheck,
+  Smile,
   Sparkles,
+  TrendingUp,
   User,
 } from "lucide-react";
 
@@ -14,34 +17,50 @@ const candidateOpeners = {
   Alex: {
     title: "Alex AI",
     relationship: "Possible company coworker",
-    tone: "Warm and confident",
+    tone: "Friendly",
     opener:
-      "Hey Alex, I noticed we may be joining similar onboarding circles. Would love to hear what has helped you settle in so far.",
+      "Hi Alex, I noticed we may be in the same onboarding group. Want to compare notes on what has been most helpful so far?",
     reason: "Same workplace context · shared onboarding signal",
+    suggestions: [
+      "Hi Alex, I think we may be starting around the same time. Want to swap one onboarding tip?",
+      "Hey Alex, I am still finding my way around. Would be nice to compare first-week notes sometime.",
+    ],
   },
   Mia: {
     title: "Mia AI",
     relationship: "Possible design buddy",
-    tone: "Creative and light",
+    tone: "Creative",
     opener:
-      "Hi Mia, I saw we may share a design background. If you are up for it, maybe we can swap one thing that inspired us this week.",
+      "Hi Mia, I saw we may share a design background. Maybe we can trade one useful resource from onboarding this week.",
     reason: "Shared graduate cohort · similar portfolio interests",
+    suggestions: [
+      "Hi Mia, I noticed we both seem close to design work. Want to swap one onboarding resource?",
+      "Hey Mia, I am collecting useful first-week design notes. Happy to trade what I find.",
+    ],
   },
   Sam: {
     title: "Sam AI",
     relationship: "Possible community match",
-    tone: "Casual and easy",
+    tone: "Easygoing",
     opener:
-      "Hey Sam, looks like we may be in the same company space. Want to compare notes on good lunch spots or first-week survival tips?",
+      "Hey Sam, looks like we may be in the same company space. Want to compare good lunch spots or first-week survival tips?",
     reason: "Same company space · lunch group overlap",
+    suggestions: [
+      "Hey Sam, I am new here too. Any lunch spot you have already found worth trying?",
+      "Hi Sam, looks like our spaces overlap. Want to compare first-week survival tips?",
+    ],
   },
   Nora: {
     title: "Nora AI",
     relationship: "Possible project neighbor",
-    tone: "Polished and curious",
+    tone: "Polished",
     opener:
-      "Hi Nora, I noticed our onboarding tasks may overlap. I would be happy to trade notes if that helps both of us get oriented faster.",
+      "Hi Nora, I noticed our onboarding tasks may overlap. I would be happy to trade notes if that helps us both get oriented faster.",
     reason: "Adjacent team context · shared onboarding task",
+    suggestions: [
+      "Hi Nora, I think our onboarding tasks overlap. Would you be open to comparing notes?",
+      "Hi Nora, I am getting oriented on the same area. Happy to share anything useful I find.",
+    ],
   },
 };
 
@@ -76,67 +95,97 @@ export function F10_CandidateChat() {
         </div>
       </div>
 
-      <div className="px-4 py-4 flex flex-col gap-3 overflow-y-auto h-[calc(100%-132px)] prototype-scroll">
+      <div
+        className="px-3 py-3 flex flex-col gap-3 overflow-y-auto prototype-scroll"
+        style={{ height: "calc(100% - 220px)" }}
+      >
         <div className="bg-white rounded-2xl p-3 flex items-start gap-2 shadow-soft border border-brand-purple/20">
           <div className="w-7 h-7 rounded-lg gradient-brand flex items-center justify-center shrink-0">
             <ShieldCheck size={13} className="text-white" />
           </div>
           <div className="flex-1">
             <div className="text-[11px] font-bold">
-              I found a low-pressure way to start this conversation.
+              AI can suggest an opener, but only you can send it.
             </div>
             <div className="text-[9px] text-brand-mute">
-              You review first. Nothing is sent without you.
+              Your Second Self found a low-pressure workplace connection.
             </div>
           </div>
         </div>
 
-        <div className="flex items-start gap-2">
-          <div className="w-8 h-8 rounded-full gradient-brand flex items-center justify-center shrink-0">
-            <Bot size={13} className="text-white" />
+        <div className="flex items-end gap-2">
+          <div className="w-7 h-7 rounded-full gradient-pink-peach flex items-center justify-center shrink-0">
+            <Bot size={12} className="text-white" />
           </div>
           <div className="max-w-[78%]">
-            <div className="text-[9px] font-bold tracking-[0.12em] uppercase text-brand-purple mb-1">
-              Your Second Self
-            </div>
-            <div className="bg-white rounded-2xl px-3 py-3 text-[12px] leading-[17px] shadow-soft border border-brand-bg">
+            <div className="px-3 py-2.5 rounded-2xl text-[12px] leading-[17px] bg-white shadow-soft">
               {candidate.opener}
             </div>
-            <div className="mt-1.5 flex items-center gap-1 text-[8px] text-brand-mute font-bold">
+            <div className="text-[8px] text-brand-mute mt-1 tracking-wider font-bold flex items-center gap-1">
               <Sparkles size={8} /> AI SUGGESTION ONLY
             </div>
           </div>
         </div>
 
-        <div className="mt-1 rounded-2xl bg-white/82 border border-white/80 p-3 shadow-soft">
-          <div className="flex items-center gap-2">
-            <Sparkles size={12} className="text-brand-purple" />
-            <div className="text-[10px] font-bold tracking-[0.12em] text-brand-purple">
-              WHY THIS COULD WORK
-            </div>
+        <div className="bg-white rounded-2xl p-3 flex items-start gap-2 shadow-soft border border-brand-mint/40">
+          <div className="w-7 h-7 rounded-lg gradient-mint-sky flex items-center justify-center shrink-0">
+            <TrendingUp size={13} className="text-white" />
           </div>
-          <div className="mt-2 text-[12px] leading-[17px] text-brand-mute">{candidate.reason}</div>
-          <div className="mt-2 inline-flex rounded-full bg-brand-bg px-3 py-1 text-[10px] font-bold text-brand-ink">
-            {candidate.tone}
+          <div className="flex-1">
+            <div className="text-[11px] font-bold">Warm-up signal</div>
+            <div className="text-[9px] text-brand-mute leading-[12px]">{candidate.reason}</div>
+            <div className="text-[8px] text-brand-purple mt-1 font-bold">
+              Tone: {candidate.tone}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 glass border-t border-brand-bg px-3 py-3">
-        <div className="flex items-center gap-2">
-          <button className="flex-1 rounded-2xl bg-white px-3 py-3 text-[11px] font-bold text-brand-purple shadow-sm flex items-center justify-center gap-1.5">
-            <Bookmark size={12} /> Save draft
-          </button>
-          <motion.button
-            whileTap={{ scale: 0.96 }}
-            className="flex-1 rounded-2xl gradient-brand px-3 py-3 text-[11px] font-bold text-white shadow-soft flex items-center justify-center gap-1.5"
-          >
-            <Send size={12} /> Use this
-          </motion.button>
-          <button className="w-10 h-10 rounded-2xl bg-white text-brand-purple shadow-sm flex items-center justify-center">
-            <User size={14} />
-          </button>
+      <div className="absolute bottom-[64px] left-0 right-0 glass border-t border-brand-bg px-3 pt-3 pb-2">
+        <div className="flex items-center justify-between">
+          <div className="text-[12px] font-bold flex items-center gap-1.5">
+            <Sparkles size={12} className="text-brand-purple" /> SPARK REPLY SUGGESTIONS
+          </div>
+          <div className="text-[8px] text-brand-mute font-bold">AI SUGGESTION ONLY</div>
         </div>
+        <div className="mt-2 flex gap-1.5">
+          <button className="px-3 py-1 rounded-full gradient-brand text-white text-[10px] font-bold shadow-soft">
+            {candidate.tone}
+          </button>
+          <button className="px-3 py-1 rounded-full bg-white text-[10px] font-bold">Direct</button>
+          <button className="px-3 py-1 rounded-full bg-white text-[10px] font-bold">Warm</button>
+        </div>
+        <div className="mt-2 space-y-1.5">
+          {candidate.suggestions.map((suggestion) => (
+            <motion.div
+              whileHover={{ x: 2 }}
+              key={suggestion}
+              className="bg-white rounded-xl px-2.5 py-2 flex items-start gap-2 shadow-sm"
+            >
+              <Sparkles size={11} className="mt-0.5 text-brand-pink" />
+              <div className="flex-1 text-[10px] leading-[13px]">{suggestion}</div>
+              <Bookmark size={11} className="text-brand-mute" />
+            </motion.div>
+          ))}
+        </div>
+        <div className="mt-1 text-[10px] text-center text-brand-purple font-bold">View more</div>
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-brand-bg px-3 py-2.5 flex items-center gap-2">
+        <div className="w-8 h-8 rounded-full bg-brand-bg flex items-center justify-center">
+          <Plus size={16} className="text-brand-purple" />
+        </div>
+        <div className="flex-1 px-3 py-2 rounded-full bg-brand-bg flex items-center gap-2">
+          <div className="flex-1 text-[11px] text-brand-mute">Write your own message...</div>
+          <Sparkles size={12} className="text-brand-purple" />
+          <Smile size={12} className="text-brand-mute" />
+        </div>
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          className="w-9 h-9 rounded-full gradient-brand flex items-center justify-center shadow-soft"
+        >
+          <Send size={14} className="text-white" />
+        </motion.button>
       </div>
     </div>
   );

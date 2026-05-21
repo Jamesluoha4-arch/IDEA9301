@@ -4,8 +4,8 @@ import { Bell, Bot, Camera, CheckCircle2, Code2, Music, Sparkles, Users } from "
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
 import alexUrl from "@/assets/radar-avatar-1.png";
 import joeUrl from "@/assets/radar-avatar-2.png";
-import jamesUrl from "@/assets/radar-avatar-3.png";
-import sabrinaUrl from "@/assets/radar-avatar-4.png";
+import sabrinaUrl from "@/assets/radar-avatar-3.png";
+import jamesUrl from "@/assets/radar-avatar-4.png";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
 import { BottomNav } from "./F09_Home";
 
@@ -19,7 +19,7 @@ const spaceTopics = [
     signal: "AI-assisted creation - transparent identity - draft ready",
     Icon: Bot,
     avatar: alexUrl,
-    user: "NODE_NEURAL_72",
+    user: "Alex",
     certification: "AI Second Self",
     post: "Exploration of generative architectural patterns in high-density urban nodes. This draft analyzes the intersection of algorithmic spatial optimization and human navigation logic.",
     tags: ["AI-created", "Approved interests"],
@@ -50,7 +50,7 @@ const spaceTopics = [
       "A warm community for sharing playlists, show memories, and first-week energy without forcing conversation.",
     signal: "Shared taste signal - casual opening - preview ready",
     Icon: Music,
-    avatar: jamesUrl,
+    avatar: sabrinaUrl,
     user: "Sabrina",
     certification: "Human verified",
     post: "First week feels easier when the background track is right. I am building a starter playlist for quiet focus and small wins.",
@@ -66,7 +66,7 @@ const spaceTopics = [
       "A space for noticing the company neighborhood through photos, light, materials, and small discoveries.",
     signal: "Adjacent company context - outdoor interest - warm note ready",
     Icon: Camera,
-    avatar: sabrinaUrl,
+    avatar: jamesUrl,
     user: "James",
     certification: "AI Second Self",
     post: "A quick photo walk around the office can turn a new place into a map of small familiar landmarks.",
@@ -272,7 +272,7 @@ function PostPreview({ topic }: { topic: SpaceTopic }) {
           {topic.certification}
         </span>
       </div>
-      <div className={`mt-3 h-[82px] rounded-2xl bg-gradient-to-br ${topic.g} opacity-70`} />
+      <SpaceCover topicKey={topic.key} compact />
       <div className="mt-2 flex flex-wrap gap-1.5">
         {topic.tags.map((tag) => (
           <span
@@ -284,6 +284,77 @@ function PostPreview({ topic }: { topic: SpaceTopic }) {
         ))}
       </div>
       <p className="mt-2 text-[10px] leading-[14px] text-brand-ink">{topic.post}</p>
+    </div>
+  );
+}
+
+function SpaceCover({ topicKey, compact = false }: { topicKey: string; compact?: boolean }) {
+  const height = compact ? "h-[82px]" : "h-[132px]";
+  if (topicKey === "AI_SYNTH") {
+    return (
+      <div
+        className={`mt-3 ${height} rounded-2xl overflow-hidden relative bg-[radial-gradient(circle_at_62%_44%,rgba(167,139,250,0.8),transparent_18%),linear-gradient(135deg,#142035_0%,#2d3153_45%,#9279e8_100%)]`}
+      >
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(0deg,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[length:18px_18px] opacity-40" />
+        <div className="absolute left-4 top-4 w-[58%] text-white">
+          <div className="text-[14px] font-bold leading-[17px]">
+            AI-created identity,
+            <br />
+            transparent systems.
+          </div>
+          <div className="mt-1 text-[7px] text-white/75">Create. Collaborate. Reflect.</div>
+        </div>
+        <div className="absolute right-4 top-4 h-14 w-14 rounded-full border border-white/35 bg-white/10 backdrop-blur flex items-center justify-center">
+          <Bot size={22} className="text-white" />
+        </div>
+      </div>
+    );
+  }
+  if (topicKey === "DESIGN_SYSTEMS") {
+    return (
+      <div className={`mt-3 ${height} rounded-2xl bg-white relative overflow-hidden`}>
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(31,31,46,0.08)_1px,transparent_1px),linear-gradient(0deg,rgba(31,31,46,0.08)_1px,transparent_1px)] bg-[length:42px_32px]" />
+        <div className="absolute left-4 top-4 text-[12px] font-bold leading-[16px] max-w-[160px]">
+          Tiny interface decisions that make trust visible.
+        </div>
+        <div className="absolute right-5 bottom-4 rounded-xl bg-white shadow-soft px-3 py-2 text-[8px] text-brand-mute">
+          Smart defaults
+        </div>
+      </div>
+    );
+  }
+  if (topicKey === "MUSIC_ROOM") {
+    return (
+      <div
+        className={`mt-3 ${height} rounded-2xl relative overflow-hidden bg-[radial-gradient(circle_at_72%_18%,rgba(255,255,255,0.85),transparent_22%),linear-gradient(135deg,#eff7e8_0%,#d8ead0_55%,#f8f4e8_100%)]`}
+      >
+        <div className="absolute left-4 top-4 text-[13px] font-bold leading-[17px] max-w-[165px]">
+          First week feels easier when the background track is right.
+        </div>
+        <div className="absolute bottom-3 left-4 flex items-center gap-2 text-[8px] text-brand-mute">
+          <Music size={12} /> 42 min · 12 tracks
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className={`mt-3 ${height} rounded-2xl relative overflow-hidden bg-[#fbfaf6]`}>
+      <div className="absolute inset-4 border border-brand-mint/25 bg-white/45" />
+      {[1, 2, 3, 4, 5].map((n, index) => (
+        <span
+          key={n}
+          className="absolute h-5 w-5 rounded-full bg-brand-mint text-white text-[9px] font-bold flex items-center justify-center"
+          style={{
+            left: `${20 + index * 13}%`,
+            top: `${34 + (index % 2) * 22}%`,
+          }}
+        >
+          {n}
+        </span>
+      ))}
+      <div className="absolute left-4 top-4 text-[13px] font-bold leading-[17px] max-w-[175px]">
+        A quick photo walk can map small familiar landmarks.
+      </div>
     </div>
   );
 }

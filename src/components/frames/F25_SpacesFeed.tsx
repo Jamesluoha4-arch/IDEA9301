@@ -4,69 +4,114 @@ import {
   ArrowLeft,
   Bell,
   Bot,
-  CheckCircle2,
+  ChevronDown,
+  Edit3,
   Heart,
   MessageSquare,
+  Search,
   Send,
-  Share2,
   ShieldCheck,
 } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
 import alexUrl from "@/assets/radar-avatar-1.png";
 import joeUrl from "@/assets/radar-avatar-2.png";
-import jamesUrl from "@/assets/radar-avatar-3.png";
-import sabrinaUrl from "@/assets/radar-avatar-4.png";
+import sabrinaUrl from "@/assets/radar-avatar-3.png";
+import jamesUrl from "@/assets/radar-avatar-4.png";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
 import { BottomNav } from "./F09_Home";
 
-const spaceData = {
+type CoverKind = "ai" | "design" | "music" | "photo";
+type SpacePostData = {
+  key: string;
+  name: string;
+  user: string;
+  avatar: string;
+  auth: "AI Second Self" | "Human verified";
+  cover: CoverKind;
+  body: string;
+  tags: string[];
+  starter: string;
+  id?: string;
+  time?: string;
+};
+
+const spaceData: Record<string, SpacePostData> = {
   AI_SYNTH: {
+    key: "AI_SYNTH",
     name: "AI Synth",
-    user: "NODE_NEURAL_72",
+    user: "Alex",
     avatar: alexUrl,
     auth: "AI Second Self",
-    cover: "from-brand-lavender to-brand-purple",
+    cover: "ai",
     body: "Exploration of generative architectural patterns in high-density urban nodes. This draft analyzes the intersection of algorithmic spatial optimization and human navigation logic.",
-    tags: ["AI-created", "Source: approved interests", "Spatial thinking"],
+    tags: ["AI-created", "Source: approved interests"],
     starter:
       "Hi, I am {user}. I am curious about how AI-created identity can stay transparent while still feeling expressive and useful in a new community.",
   },
   DESIGN_SYSTEMS: {
+    key: "DESIGN_SYSTEMS",
     name: "Design Systems",
     user: "Joe",
     avatar: joeUrl,
     auth: "Human verified",
-    cover: "from-brand-sky to-brand-mint",
-    body: "A small design note from onboarding: trust often comes from consistent spacing, clear hierarchy, and controls that explain themselves through motion.",
-    tags: ["Human post", "Design notes", "Graduate cohort"],
+    cover: "design",
+    body: "I am collecting tiny interface decisions that make a new product feel easier to trust. The best ones are almost invisible until you need them.",
+    tags: ["Human post", "Design notes"],
     starter:
       "Hi, I am {user}. I am new here and I would love to trade one design system detail that made onboarding feel clearer.",
   },
   MUSIC_ROOM: {
+    key: "MUSIC_ROOM",
     name: "Music Room",
     user: "Sabrina",
-    avatar: jamesUrl,
+    avatar: sabrinaUrl,
     auth: "Human verified",
-    cover: "from-brand-pink to-brand-peach",
-    body: "First week soundtrack idea: something light enough to focus, warm enough to make a new workspace feel familiar.",
-    tags: ["Human post", "Music", "Low-pressure social"],
+    cover: "music",
+    body: "First week feels easier when the background track is right. I am building a starter playlist for quiet focus and small wins.",
+    tags: ["Human post", "Music"],
     starter:
       "Hi, I am {user}. I am building a first-week playlist and would love to hear one track that helps you settle into a new place.",
   },
   PHOTO_WALK: {
+    key: "PHOTO_WALK",
     name: "Photo Walk",
     user: "James",
-    avatar: sabrinaUrl,
+    avatar: jamesUrl,
     auth: "AI Second Self",
-    cover: "from-brand-peach to-brand-pink",
-    body: "A photo walk around the company neighborhood can turn an unfamiliar place into a set of small shared landmarks.",
-    tags: ["AI-created", "Photo walk", "Approved interests"],
+    cover: "photo",
+    body: "A quick photo walk around the office can turn a new place into a map of small familiar landmarks.",
+    tags: ["AI-created", "Source: approved interests"],
     starter:
       "Hi, I am {user}. I am trying to learn the area around the office through small visual details. What is one place nearby worth noticing?",
   },
 };
 
 type SpaceKey = keyof typeof spaceData;
+type FeedMode = "Friends" | "Featured";
+
+const curatedPosts: SpacePostData[] = [
+  {
+    ...spaceData.DESIGN_SYSTEMS,
+    id: "curated-design",
+    user: "Joe",
+    time: "18M AGO",
+    body: "Tiny product decisions can make a new team feel easier to trust: clear labels, visible state, and a safe way to undo.",
+  },
+  {
+    ...spaceData.MUSIC_ROOM,
+    id: "curated-music",
+    user: "Sabrina",
+    time: "26M AGO",
+    body: "I am collecting quiet tracks for first-week focus. Nothing too dramatic, just enough warmth to make the desk feel familiar.",
+  },
+  {
+    ...spaceData.PHOTO_WALK,
+    id: "curated-photo",
+    user: "James",
+    time: "41M AGO",
+    body: "A five-minute photo walk helped me remember the route from reception to the project room. Small landmarks really help.",
+  },
+];
 
 function readUserName() {
   return window.localStorage.getItem("second-self-user-name")?.trim() || "David";
@@ -79,8 +124,10 @@ function readSpaceKey(): SpaceKey {
 
 export function F25_SpacesFeed() {
   const [showComposer, setShowComposer] = useState(false);
-  const [approving, setApproving] = useState(false);
   const [composerGone, setComposerGone] = useState(false);
+  const [publishedStarter, setPublishedStarter] = useState<SpacePostData | null>(null);
+  const [mode, setMode] = useState<FeedMode>("Friends");
+  const [filterOpen, setFilterOpen] = useState(false);
   const spaceKey = readSpaceKey();
   const space = spaceData[spaceKey];
   const userName = readUserName();
@@ -88,21 +135,61 @@ export function F25_SpacesFeed() {
   const starter = useMemo(() => space.starter.replace("{user}", userName), [space, userName]);
 
   useEffect(() => {
+    setShowComposer(false);
+    setComposerGone(false);
+    setPublishedStarter(null);
     const timer = window.setTimeout(() => setShowComposer(true), 1000);
     return () => window.clearTimeout(timer);
   }, [spaceKey]);
 
   const approve = () => {
-    setApproving(true);
-    window.setTimeout(() => setComposerGone(true), 1700);
+    setPublishedStarter({
+      ...space,
+      id: "starter-post",
+      user: userName,
+      avatar: userAvatar,
+      auth: "AI Second Self",
+      body: starter,
+      tags: ["AI-created", "Approved opening"],
+      time: "JUST NOW",
+    });
+    setComposerGone(true);
   };
 
+  const friendPosts = [
+    ...(publishedStarter ? [publishedStarter] : []),
+    space,
+    {
+      ...spaceData.MUSIC_ROOM,
+      id: "sabrina-reflection",
+      user: "Sabrina",
+      avatar: sabrinaUrl,
+      body: "I like how this topic gives new starters a small and safe reason to speak. It feels easier than forcing a big introduction.",
+      tags: ["Human post", "New starter note"],
+    },
+  ];
+  const posts = mode === "Friends" ? friendPosts : curatedPosts;
+
   return (
-    <div className="relative w-full h-full pt-12 pb-20 overflow-y-auto font-sans text-brand-ink gradient-brand-soft prototype-scroll">
-      <div className="px-4 py-3 flex items-center justify-between glass border-b border-brand-bg">
-        <ArrowLeft size={16} className="text-brand-purple" data-prototype-back="7:0" />
-        <div className="text-[11px] font-bold tracking-[0.6px]">{space.name.toUpperCase()}</div>
-        <Bell size={16} className="text-brand-purple" />
+    <div className="relative w-full h-full pt-12 pb-24 overflow-y-auto font-sans text-brand-ink gradient-brand-soft prototype-scroll">
+      <div className="px-4 py-3 flex items-center gap-3 glass border-b border-brand-bg">
+        <button
+          type="button"
+          data-prototype-back="7:0"
+          className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center"
+        >
+          <ArrowLeft size={15} className="text-brand-purple" />
+        </button>
+        <label className="flex-1 h-9 rounded-full bg-white/90 shadow-sm border border-white px-3 flex items-center gap-2">
+          <Search size={14} className="text-brand-mute" />
+          <input
+            className="w-full bg-transparent outline-none text-[12px]"
+            placeholder={`Search ${space.name}`}
+          />
+        </label>
+        <button className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center">
+          <Bell size={14} className="text-brand-purple" />
+        </button>
       </div>
 
       <div className="px-5 pt-4">
@@ -110,21 +197,58 @@ export function F25_SpacesFeed() {
         <p className="mt-1 text-[12px] text-brand-mute">
           A curated room built from approved interests and transparent identity labels.
         </p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {["Featured", "Human", "AI Second Self", "New starters", "Ideas"].map((tag) => (
+
+        <div className="mt-4 flex items-center gap-2">
+          <div className="relative">
             <button
-              key={tag}
               type="button"
-              className="rounded-full bg-white/86 px-3 py-1.5 text-[10px] font-bold text-brand-purple shadow-sm border border-white"
+              onClick={() => setFilterOpen((value) => !value)}
+              className="rounded-full gradient-brand px-4 py-2 text-[11px] font-bold text-white shadow-soft flex items-center gap-1.5"
             >
-              {tag}
+              {mode}
+              <ChevronDown size={12} />
             </button>
-          ))}
+            <AnimatePresence>
+              {filterOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -4, scale: 0.96 }}
+                  className="absolute left-0 top-10 z-40 w-28 rounded-2xl bg-white shadow-soft border border-brand-bg p-1"
+                >
+                  {(["Friends", "Featured"] as FeedMode[]).map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => {
+                        setMode(item);
+                        setFilterOpen(false);
+                      }}
+                      className={`w-full rounded-xl px-3 py-2 text-left text-[11px] font-bold ${
+                        mode === item ? "bg-brand-bg text-brand-purple" : "text-brand-ink"
+                      }`}
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          <button className="rounded-full bg-white/80 px-4 py-2 text-[11px] font-bold text-brand-mute shadow-sm">
+            Pending
+          </button>
+          <button className="rounded-full bg-white/80 px-4 py-2 text-[11px] font-bold text-brand-mute shadow-sm">
+            Mine
+          </button>
+          <button className="ml-auto h-9 w-9 rounded-full bg-white/80 shadow-sm flex items-center justify-center">
+            <Search size={15} className="text-brand-mint" />
+          </button>
         </div>
       </div>
 
       <AnimatePresence>
-        {showComposer && !composerGone && (
+        {showComposer && !composerGone && mode === "Friends" && (
           <motion.section
             initial={{ opacity: 0, y: -18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -167,8 +291,8 @@ export function F25_SpacesFeed() {
                 <motion.span
                   className="absolute inset-y-0 left-0 bg-brand-ink/35"
                   initial={{ width: "0%" }}
-                  animate={{ width: approving ? "100%" : "0%" }}
-                  transition={{ duration: 1.55, ease: "easeInOut" }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: 2.2, ease: "easeInOut" }}
                 />
                 <span className="relative">Approved</span>
               </button>
@@ -178,29 +302,31 @@ export function F25_SpacesFeed() {
       </AnimatePresence>
 
       <div className="px-4 mt-4 space-y-3 relative">
-        <SpacePost space={space} />
-        <SpacePost
-          space={{
-            ...space,
-            user: space.auth === "Human verified" ? "SECOND_SELF_DRAFT" : "Maya",
-            avatar: userAvatar,
-            auth: space.auth === "Human verified" ? "AI Second Self" : "Human verified",
-            body: "I like how this topic makes a new workplace feel less abstract. It gives people a small, safe reason to start talking.",
-          }}
-        />
+        <AnimatePresence initial={false}>
+          {posts.map((post, index) => (
+            <SpacePost key={post.id ?? `${post.key}-${index}`} space={post} index={index} />
+          ))}
+        </AnimatePresence>
       </div>
+
+      <button className="absolute bottom-24 right-5 h-14 w-14 rounded-full bg-brand-mint text-white shadow-glow flex items-center justify-center">
+        <Edit3 size={22} />
+      </button>
 
       <BottomNav active="COMMUNITY" />
     </div>
   );
 }
 
-function SpacePost({ space }: { space: (typeof spaceData)[SpaceKey] }) {
+function SpacePost({ space, index }: { space: SpacePostData; index: number }) {
   const isAi = space.auth === "AI Second Self";
   return (
     <motion.div
+      layout
       initial={{ y: 12, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -10, opacity: 0 }}
+      transition={{ delay: 0.04 * index }}
       className="bg-white rounded-3xl shadow-soft overflow-hidden border border-brand-bg"
     >
       <div className="px-3 pt-3 flex items-center gap-2">
@@ -209,7 +335,7 @@ function SpacePost({ space }: { space: (typeof spaceData)[SpaceKey] }) {
         </div>
         <div className="flex-1">
           <div className="text-[12px] font-bold tracking-[0.3px]">{space.user}</div>
-          <div className="text-[9px] font-mono text-brand-mute">2H AGO</div>
+          <div className="text-[9px] font-mono text-brand-mute">{space.time ?? "2H AGO"}</div>
         </div>
         <div
           className={`px-2 py-0.5 rounded-md text-[8px] font-bold tracking-[0.4px] flex items-center gap-1 ${
@@ -221,15 +347,7 @@ function SpacePost({ space }: { space: (typeof spaceData)[SpaceKey] }) {
         </div>
       </div>
 
-      <div
-        className={`mx-3 mt-3 h-[132px] rounded-2xl bg-gradient-to-br ${space.cover} relative overflow-hidden`}
-      >
-        <motion.div
-          animate={{ x: ["-100%", "100%"] }}
-          transition={{ duration: 3, repeat: Infinity }}
-          className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/18 to-transparent"
-        />
-      </div>
+      <PostCover kind={space.cover} />
 
       <div className="px-3 mt-3 flex flex-wrap gap-1.5">
         {space.tags.map((tag) => (
@@ -246,18 +364,76 @@ function SpacePost({ space }: { space: (typeof spaceData)[SpaceKey] }) {
 
       <div className="px-3 mt-3 mb-3 pt-2.5 border-t border-brand-bg flex items-center gap-4 text-[11px] text-brand-mute">
         <button className="flex items-center gap-1.5">
-          <Heart size={13} className="text-brand-pink" /> 1.2K
+          <Heart size={13} className="text-brand-pink" /> {index === 0 ? "1.2K" : "84"}
         </button>
         <button className="flex items-center gap-1.5">
-          <MessageSquare size={13} className="text-brand-purple" /> 42
+          <MessageSquare size={13} className="text-brand-purple" /> {index === 0 ? "42" : "9"}
         </button>
         <button className="ml-auto flex items-center gap-1.5 text-[9px] font-mono font-bold text-brand-ink">
-          <Share2 size={12} /> REF: #{isAi ? "772-BX" : "ORIG-19"}
-        </button>
-        <button className="flex items-center gap-1 text-[9px] font-bold text-brand-purple">
-          <Send size={11} /> Share
+          <Send size={12} /> REF: #{isAi ? "772-BX" : "ORIG-19"}
         </button>
       </div>
     </motion.div>
+  );
+}
+
+function PostCover({ kind }: { kind: string }) {
+  if (kind === "ai") {
+    return (
+      <div className="mx-3 mt-3 h-[132px] rounded-2xl overflow-hidden relative bg-[radial-gradient(circle_at_62%_44%,rgba(167,139,250,0.8),transparent_18%),linear-gradient(135deg,#142035_0%,#2d3153_45%,#9279e8_100%)]">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(0deg,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[length:18px_18px] opacity-40" />
+        <div className="absolute left-4 top-4 w-[62%] text-white">
+          <div className="text-[16px] font-bold leading-[18px]">
+            A space for AI-created identity and responsible creative systems.
+          </div>
+          <div className="mt-2 text-[8px] text-white/75">Transparency · Consent · Attribution</div>
+        </div>
+      </div>
+    );
+  }
+  if (kind === "design") {
+    return (
+      <div className="mx-3 mt-3 h-[132px] rounded-2xl bg-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(31,31,46,0.08)_1px,transparent_1px),linear-gradient(0deg,rgba(31,31,46,0.08)_1px,transparent_1px)] bg-[length:42px_32px]" />
+        <div className="absolute left-5 top-5 text-[15px] font-bold leading-[19px] max-w-[230px]">
+          Tiny interface decisions make a new product easier to trust.
+        </div>
+        <div className="absolute right-5 bottom-4 rounded-xl bg-white shadow-soft px-3 py-2 text-[9px] text-brand-mute">
+          Smart defaults
+        </div>
+      </div>
+    );
+  }
+  if (kind === "music") {
+    return (
+      <div className="mx-3 mt-3 h-[132px] rounded-2xl relative overflow-hidden bg-[radial-gradient(circle_at_72%_18%,rgba(255,255,255,0.85),transparent_22%),linear-gradient(135deg,#eff7e8_0%,#d8ead0_55%,#f8f4e8_100%)]">
+        <div className="absolute left-5 top-5 text-[16px] font-bold leading-[20px] max-w-[240px]">
+          First week feels easier when the background track is right.
+        </div>
+        <div className="absolute bottom-4 left-5 flex items-center gap-2 text-[9px] text-brand-mute">
+          42 min · 12 tracks · designed for focus
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="mx-3 mt-3 h-[132px] rounded-2xl relative overflow-hidden bg-[#fbfaf6]">
+      <div className="absolute inset-4 border border-brand-mint/25 bg-white/45" />
+      {[1, 2, 3, 4, 5].map((n, index) => (
+        <span
+          key={n}
+          className="absolute h-6 w-6 rounded-full bg-brand-mint text-white text-[10px] font-bold flex items-center justify-center"
+          style={{
+            left: `${20 + index * 13}%`,
+            top: `${34 + (index % 2) * 22}%`,
+          }}
+        >
+          {n}
+        </span>
+      ))}
+      <div className="absolute left-5 top-5 text-[15px] font-bold leading-[19px] max-w-[230px]">
+        A quick photo walk can map small familiar landmarks.
+      </div>
+    </div>
   );
 }

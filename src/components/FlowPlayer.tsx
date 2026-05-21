@@ -55,7 +55,7 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: ["AI Control", "Safety Center"], target: key(3, 0) },
     { match: "View all conversations", target: key(5, 0) },
     { match: ["CHAT", "SOCIAL"], target: key(1, 6) },
-    { match: ["COMMUNITY", "社区"], target: key(7, 3) },
+    { match: ["COMMUNITY", "社区"], target: key(7, 0) },
     { match: "AI", target: home },
     { match: "PRESENCE", target: key(7, 8) },
     { match: ["SETTINGS", "PROFILE"], target: key(3, 0) },
@@ -306,7 +306,7 @@ function findRule(rules: Rule[], text: string) {
 const tabTargets: Record<string, NodeKey> = {
   home,
   chat: home,
-  community: key(7, 3),
+  community: key(7, 0),
   social: key(1, 1),
   ai: home,
   presence: key(7, 8),

@@ -130,10 +130,8 @@ export function F10_Social() {
         </div>
 
         <motion.div
-          data-prototype-target="1:9"
-          data-prototype-person="Alex"
           whileTap={{ scale: 0.985 }}
-          className="mx-5 mt-4 bg-white rounded-2xl p-4 shadow-soft border border-brand-bg cursor-pointer"
+          className="mx-5 mt-4 bg-white rounded-2xl p-4 shadow-soft border border-brand-bg"
         >
           <div className="flex items-center gap-2">
             <Sparkles size={12} className="text-brand-purple" />
@@ -143,7 +141,12 @@ export function F10_Social() {
           </div>
           <div className="mt-1.5 text-[14px] font-bold">Alex - possible company coworker</div>
           <div className="text-[11px] text-brand-mute mt-1">{candidates[0].signal}</div>
-          <div className="mt-3 relative h-[144px] rounded-2xl bg-gradient-to-br from-[#fff7fb] to-[#eef7ff] border border-brand-bg flex items-center justify-center overflow-visible">
+          <div
+            data-prototype-target="1:9"
+            data-prototype-person="Alex"
+            data-prototype-source="avatar"
+            className="mt-3 relative h-[144px] rounded-2xl bg-gradient-to-br from-[#fff7fb] to-[#eef7ff] border border-brand-bg flex items-center justify-center overflow-visible cursor-pointer"
+          >
             <img
               src={candidates[0].img}
               alt=""
@@ -159,6 +162,9 @@ export function F10_Social() {
             </motion.div>
           </div>
           <motion.button
+            data-prototype-target="1:9"
+            data-prototype-person="Alex"
+            data-prototype-source="review-path"
             whileTap={{ scale: 0.98 }}
             whileHover={{ y: -1 }}
             className="mt-3 w-full py-3 rounded-full gradient-brand text-white text-[13px] font-bold shadow-soft"
@@ -221,6 +227,7 @@ function RadarCandidate({ person, index }: { person: (typeof candidates)[number]
     <motion.div
       data-prototype-target="1:9"
       data-prototype-person={person.name}
+      data-prototype-source="avatar"
       className="absolute z-20 cursor-pointer"
       style={{
         left: `calc(50% + ${x - person.size / 2}px)`,

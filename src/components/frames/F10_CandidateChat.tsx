@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   Smile,
   Sparkles,
+  TrendingUp,
   Users,
 } from "lucide-react";
 import alexUrl from "@/assets/radar-avatar-1.png";
@@ -30,6 +31,8 @@ type ChatMessage = { from: "ai" | "me"; text: string } | { from: "system"; text:
 
 const chatListStorageKey = "second-self.chat-list";
 const openedCandidateStorageKey = "second-self.opened-candidate-chat";
+const candidateSourceStorageKey = "second-self.selected-candidate-source";
+const alexReviewSeenStorageKey = "second-self.alex-review-path-seen";
 
 const candidateOpeners = {
   Alex: {
@@ -266,6 +269,9 @@ export function F10_CandidateChat() {
   const candidate = candidateOpeners[candidateName];
   const userName = readUserName();
   const userAvatar = readGeneratedAvatar();
+  const selfAvatar = userAvatar || alexUrl;
+  const messageListRef = useRef<HTMLDivElement | null>(null);
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
   const holdTimer = useRef<number | null>(null);
   const [selectedStyle, setSelectedStyle] = useState<StyleTab>("Friendly");
   const [messages, setMessages] = useState<ChatMessage[]>(() =>
@@ -277,6 +283,7 @@ export function F10_CandidateChat() {
   const [commentTarget, setCommentTarget] = useState<string | null>(null);
   const [replyTurn, setReplyTurn] = useState(0);
   const [draftSeed, setDraftSeed] = useState(0);
+  const [showWarmupSignal, setShowWarmupSignal] = useState(false);
 
   useEffect(() => {
     const openedName = window.sessionStorage.getItem(openedCandidateStorageKey);
@@ -285,6 +292,20 @@ export function F10_CandidateChat() {
       window.sessionStorage.removeItem(openedCandidateStorageKey);
     }
   }, [candidate.drafts.Friendly, candidateName, userName]);
+
+  useEffect(() => {
+    const source = window.sessionStorage.getItem(candidateSourceStorageKey);
+    const alreadySeen = window.sessionStorage.getItem(alexReviewSeenStorageKey);
+    const shouldShow = candidateName === "Alex" && source === "review-path" && !alreadySeen;
+    setShowWarmupSignal(shouldShow);
+    if (shouldShow) {
+      window.sessionStorage.setItem(alexReviewSeenStorageKey, "1");
+    }
+  }, [candidateName]);
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messages, keyboardOpen]);
 
   const selectedDraft = useMemo(
     () => personalize(candidate.drafts[selectedStyle], userName),
@@ -353,8 +374,9 @@ export function F10_CandidateChat() {
       </div>
 
       <div
+        ref={messageListRef}
         className="px-3 py-3 flex flex-col gap-3 overflow-y-auto prototype-scroll"
-        style={{ height: keyboardOpen ? "calc(100% - 438px)" : "calc(100% - 326px)" }}
+        style={{ height: keyboardOpen ? "calc(100% - 488px)" : "calc(100% - 316px)" }}
       >
         <div className="bg-white rounded-2xl p-3 flex items-start gap-2 shadow-soft border border-brand-purple/20">
           <div className="w-7 h-7 rounded-lg gradient-brand flex items-center justify-center shrink-0">
@@ -399,14 +421,16 @@ export function F10_CandidateChat() {
                 {isMe ? (
                   userAvatar ? (
                     <img
-                      src={userAvatar}
+                      src={selfAvatar}
                       alt=""
                       className="h-[130%] w-[130%] object-cover object-top"
                     />
                   ) : (
-                    <div className="w-full h-full gradient-brand flex items-center justify-center text-white text-[11px] font-bold">
-                      You
-                    </div>
+                    <img
+                      src={selfAvatar}
+                      alt=""
+                      className="h-[130%] w-[130%] object-cover object-top"
+                    />
                   )
                 ) : (
                   <img
@@ -436,20 +460,55 @@ export function F10_CandidateChat() {
                 )}
                 {commentTarget === message.text && (
                   <motion.div
-                    initial={{ opacity: 0, y: 6, scale: 0.96 }}
+                    initial={{ opacity: 0, y: 8, scale: 0.88 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    className={`absolute -top-10 ${isMe ? "right-12" : "left-12"} rounded-2xl border border-white/80 bg-white/90 px-3 py-2 text-[10px] font-bold text-brand-purple shadow-soft backdrop-blur-xl`}
+                    exit={{ opacity: 0, y: 6, scale: 0.9 }}
+                    className={`absolute -top-14 ${isMe ? "right-12" : "left-12"} rounded-full border border-white/80 bg-white/95 px-3 py-2 shadow-[0_12px_32px_rgba(31,31,46,0.18)] backdrop-blur-xl flex items-center gap-3 text-[21px] z-30`}
                   >
-                    Comment saved for later
+                    {["❤️", "😂", "😮", "😢", "😠", "👍", "+"].map((emoji) => (
+                      <button
+                        key={emoji}
+                        type="button"
+                        onClick={() => setCommentTarget(null)}
+                        className="leading-none hover:scale-110 transition-transform"
+                      >
+                        {emoji}
+                      </button>
+                    ))}
                   </motion.div>
                 )}
               </div>
             </motion.div>
           );
         })}
+        {showWarmupSignal && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl p-3 flex items-start gap-2 shadow-soft border border-brand-mint/40"
+          >
+            <div className="w-7 h-7 rounded-lg gradient-mint-sky flex items-center justify-center shrink-0">
+              <TrendingUp size={13} className="text-white" />
+            </div>
+            <div className="flex-1">
+              <div className="text-[11px] font-bold">Warm-up signal</div>
+              <div className="text-[9px] text-brand-mute leading-[12px]">
+                Your Second Self found a shared onboarding context. You are both new to the company.
+              </div>
+              <div className="text-[8px] text-brand-purple mt-1 font-bold">
+                Company signal updated today
+              </div>
+            </div>
+          </motion.div>
+        )}
+        <div ref={messageEndRef} className="h-5 shrink-0" />
       </div>
 
-      <div className="absolute bottom-[150px] left-0 right-0 glass border-t border-brand-bg px-3 pt-3 pb-2">
+      <motion.div
+        animate={{ y: keyboardOpen ? -232 : 0 }}
+        transition={{ type: "spring", stiffness: 360, damping: 34 }}
+        className="absolute bottom-[150px] left-0 right-0 glass border-t border-brand-bg px-3 pt-3 pb-2"
+      >
         <div className="flex items-center justify-between">
           <div className="text-[12px] font-bold flex items-center gap-1.5">
             <Sparkles size={12} className="text-brand-purple" /> SPARK REPLY SUGGESTIONS
@@ -492,9 +551,13 @@ export function F10_CandidateChat() {
         >
           View more
         </button>
-      </div>
+      </motion.div>
 
-      <div className="absolute bottom-[86px] left-0 right-0 bg-white border-t border-brand-bg px-3 py-2.5 flex items-center gap-2">
+      <motion.div
+        animate={{ y: keyboardOpen ? -232 : 0 }}
+        transition={{ type: "spring", stiffness: 360, damping: 34 }}
+        className="absolute bottom-[86px] left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-brand-bg px-3 py-2.5 flex items-center gap-2"
+      >
         <div className="w-8 h-8 rounded-full bg-brand-bg flex items-center justify-center">
           <Plus size={16} className="text-brand-purple" />
         </div>
@@ -515,7 +578,7 @@ export function F10_CandidateChat() {
         >
           <Send size={14} className="text-white" />
         </motion.button>
-      </div>
+      </motion.div>
 
       <AnimatePresence>
         {keyboardOpen && (
@@ -574,9 +637,9 @@ function PrototypeKeyboard({
       animate={{ y: 0 }}
       exit={{ y: 280 }}
       transition={{ type: "spring", stiffness: 360, damping: 38 }}
-      className="absolute bottom-0 left-0 right-0 z-[110] bg-[#d7dde7] px-2 pt-2 pb-3 shadow-[0_-18px_34px_rgba(31,31,46,0.18)]"
+      className="absolute bottom-0 left-0 right-0 z-[110] bg-gradient-to-b from-[#f6f1ff] via-[#eee8fb] to-[#dfe8f5] px-2 pt-2 pb-3 shadow-[0_-18px_34px_rgba(108,92,231,0.18)] border-t border-white/75"
     >
-      <div className="mb-2 flex items-center gap-2">
+      <div className="hidden">
         <button className="h-10 w-10 rounded-full bg-white/70 flex items-center justify-center">
           <Mic size={18} />
         </button>
@@ -594,7 +657,7 @@ function PrototypeKeyboard({
           v
         </button>
       </div>
-      <div className="mb-2 flex justify-around text-[22px] text-brand-ink">
+      <div className="mb-2 flex justify-around text-[20px] text-brand-ink/80">
         {["I", "you", "we", "this", "good", "not", "in", "yes"].map((word) => (
           <button key={word} type="button" onClick={() => onType(`${word} `)}>
             {word}
@@ -608,7 +671,7 @@ function PrototypeKeyboard({
               <button
                 type="button"
                 onClick={() => onType("")}
-                className="h-12 w-12 rounded-lg bg-[#b7bfca] text-[22px]"
+                className="h-12 w-12 rounded-xl bg-white/55 text-[22px] text-brand-purple shadow-sm border border-white/70"
               >
                 ⇧
               </button>
@@ -618,7 +681,7 @@ function PrototypeKeyboard({
                 key={key}
                 type="button"
                 onClick={() => onType(key)}
-                className="h-12 min-w-[35px] flex-1 rounded-lg bg-white text-[28px] text-black shadow-sm"
+                className="h-12 min-w-[35px] flex-1 rounded-xl bg-white/92 text-[26px] text-brand-ink shadow-sm border border-white"
               >
                 {key}
               </button>
@@ -627,7 +690,7 @@ function PrototypeKeyboard({
               <button
                 type="button"
                 onClick={onDelete}
-                className="h-12 w-12 rounded-lg bg-[#b7bfca] flex items-center justify-center"
+                className="h-12 w-12 rounded-xl bg-white/55 flex items-center justify-center text-brand-purple shadow-sm border border-white/70"
               >
                 <Delete size={22} />
               </button>
@@ -635,24 +698,34 @@ function PrototypeKeyboard({
           </div>
         ))}
         <div className="flex gap-2">
-          <button type="button" className="h-12 w-16 rounded-lg bg-[#b7bfca] text-[18px]">
+          <button
+            type="button"
+            className="h-12 w-16 rounded-xl bg-white/55 text-[18px] text-brand-ink shadow-sm border border-white/70"
+          >
             123
           </button>
           <button
             type="button"
             onClick={() => onType(" ")}
-            className="h-12 flex-1 rounded-lg bg-white text-[18px]"
+            className="h-12 flex-1 rounded-xl bg-white/92 text-[18px] text-brand-ink shadow-sm border border-white"
           >
             space
           </button>
           <button
             type="button"
             onClick={onSend}
-            className="h-12 w-20 rounded-lg bg-[#b7bfca] text-[17px] font-bold"
+            className="h-12 w-20 rounded-xl gradient-brand text-[17px] font-bold text-white shadow-soft"
           >
             send
           </button>
         </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-2 mx-auto block h-6 w-16 rounded-full bg-white/50 text-[14px] text-brand-purple"
+        >
+          v
+        </button>
       </div>
     </motion.div>
   );

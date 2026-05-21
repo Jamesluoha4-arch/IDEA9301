@@ -446,6 +446,14 @@ export function FlowPlayer({ onOpenGallery }: Props) {
         "second-self.selected-candidate",
         candidateTarget.dataset.prototypePerson,
       );
+      if (candidateTarget.dataset.prototypeSource) {
+        window.sessionStorage.setItem(
+          "second-self.selected-candidate-source",
+          candidateTarget.dataset.prototypeSource,
+        );
+      } else {
+        window.sessionStorage.removeItem("second-self.selected-candidate-source");
+      }
       window.sessionStorage.setItem(
         "second-self.opened-candidate-chat",
         candidateTarget.dataset.prototypePerson,

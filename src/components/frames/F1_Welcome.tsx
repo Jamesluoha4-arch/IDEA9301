@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 
 export function F1_Welcome() {
   return (
@@ -71,7 +71,7 @@ export function F1_Welcome() {
         </motion.div>
       </div>
 
-      {/* Content — preserve original positions */}
+      {/* Content 鈥?preserve original positions */}
       <div className="absolute left-6 right-6 top-[300px] flex flex-col items-center gap-2">
         <motion.h1
           className="text-[28px] font-bold text-brand-ink leading-[32px]"

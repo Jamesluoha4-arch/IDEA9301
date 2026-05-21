@@ -1,4 +1,4 @@
-export const generatedAvatarStorageKey = "second-self.generated-avatar";
+﻿export const generatedAvatarStorageKey = "second-self.generated-avatar";
 
 let generatedAvatarMemoryUrl = "";
 

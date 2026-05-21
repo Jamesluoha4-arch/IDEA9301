@@ -1,4 +1,4 @@
-import { User, MessageCircle, ChevronRight } from "lucide-react";
+﻿import { User, MessageCircle, ChevronRight } from "lucide-react";
 import { BottomNav } from "./F09_Home";
 
 export function F79_RelationshipSignals() {
@@ -19,7 +19,7 @@ export function F79_RelationshipSignals() {
       />
       <Group
         label="MEDIUM PRIORITY"
-        name="Alex Chen"
+        name="Jim Chen"
         status="Cooling down"
         sub="REPLY GAP INCREASED"
       />
@@ -33,7 +33,7 @@ export function F79_RelationshipSignals() {
           { n: "1", t: "Blocked action" },
         ].map((r) => (
           <div key={r.t} className="px-4 py-3 flex items-center gap-3">
-            <div className="w-6 text-[10px] text-brand-mute font-bold">●</div>
+            <div className="w-6 text-[10px] text-brand-mute font-bold">?</div>
             <div className="text-[14px] font-bold w-5">{r.n}</div>
             <div className="text-[12px] flex-1">{r.t}</div>
             <ChevronRight size={13} className="text-brand-mute" />

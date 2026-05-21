@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { Heart, Lock, BookOpen, Link2, ShieldCheck, MessageSquare, Bookmark, Users, Ban, ArrowLeft } from "lucide-react";
 
 const blocked = [

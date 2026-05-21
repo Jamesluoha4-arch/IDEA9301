@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ChevronLeft, Star, TrendingUp, ClipboardCheck, CheckCircle2, RefreshCw, FileText, Flame, Trophy, ChevronRight, Gift, Info } from "lucide-react";
 
 const rules = [

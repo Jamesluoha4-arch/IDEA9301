@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { Settings, Ban, Lightbulb, Edit3, User, Users, UserCheck, Heart, ChevronRight, FileEdit, Sparkles, CheckCircle2, AlertTriangle } from "lucide-react";
 
 const perms = [
@@ -7,9 +7,9 @@ const perms = [
   { Icon: Heart, label: "Close Relationships", active: false },
 ];
 const actions = [
-  { time: "2:40 PM", Icon: FileEdit, text: "Drafted a reply for Alex", ctx: "In Chat · Personal" },
+  { time: "2:40 PM", Icon: FileEdit, text: "Drafted a reply for Jim", ctx: "In Chat 路 Personal" },
   { time: "11:15 AM", Icon: Sparkles, text: "Suggested topics in Discovery", ctx: "In Discovery" },
-  { time: "Yesterday 8:30 PM", Icon: CheckCircle2, text: "Blocked in emotional context", ctx: "In Chat · Personal" },
+  { time: "Yesterday 8:30 PM", Icon: CheckCircle2, text: "Blocked in emotional context", ctx: "In Chat 路 Personal" },
 ];
 const levels = [
   { Icon: Ban, label: "Off" },
@@ -35,7 +35,7 @@ export function F51_AICenterFull() {
             <div className="text-[11px] text-brand-mute leading-[15px] mt-1">AI can draft and suggest, but won't act without your approval.</div>
           </div>
           <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="w-16 h-16 rounded-full border-2 border-dashed border-brand-lavender flex items-center justify-center shrink-0 ml-3">
-            <div className="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center"><div className="text-[16px]">🤖</div></div>
+            <div className="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center"><div className="text-[16px]">馃</div></div>
           </motion.div>
         </div>
         <div className="flex items-center justify-between mt-3">

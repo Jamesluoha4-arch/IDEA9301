@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Info, Bot, Check, Sparkles, Music2 } from "lucide-react";
 
 export function F43_MissedDaily() {
@@ -12,7 +12,7 @@ export function F43_MissedDaily() {
 
       <div className="mt-2 flex justify-center">
         <div className="px-3 py-1.5 rounded-full bg-brand-peach/20 text-brand-peach text-[11px] font-bold border border-brand-peach/30">
-          ⊘ Challenge missed today
+          鈯?Challenge missed today
         </div>
       </div>
 

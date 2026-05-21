@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, Edit3, Bot, ShieldCheck, MessageSquare, CheckCircle2, User, Calendar, ChevronRight, AlertCircle, Lock } from "lucide-react";
 
 export function F48_ChangeDetails() {
@@ -23,7 +23,7 @@ export function F48_ChangeDetails() {
       <div className="flex flex-col items-center mt-1">
         <div className="px-4 py-1.5 rounded-full bg-brand-ink text-white text-[13px] font-bold flex items-center gap-1.5"><ShieldCheck size={13}/> Assistant</div>
         <div className="text-[11px] text-brand-mute mt-1.5">Changed from Co-pilot today</div>
-        <div className="text-[10px] text-brand-mute">May 5, 2025 · 9:41 AM</div>
+        <div className="text-[10px] text-brand-mute">May 5, 2025 路 9:41 AM</div>
       </div>
 
       <div className="px-5 mt-5 text-[14px] font-bold">Why did it change?</div>
@@ -31,7 +31,7 @@ export function F48_ChangeDetails() {
         {[
           { Icon: MessageSquare, tag: "AI ACTIVITY", h: "AI drafted 4 replies today", d: "Frequent drafting increased AI support in your chats.", g: "gradient-brand" },
           { Icon: CheckCircle2, tag: "YOUR DECISIONS", h: "You accepted 2 suggestions", d: "Your approvals showed comfort with more AI help.", g: "gradient-mint-sky" },
-          { Icon: User, tag: "RELATIONSHIP CONTEXT", h: "High involvement in Alex's chat", d: "One relationship needed more support today.", g: "gradient-pink-peach" },
+          { Icon: User, tag: "RELATIONSHIP CONTEXT", h: "High involvement in Jim's chat", d: "One relationship needed more support today.", g: "gradient-pink-peach" },
           { Icon: Calendar, tag: "USAGE PATTERN", h: "You kept Co-pilot mode for 3 days", d: "A repeated pattern reinforced the Assistant state.", g: "gradient-brand" },
         ].map((r) => (
           <div key={r.tag} className="p-3 flex items-start gap-3">
@@ -59,7 +59,7 @@ export function F48_ChangeDetails() {
 
       <div className="px-5 mt-5 text-[14px] font-bold">Control Insight</div>
       <div className="mx-4 mt-2 bg-white rounded-2xl p-3 flex items-start gap-3 shadow-soft border border-white">
-        <div className="w-8 h-8 rounded-full gradient-brand-soft flex items-center justify-center shrink-0">💡</div>
+        <div className="w-8 h-8 rounded-full gradient-brand-soft flex items-center justify-center shrink-0">馃挕</div>
         <div className="text-[11px] text-brand-mute leading-[15px]">AI involvement increased today, but no action was completed without your approval.</div>
       </div>
 

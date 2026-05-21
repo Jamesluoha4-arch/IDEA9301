@@ -1,19 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeft,
-  Bell,
   Bot,
   ChevronDown,
   Edit3,
   Heart,
+  Info,
   MessageSquare,
   Search,
   Send,
   ShieldCheck,
 } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
-import alexUrl from "@/assets/radar-avatar-1.png";
+import JimUrl from "@/assets/radar-avatar-1.png";
 import joeUrl from "@/assets/radar-avatar-2.png";
 import sabrinaUrl from "@/assets/radar-avatar-3.png";
 import jamesUrl from "@/assets/radar-avatar-4.png";
@@ -39,8 +39,8 @@ const spaceData: Record<string, SpacePostData> = {
   AI_SYNTH: {
     key: "AI_SYNTH",
     name: "AI Synth",
-    user: "Alex",
-    avatar: alexUrl,
+    user: "Jim",
+    avatar: JimUrl,
     auth: "AI Second Self",
     cover: "ai",
     body: "Exploration of generative architectural patterns in high-density urban nodes. This draft analyzes the intersection of algorithmic spatial optimization and human navigation logic.",
@@ -122,12 +122,25 @@ function readSpaceKey(): SpaceKey {
   return stored && stored in spaceData ? (stored as SpaceKey) : "AI_SYNTH";
 }
 
+function readCustomPosts(spaceKey: SpaceKey): SpacePostData[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const saved = JSON.parse(
+      window.sessionStorage.getItem(`second-self.posts.${spaceKey}`) || "[]",
+    );
+    return Array.isArray(saved) ? saved : [];
+  } catch {
+    return [];
+  }
+}
+
 export function F25_SpacesFeed() {
   const [showComposer, setShowComposer] = useState(false);
   const [composerGone, setComposerGone] = useState(false);
   const [publishedStarter, setPublishedStarter] = useState<SpacePostData | null>(null);
   const [mode, setMode] = useState<FeedMode>("Friends");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [customPosts, setCustomPosts] = useState<SpacePostData[]>([]);
   const spaceKey = readSpaceKey();
   const space = spaceData[spaceKey];
   const userName = readUserName();
@@ -138,6 +151,7 @@ export function F25_SpacesFeed() {
     setShowComposer(false);
     setComposerGone(false);
     setPublishedStarter(null);
+    setCustomPosts(readCustomPosts(spaceKey));
     const timer = window.setTimeout(() => setShowComposer(true), 1000);
     return () => window.clearTimeout(timer);
   }, [spaceKey]);
@@ -152,12 +166,14 @@ export function F25_SpacesFeed() {
       body: starter,
       tags: ["AI-created", "Approved opening"],
       time: "JUST NOW",
+      starter,
     });
     setComposerGone(true);
   };
 
   const friendPosts = [
     ...(publishedStarter ? [publishedStarter] : []),
+    ...customPosts,
     space,
     {
       ...spaceData.MUSIC_ROOM,
@@ -187,8 +203,11 @@ export function F25_SpacesFeed() {
             placeholder={`Search ${space.name}`}
           />
         </label>
-        <button className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center">
-          <Bell size={14} className="text-brand-purple" />
+        <button
+          data-prototype-target="7:3"
+          className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center"
+        >
+          <Info size={14} className="text-brand-purple" />
         </button>
       </div>
 
@@ -293,6 +312,7 @@ export function F25_SpacesFeed() {
                   initial={{ width: "0%" }}
                   animate={{ width: "100%" }}
                   transition={{ duration: 2.2, ease: "easeInOut" }}
+                  onAnimationComplete={approve}
                 />
                 <span className="relative">Approved</span>
               </button>
@@ -309,7 +329,10 @@ export function F25_SpacesFeed() {
         </AnimatePresence>
       </div>
 
-      <button className="absolute bottom-24 right-5 h-14 w-14 rounded-full bg-brand-mint text-white shadow-glow flex items-center justify-center">
+      <button
+        data-prototype-target="7:2"
+        className="absolute bottom-24 right-5 h-14 w-14 rounded-full bg-gradient-to-br from-brand-mint to-brand-sky text-white shadow-glow flex items-center justify-center z-30 border-[4px] border-white/70"
+      >
         <Edit3 size={22} />
       </button>
 
@@ -319,7 +342,10 @@ export function F25_SpacesFeed() {
 }
 
 function SpacePost({ space, index }: { space: SpacePostData; index: number }) {
+  const [liked, setLiked] = useState(false);
+  const [commentsOpen, setCommentsOpen] = useState(false);
   const isAi = space.auth === "AI Second Self";
+  const isStarter = space.id === "starter-post" || space.time === "JUST NOW";
   return (
     <motion.div
       layout
@@ -330,7 +356,11 @@ function SpacePost({ space, index }: { space: SpacePostData; index: number }) {
       className="bg-white rounded-3xl shadow-soft overflow-hidden border border-brand-bg"
     >
       <div className="px-3 pt-3 flex items-center gap-2">
-        <div className="w-8 h-8 rounded-xl bg-white shadow-sm overflow-hidden flex items-center justify-center">
+        <div
+          data-prototype-target="7:4"
+          data-prototype-person={space.user}
+          className="w-8 h-8 rounded-xl bg-white shadow-sm overflow-hidden flex items-center justify-center cursor-pointer"
+        >
           <img src={space.avatar} alt="" className="h-[125%] w-[125%] object-cover object-top" />
         </div>
         <div className="flex-1">
@@ -347,7 +377,7 @@ function SpacePost({ space, index }: { space: SpacePostData; index: number }) {
         </div>
       </div>
 
-      <PostCover kind={space.cover} />
+      {!isStarter && <PostCover kind={space.cover} />}
 
       <div className="px-3 mt-3 flex flex-wrap gap-1.5">
         {space.tags.map((tag) => (
@@ -363,16 +393,71 @@ function SpacePost({ space, index }: { space: SpacePostData; index: number }) {
       <div className="px-3 mt-2.5 text-[12px] leading-[16px]">{space.body}</div>
 
       <div className="px-3 mt-3 mb-3 pt-2.5 border-t border-brand-bg flex items-center gap-4 text-[11px] text-brand-mute">
-        <button className="flex items-center gap-1.5">
-          <Heart size={13} className="text-brand-pink" /> {index === 0 ? "1.2K" : "84"}
+        <button onClick={() => setLiked((value) => !value)} className="flex items-center gap-1.5">
+          <Heart size={13} className={liked ? "text-red-500 fill-red-500" : "text-brand-pink"} />{" "}
+          {isStarter ? "" : index === 0 ? "1.2K" : "84"}
         </button>
-        <button className="flex items-center gap-1.5">
-          <MessageSquare size={13} className="text-brand-purple" /> {index === 0 ? "42" : "9"}
+        <button
+          onClick={() => setCommentsOpen((value) => !value)}
+          className="flex items-center gap-1.5"
+        >
+          <MessageSquare size={13} className="text-brand-purple" />{" "}
+          {isStarter ? "" : index === 0 ? "42" : "9"}
         </button>
         <button className="ml-auto flex items-center gap-1.5 text-[9px] font-mono font-bold text-brand-ink">
           <Send size={12} /> REF: #{isAi ? "772-BX" : "ORIG-19"}
         </button>
       </div>
+      <AnimatePresence>
+        {commentsOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden border-t border-brand-bg bg-[#fbfaff]"
+          >
+            <div className="px-3 py-3 space-y-2">
+              {[
+                {
+                  name: "Joe",
+                  tag: "Human verified",
+                  text: "This is useful. I care most about where the AI clearly explains what it used.",
+                  avatar: joeUrl,
+                },
+                {
+                  name: "Second Self",
+                  tag: "AI Reply",
+                  text: "I can summarize the thread and keep private context out of the response.",
+                  avatar: defaultAvatarUrl,
+                },
+              ].map((comment) => (
+                <div key={comment.name} className="flex gap-2">
+                  <img
+                    src={comment.avatar}
+                    alt=""
+                    className="h-7 w-7 rounded-full bg-white object-cover object-top"
+                  />
+                  <div className="flex-1 rounded-2xl bg-white px-3 py-2 shadow-sm">
+                    <div className="text-[10px] font-bold">
+                      {comment.name}
+                      <span className="ml-1 rounded-md bg-brand-bg px-1.5 py-0.5 text-[8px] text-brand-purple">
+                        {comment.tag}
+                      </span>
+                    </div>
+                    <div className="mt-1 text-[10px] leading-[14px] text-brand-ink/85">
+                      {comment.text}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div className="mt-2 rounded-full bg-white px-3 py-2 text-[11px] text-brand-mute flex items-center justify-between">
+                Expecting your comment...
+                <span className="text-brand-mint">??</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -386,7 +471,9 @@ function PostCover({ kind }: { kind: string }) {
           <div className="text-[16px] font-bold leading-[18px]">
             A space for AI-created identity and responsible creative systems.
           </div>
-          <div className="mt-2 text-[8px] text-white/75">Transparency · Consent · Attribution</div>
+          <div className="mt-2 text-[8px] text-white/75">
+            Transparency 路 Consent 路 Attribution
+          </div>
         </div>
       </div>
     );
@@ -411,7 +498,7 @@ function PostCover({ kind }: { kind: string }) {
           First week feels easier when the background track is right.
         </div>
         <div className="absolute bottom-4 left-5 flex items-center gap-2 text-[9px] text-brand-mute">
-          42 min · 12 tracks · designed for focus
+          42 min 路 12 tracks 路 designed for focus
         </div>
       </div>
     );

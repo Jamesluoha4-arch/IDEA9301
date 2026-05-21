@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { Maximize2, Eye, Sparkles, ChevronRight } from "lucide-react";
 import { BottomNav } from "./F09_Home";
 
@@ -135,7 +135,7 @@ export function F30_SystemVisibility() {
         {[
           { t: "12:42", b: "AI explored a shared music interest" },
           { t: "12:35", b: "AI revisited an inactive connection" },
-          { t: "12:21", b: "AI suggested reconnecting with Alex" },
+          { t: "12:21", b: "AI suggested reconnecting with Jim" },
         ].map((r) => (
           <div
             key={r.t}

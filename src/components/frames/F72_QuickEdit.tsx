@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { ArrowLeft, Info, Ban, Lightbulb, Edit3, Sparkles, Users, Heart, SlidersHorizontal, Check } from "lucide-react";
 
 const LEVELS = [

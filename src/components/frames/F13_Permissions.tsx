@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { useState } from "react";
 import { ArrowLeft, ShieldCheck, MessageSquare, Brain, Users, FileText, Smile, BookOpen, Link2, Info } from "lucide-react";
 

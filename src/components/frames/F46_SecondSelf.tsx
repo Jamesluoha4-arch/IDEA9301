@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Edit3, Bot, TrendingUp, MessageSquare, CheckCircle2, User, Calendar } from "lucide-react";
 
 export function F46_SecondSelf() {
@@ -61,7 +61,7 @@ export function F46_SecondSelf() {
         {[
           { Icon: MessageSquare, t: "AI drafted 4 replies today" },
           { Icon: CheckCircle2, t: "You accepted 2 suggestions" },
-          { Icon: User, t: "High involvement in Alex's chat" },
+          { Icon: User, t: "High involvement in Jim's chat" },
           { Icon: Calendar, t: "You kept Co-pilot mode for 3 days" },
         ].map((r) => (
           <div key={r.t} className="p-3 flex items-center gap-3">

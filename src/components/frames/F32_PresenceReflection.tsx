@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, Sparkles, MessageSquare, TrendingUp, Pause } from "lucide-react";
 import { useState } from "react";
 import { BottomNav } from "./F09_Home";
@@ -11,7 +11,7 @@ const reflections = [
 ];
 
 const relationships = [
-  { t: "Alex", d: "Frequent revisits", v: 78, g: "from-brand-purple to-brand-pink" },
+  { t: "Jim", d: "Frequent revisits", v: 78, g: "from-brand-purple to-brand-pink" },
   { t: "Shared interests", d: "Topic cluster", v: 62, g: "from-brand-sky to-brand-mint" },
   { t: "Close relationship", d: "Emotionally active", v: 34, g: "from-brand-pink to-brand-peach" },
 ];

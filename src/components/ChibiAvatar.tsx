@@ -1,4 +1,4 @@
-type ChibiAvatarProps = {
+﻿type ChibiAvatarProps = {
   hair?: number;
   eyes?: number;
   mouth?: number;

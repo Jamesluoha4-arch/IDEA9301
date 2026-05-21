@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { useMemo } from "react";
 
 type PersonalitySnapshot = {
@@ -21,21 +21,21 @@ function getAiReply({ comm = "Direct", energy = "Balanced", tags = [] }: Persona
     : "";
 
   if (comm === "Direct" && energy === "Introverted") {
-    return `Got it. I will keep things clear, short, and low-pressure. I can suggest a few careful options, but I will never push you to reply before you feel ready. ${tagTone} 🙂`;
+    return `Got it. I will keep things clear, short, and low-pressure. I can suggest a few careful options, but I will never push you to reply before you feel ready. ${tagTone}`;
   }
   if (comm === "Direct" && energy === "Extroverted") {
-    return `Perfect. I will help you move conversations forward with confident, friendly wording. I can give you quick drafts that feel natural and easy to send. ${tagTone} ✨`;
+    return `Perfect. I will help you move conversations forward with confident, friendly wording. I can give you quick drafts that feel natural and easy to send. ${tagTone}`;
   }
   if (comm === "Reflective" && energy === "Introverted") {
-    return `I understand. I will slow the pace down, notice emotional detail, and offer gentle replies that leave room for nuance. Nothing goes out unless it feels like you. ${tagTone} 🌙`;
+    return `I understand. I will slow the pace down, notice emotional detail, and offer gentle replies that leave room for nuance. Nothing goes out unless it feels like you. ${tagTone}`;
   }
   if (comm === "Reflective" && energy === "Extroverted") {
-    return `Nice. I will help you sound warm and expressive while still thinking carefully before each message. I can turn your social energy into thoughtful conversation starts. ${tagTone} 💫`;
+    return `Nice. I will help you sound warm and expressive while still thinking carefully before each message. I can turn your social energy into thoughtful conversation starts. ${tagTone}`;
   }
   if (energy === "Balanced") {
-    return `Great. I will balance clarity with warmth, shifting between direct answers and reflective support depending on the moment. You stay in control of every message. ${tagTone} 🌿`;
+    return `Great. I will balance clarity with warmth, shifting between direct answers and reflective support depending on the moment. You stay in control of every message. ${tagTone}`;
   }
-  return `I am ready. I will adapt to the personality you gave me and offer conversation support that sounds like you, not a generic assistant. ${tagTone} ✨`;
+  return `I am ready. I will adapt to the personality you gave me and offer conversation support that sounds like you, not a generic assistant. ${tagTone}`;
 }
 
 export function F8_AIChat() {

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ChevronLeft, Lightbulb, Edit3, Search, Hand, Info } from "lucide-react";
 
 export function F61_CopilotModeDetail() {
@@ -14,7 +14,7 @@ export function F61_CopilotModeDetail() {
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 18, repeat: Infinity, ease: "linear" }} className="absolute inset-0 rounded-full border-2 border-dashed border-brand-lavender/60"/>
         <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2.5, repeat: Infinity }} className="w-24 h-24 rounded-3xl gradient-brand flex items-center justify-center shadow-glow">
           <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center">
-            <div className="text-3xl">🤖</div>
+            <div className="text-3xl">馃</div>
           </div>
         </motion.div>
       </div>

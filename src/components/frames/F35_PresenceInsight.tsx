@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, Sparkles, Mic, HardDrive, MapPin, Bluetooth } from "lucide-react";
 import { useState } from "react";
 import { BottomNav } from "./F09_Home";

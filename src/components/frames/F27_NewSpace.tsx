@@ -1,10 +1,51 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, Image as ImageIcon, Camera, X } from "lucide-react";
 import { useState } from "react";
+import defaultAvatarUrl from "@/assets/chibi-figurine.png";
+import { readGeneratedAvatar } from "@/lib/avatar-generation";
+
+function readUserName() {
+  return window.localStorage.getItem("second-self-user-name")?.trim() || "David";
+}
 
 export function F27_NewSpace() {
   const [tags, setTags] = useState(["architecture", "optimization"]);
   const [text, setText] = useState("");
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [published, setPublished] = useState(false);
+
+  const uploadSource = (file?: File) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setImageUrl(typeof reader.result === "string" ? reader.result : null);
+    reader.readAsDataURL(file);
+  };
+
+  const publish = () => {
+    const spaceKey = window.sessionStorage.getItem("second-self.selected-space") || "AI_SYNTH";
+    const userName = readUserName();
+    const post = {
+      key: spaceKey,
+      name: spaceKey.replaceAll("_", " "),
+      user: userName,
+      avatar: readGeneratedAvatar() || defaultAvatarUrl,
+      auth: "AI Second Self" as const,
+      cover: imageUrl ? ("photo" as const) : ("design" as const),
+      body:
+        text.trim() || `Hi, I am ${userName}. I am sharing a small observation from this space.`,
+      tags: tags.map((tag) => tag.replace(/^#/, "")),
+      starter: "",
+      id: `custom-${Date.now()}`,
+      time: "JUST NOW",
+    };
+    const key = `second-self.posts.${spaceKey}`;
+    const existing = JSON.parse(window.sessionStorage.getItem(key) || "[]");
+    window.sessionStorage.setItem(
+      key,
+      JSON.stringify([post, ...(Array.isArray(existing) ? existing : [])]),
+    );
+    setPublished(true);
+  };
 
   return (
     <div className="relative w-full h-full pt-12 pb-6 overflow-y-auto font-sans text-brand-ink gradient-brand-soft">
@@ -19,11 +60,13 @@ export function F27_NewSpace() {
           </span>
         </h1>
         <motion.button
+          data-prototype-target="7:1"
           whileTap={{ scale: 0.96 }}
           whileHover={{ y: -1 }}
+          onClick={publish}
           className="px-4 py-2 rounded-full gradient-brand text-white text-[11px] font-bold tracking-[0.6px] shadow-soft"
         >
-          PUBLISH
+          {published ? "PUBLISHED" : "PUBLISH"}
         </motion.button>
       </div>
 
@@ -34,13 +77,25 @@ export function F27_NewSpace() {
           whileHover={{ y: -2 }}
           className="mt-2 rounded-2xl border-2 border-dashed border-brand-lavender/50 bg-white/60 p-6 flex flex-col items-center justify-center gap-2"
         >
-          <div className="w-12 h-12 rounded-2xl gradient-brand-soft flex items-center justify-center">
-            <ImageIcon size={20} className="text-brand-purple" />
+          {imageUrl ? (
+            <img src={imageUrl} alt="" className="h-28 w-full rounded-2xl object-cover" />
+          ) : (
+            <div className="w-12 h-12 rounded-2xl gradient-brand-soft flex items-center justify-center">
+              <ImageIcon size={20} className="text-brand-purple" />
+            </div>
+          )}
+          <div className="text-[12px] text-brand-mute">
+            {imageUrl ? "Media selected" : "No media selected"}
           </div>
-          <div className="text-[12px] text-brand-mute">No media selected</div>
-          <button className="mt-2 px-4 py-2 rounded-full bg-white border border-brand-bg text-[11px] font-bold flex items-center gap-1.5 shadow-soft">
+          <label className="mt-2 px-4 py-2 rounded-full bg-white border border-brand-bg text-[11px] font-bold flex items-center gap-1.5 shadow-soft cursor-pointer">
             <Camera size={12} className="text-brand-purple" /> Upload source
-          </button>
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(event) => uploadSource(event.target.files?.[0])}
+            />
+          </label>
         </motion.div>
       </div>
 

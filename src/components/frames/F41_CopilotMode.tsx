@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { Settings, Trophy, Bot, Ban, Lightbulb, PenLine, Send, User, Users, Heart, ChevronRight, AlertTriangle, MessageSquare, CheckCircle2, Eye } from "lucide-react";
 
 const modes = [{ Icon: Ban, t: "Off" }, { Icon: Lightbulb, t: "Suggest" }, { Icon: PenLine, t: "Draft" }, { Icon: Send, t: "Act" }];
@@ -22,7 +22,7 @@ export function F41_CopilotMode() {
             <div className="text-[13px] font-bold">Daily Challenge</div>
             <div className="px-2 py-0.5 rounded-full gradient-brand text-white text-[9px] font-bold">+20 pts earned</div>
           </div>
-          <div className="text-[10px] text-brand-mute mt-1 flex items-center gap-1"><CheckCircle2 size={10} className="text-brand-purple"/> All done today · 3 / 3</div>
+          <div className="text-[10px] text-brand-mute mt-1 flex items-center gap-1"><CheckCircle2 size={10} className="text-brand-purple"/> All done today 路 3 / 3</div>
         </div>
         <button className="px-2.5 py-1.5 rounded-full bg-brand-bg text-[10px] font-bold text-brand-purple">View Reward</button>
       </div>
@@ -96,9 +96,9 @@ export function F41_CopilotMode() {
         <div className="relative pl-5">
           <div className="absolute left-[5px] top-1 bottom-1 w-px bg-brand-bg"/>
           {[
-            { t: "2:40 PM", h: "Drafted a reply for Alex", s: "In Chat · Personal", Icon: PenLine, g: "gradient-brand" },
+            { t: "2:40 PM", h: "Drafted a reply for Jim", s: "In Chat 路 Personal", Icon: PenLine, g: "gradient-brand" },
             { t: "11:15 AM", h: "Suggested topics in Discovery", s: "In Discovery", Icon: Lightbulb, g: "gradient-mint-sky" },
-            { t: "Yesterday 8:30 PM", h: "Blocked an emotional context", s: "In Chat · Personal", Icon: Eye, g: "gradient-pink-peach" },
+            { t: "Yesterday 8:30 PM", h: "Blocked an emotional context", s: "In Chat 路 Personal", Icon: Eye, g: "gradient-pink-peach" },
           ].map((a, i) => (
             <div key={i} className="relative mb-3 last:mb-0">
               <div className={`absolute -left-5 top-1 w-2.5 h-2.5 rounded-full ${a.g}`}/>

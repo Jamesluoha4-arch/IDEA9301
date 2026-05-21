@@ -1,4 +1,4 @@
-import { Settings, ChevronRight, Bot, Users, Heart, User, Plus, Mic, ImageIcon, Shield, ArrowRight } from "lucide-react";
+﻿import { Settings, ChevronRight, Bot, Users, Heart, User, Plus, Mic, ImageIcon, Shield, ArrowRight } from "lucide-react";
 
 export function F73_AICenterFullAlt() {
   return (
@@ -12,7 +12,7 @@ export function F73_AICenterFullAlt() {
         <div className="w-10 h-10 rounded-xl gradient-brand-soft flex items-center justify-center"><Shield size={16} className="text-brand-purple"/></div>
         <div className="flex-1">
           <div className="text-[12px] font-bold">Daily Challenge</div>
-          <div className="text-[10px] text-brand-mute">Today's boundary task · 1 / 3 completed today</div>
+          <div className="text-[10px] text-brand-mute">Today's boundary task 路 1 / 3 completed today</div>
         </div>
         <button className="px-3 py-1.5 rounded-full bg-brand-ink text-white text-[10px] font-bold">Continue</button>
       </div>
@@ -29,7 +29,7 @@ export function F73_AICenterFullAlt() {
             <div className="relative w-16 h-16 rounded-full border-2 border-dashed border-brand-lavender flex items-center justify-center">
               <div className="w-10 h-10 rounded-2xl gradient-brand flex items-center justify-center"><Bot size={16} className="text-white"/></div>
             </div>
-            <div className="px-2 py-0.5 rounded-full bg-brand-bg text-[9px] font-bold text-brand-purple">● ACTIVE</div>
+            <div className="px-2 py-0.5 rounded-full bg-brand-bg text-[9px] font-bold text-brand-purple">鈼?ACTIVE</div>
           </div>
         </div>
         <div className="mt-3 pt-3 border-t border-brand-bg flex items-center justify-between">

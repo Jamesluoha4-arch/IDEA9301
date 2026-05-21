@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, User, Star } from "lucide-react";
 
 export function F53_CloudUnlockSheet() {
@@ -36,7 +36,7 @@ export function F53_CloudUnlockSheet() {
         <div className="text-[12px] mt-3">A playful frame unlocked with points.</div>
         <button className="w-full mt-4 py-3.5 rounded-2xl bg-brand-ink text-white text-[14px] font-bold">Unlock and Apply</button>
         <button className="w-full mt-2 py-3.5 rounded-2xl bg-white border border-brand-bg text-[14px] font-bold">Cancel</button>
-        <div className="text-center text-[10px] text-brand-mute mt-3">ⓘ After unlocking, this frame will move to Owned.</div>
+        <div className="text-center text-[10px] text-brand-mute mt-3">鈸?After unlocking, this frame will move to Owned.</div>
       </motion.div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export function F5_AIPersona() {
@@ -167,7 +167,7 @@ export function F5_AIPersona() {
                   className="w-4 h-4 rounded-full bg-white/80 border border-brand-purple/20 text-brand-purple leading-none flex items-center justify-center text-[11px]"
                   aria-label={`Remove ${tag}`}
                 >
-                  ×
+                  脳
                 </button>
               </motion.div>
             ))}

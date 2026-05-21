@@ -1,4 +1,4 @@
-import { X, MoreHorizontal, Edit3, CheckCircle2, ArrowUp, EyeOff, TrendingUp, ChevronRight } from "lucide-react";
+﻿import { X, MoreHorizontal, Edit3, CheckCircle2, ArrowUp, EyeOff, TrendingUp, ChevronRight } from "lucide-react";
 
 export function F74_ChangeDetailDraft() {
   return (
@@ -13,7 +13,7 @@ export function F74_ChangeDetailDraft() {
         <div className="w-10 h-10 rounded-xl gradient-brand-soft flex items-center justify-center"><Edit3 size={16} className="text-brand-purple"/></div>
         <div>
           <div className="text-[15px] font-bold">You drafted a reply</div>
-          <div className="text-[10px] text-brand-mute mt-0.5">11:32 AM · AI level: Draft</div>
+          <div className="text-[10px] text-brand-mute mt-0.5">11:32 AM 路 AI level: Draft</div>
         </div>
       </div>
 
@@ -21,7 +21,7 @@ export function F74_ChangeDetailDraft() {
         <div className="text-[13px] font-bold">What happened?</div>
         <div className="mt-3 h-32 rounded-2xl bg-brand-bg/40 flex items-center justify-center gradient-brand-soft border border-white">
           <div className="text-center text-[11px] text-brand-mute italic">
-            <div className="flex gap-6 justify-center text-[20px]">💬 💬</div>
+            <div className="flex gap-6 justify-center text-[20px]">馃挰 馃挰</div>
             <div className="mt-2 text-brand-ink">Conversation insight</div>
           </div>
         </div>
@@ -34,7 +34,7 @@ export function F74_ChangeDetailDraft() {
           {["Saved me time", "AI understood better", "Historic pattern"].map((t, i) => (
             <button key={t} className={`px-3 py-1.5 rounded-full text-[11px] font-bold ${i === 1 ? "bg-brand-ink text-white" : "bg-white border border-brand-bg"}`}>{t}</button>
           ))}
-          <button className="px-3 py-1.5 rounded-full bg-white border border-brand-bg text-[11px] font-bold">···</button>
+          <button className="px-3 py-1.5 rounded-full bg-white border border-brand-bg text-[11px] font-bold">路路路</button>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { ArrowLeft, Flame, Calendar, Star, Check, Info, ChevronRight } from "lucide-react";
+﻿import { ArrowLeft, Flame, Calendar, Star, Check, Info, ChevronRight } from "lucide-react";
 
 const days = ["MON","TUE","WED","THU","FRI","SAT","SUN"];
 const states = ["done","done","recovered","done","todo","todo","todo"] as const;

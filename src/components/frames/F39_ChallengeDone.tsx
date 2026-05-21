@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, TrendingUp, Check, Star, Package, Flame } from "lucide-react";
 
 export function F39_ChallengeDone() {
@@ -12,7 +12,7 @@ export function F39_ChallengeDone() {
 
       <div className="mt-2 flex justify-center">
         <div className="px-3 py-1.5 rounded-full gradient-brand text-white text-[11px] font-bold shadow-glow">
-          ✓ All done today
+          鉁?All done today
         </div>
       </div>
 

@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Bell, Bot, Camera, CheckCircle2, Code2, Music, Sparkles, Users } from "lucide-react";
+import { Bot, Camera, CheckCircle2, Code2, Info, Music, Sparkles } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
-import alexUrl from "@/assets/radar-avatar-1.png";
+import JimUrl from "@/assets/radar-avatar-1.png";
 import joeUrl from "@/assets/radar-avatar-2.png";
 import sabrinaUrl from "@/assets/radar-avatar-3.png";
 import jamesUrl from "@/assets/radar-avatar-4.png";
@@ -18,8 +18,8 @@ const spaceTopics = [
       "A space for people exploring AI-created identity, synthetic media, and responsible creative systems.",
     signal: "AI-assisted creation - transparent identity - draft ready",
     Icon: Bot,
-    avatar: alexUrl,
-    user: "Alex",
+    avatar: JimUrl,
+    user: "Jim",
     certification: "AI Second Self",
     post: "Exploration of generative architectural patterns in high-density urban nodes. This draft analyzes the intersection of algorithmic spatial optimization and human navigation logic.",
     tags: ["AI-created", "Approved interests"],
@@ -118,9 +118,12 @@ export function F22_SpacesRadar() {
               Tap any topic to preview the space.
             </p>
           </div>
-          <div className="w-9 h-9 rounded-full bg-white shadow-soft flex items-center justify-center">
-            <Bell size={15} className="text-brand-purple" />
-          </div>
+          <button
+            data-prototype-target="7:3"
+            className="w-9 h-9 rounded-full bg-white shadow-soft flex items-center justify-center"
+          >
+            <Info size={15} className="text-brand-purple" />
+          </button>
         </div>
 
         <div className="mx-5 mt-4 h-[330px] rounded-3xl bg-white/84 shadow-soft relative overflow-hidden border border-white/80">
@@ -191,7 +194,7 @@ export function F22_SpacesRadar() {
             <PostPreview topic={selected} />
             <motion.button
               type="button"
-              data-prototype-target="7:3"
+              data-prototype-target="7:1"
               data-prototype-space={selected.key}
               whileTap={{ scale: 0.98 }}
               whileHover={{ y: -1 }}
@@ -261,7 +264,11 @@ function PostPreview({ topic }: { topic: SpaceTopic }) {
   return (
     <div className="mt-3 rounded-2xl border border-brand-bg bg-white/80 p-3 shadow-[0_8px_20px_rgba(108,92,231,0.06)]">
       <div className="flex items-center gap-2">
-        <span className="h-8 w-8 rounded-xl bg-white shadow-sm overflow-hidden flex items-center justify-center">
+        <span
+          data-prototype-target="7:4"
+          data-prototype-person={topic.user}
+          className="h-8 w-8 rounded-xl bg-white shadow-sm overflow-hidden flex items-center justify-center cursor-pointer"
+        >
           <img src={topic.avatar} alt="" className="h-[125%] w-[125%] object-cover object-top" />
         </span>
         <span className="flex-1">
@@ -332,7 +339,7 @@ function SpaceCover({ topicKey, compact = false }: { topicKey: string; compact?:
           First week feels easier when the background track is right.
         </div>
         <div className="absolute bottom-3 left-4 flex items-center gap-2 text-[8px] text-brand-mute">
-          <Music size={12} /> 42 min · 12 tracks
+          <Music size={12} /> 42 min 路 12 tracks
         </div>
       </div>
     );

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+﻿import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Bookmark,
@@ -18,7 +18,7 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import alexUrl from "@/assets/radar-avatar-1.png";
+import JimUrl from "@/assets/radar-avatar-1.png";
 import joeUrl from "@/assets/radar-avatar-2.png";
 import sabrinaUrl from "@/assets/radar-avatar-3.png";
 import jamesUrl from "@/assets/radar-avatar-4.png";
@@ -32,24 +32,24 @@ type ChatMessage = { from: "ai" | "me"; text: string } | { from: "system"; text:
 const chatListStorageKey = "second-self.chat-list";
 const openedCandidateStorageKey = "second-self.opened-candidate-chat";
 const candidateSourceStorageKey = "second-self.selected-candidate-source";
-const alexReviewSeenStorageKey = "second-self.alex-review-path-seen";
+const JimReviewSeenStorageKey = "second-self.Jim-review-path-seen";
 
 const candidateOpeners = {
-  Alex: {
-    title: "Alex AI",
+  Jim: {
+    title: "Jim AI",
     relationship: "Possible coworker",
-    avatar: alexUrl,
+    avatar: JimUrl,
     reason: "Same workplace context - shared onboarding signal",
     preview: "Same workplace context - shared onboarding signal - draft ready",
     drafts: {
       Friendly:
-        "Hi, {user}. I am Alex. I noticed we may be in the same onboarding group. Want to compare notes on what has been most helpful so far?",
+        "Hi, {user}. I am Jim. I noticed we may be in the same onboarding group. Want to compare notes on what has been most helpful so far?",
       Direct:
-        "Hi, {user}. I am Alex. It looks like our onboarding overlaps. Want to exchange useful notes after the next session?",
+        "Hi, {user}. I am Jim. It looks like our onboarding overlaps. Want to exchange useful notes after the next session?",
       Playful:
-        "Hey {user}, I am Alex. Fellow onboarding explorer here. Want to trade one survival tip after the next session?",
-      Brief: "Hi, {user}. I am Alex. Want to compare onboarding notes sometime today?",
-      Warm: "Hi, {user}. I am Alex. I am also getting oriented this week. I would be happy to compare notes if that feels useful.",
+        "Hey {user}, I am Jim. Fellow onboarding explorer here. Want to trade one survival tip after the next session?",
+      Brief: "Hi, {user}. I am Jim. Want to compare onboarding notes sometime today?",
+      Warm: "Hi, {user}. I am Jim. I am also getting oriented this week. I would be happy to compare notes if that feels useful.",
     },
   },
   Joe: {
@@ -105,7 +105,7 @@ const candidateOpeners = {
 };
 
 const replyVariants: Record<CandidateName, string[]> = {
-  Alex: [
+  Jim: [
     "Good idea. Maybe we can compare notes after the onboarding briefing and keep it useful for both of us.",
     "That works. I can keep it simple: one thing we learned, one question we still have, and one easy next step.",
     "I like that. We can make the first message low-pressure, so it feels helpful rather than forced.",
@@ -147,9 +147,9 @@ function personalize(text: string, userName = readUserName()) {
 }
 
 function readCandidateName() {
-  if (typeof window === "undefined") return "Alex";
-  const value = window.sessionStorage.getItem("second-self.selected-candidate") || "Alex";
-  return value in candidateOpeners ? (value as CandidateName) : "Alex";
+  if (typeof window === "undefined") return "Jim";
+  const value = window.sessionStorage.getItem("second-self.selected-candidate") || "Jim";
+  return value in candidateOpeners ? (value as CandidateName) : "Jim";
 }
 
 type ConversationItem = {
@@ -215,7 +215,7 @@ function chooseReply(candidateName: CandidateName, turn: number, userText: strin
 }
 
 function initialMessages(candidateName: CandidateName, userName: string): ChatMessage[] {
-  if (candidateName !== "Alex") {
+  if (candidateName !== "Jim") {
     return [
       { from: "ai", text: personalize(candidateOpeners[candidateName].drafts.Friendly, userName) },
     ];
@@ -269,7 +269,7 @@ export function F10_CandidateChat() {
   const candidate = candidateOpeners[candidateName];
   const userName = readUserName();
   const userAvatar = readGeneratedAvatar();
-  const selfAvatar = userAvatar || alexUrl;
+  const selfAvatar = userAvatar || JimUrl;
   const messageListRef = useRef<HTMLDivElement | null>(null);
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const holdTimer = useRef<number | null>(null);
@@ -295,11 +295,11 @@ export function F10_CandidateChat() {
 
   useEffect(() => {
     const source = window.sessionStorage.getItem(candidateSourceStorageKey);
-    const alreadySeen = window.sessionStorage.getItem(alexReviewSeenStorageKey);
-    const shouldShow = candidateName === "Alex" && source === "review-path" && !alreadySeen;
+    const alreadySeen = window.sessionStorage.getItem(JimReviewSeenStorageKey);
+    const shouldShow = candidateName === "Jim" && source === "review-path" && !alreadySeen;
     setShowWarmupSignal(shouldShow);
     if (shouldShow) {
-      window.sessionStorage.setItem(alexReviewSeenStorageKey, "1");
+      window.sessionStorage.setItem(JimReviewSeenStorageKey, "1");
     }
   }, [candidateName]);
 
@@ -325,7 +325,7 @@ export function F10_CandidateChat() {
     setShowWarmupSignal(false);
     const reply = chooseReply(candidateName, replyTurn, text);
     const nextMessages: ChatMessage[] = [];
-    if (candidateName === "Alex" && replyTurn === 0) {
+    if (candidateName === "Jim" && replyTurn === 0) {
       nextMessages.push({ from: "system", text: "AI WARM-UP FINISHED" });
     }
     nextMessages.push({ from: "me", text }, { from: "ai", text: reply });
@@ -466,7 +466,7 @@ export function F10_CandidateChat() {
                     exit={{ opacity: 0, y: 6, scale: 0.9 }}
                     className={`absolute -top-14 ${isMe ? "right-12" : "left-12"} rounded-full border border-white/80 bg-white/95 px-3 py-2 shadow-[0_12px_32px_rgba(31,31,46,0.18)] backdrop-blur-xl flex items-center gap-3 text-[21px] z-30`}
                   >
-                    {["❤️", "😂", "😮", "😢", "😠", "👍", "+"].map((emoji) => (
+                    {["鉂わ笍", "馃槀", "馃槷", "馃槩", "馃槧", "馃憤", "+"].map((emoji) => (
                       <button
                         key={emoji}
                         type="button"
@@ -674,8 +674,7 @@ function PrototypeKeyboard({
                 onClick={() => onType("")}
                 className="h-12 w-12 rounded-xl bg-white/55 text-[22px] text-brand-purple shadow-sm border border-white/70"
               >
-                ⇧
-              </button>
+                鈬?              </button>
             )}
             {row.map((key) => (
               <button

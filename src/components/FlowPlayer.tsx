@@ -1,4 +1,4 @@
-import { useMemo, useState, type MouseEvent } from "react";
+﻿import { useMemo, useState, type MouseEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Home, Layers, RotateCcw } from "lucide-react";
 import { FloatingBottomNav } from "@/components/frames/F09_Home";
@@ -48,26 +48,26 @@ const graph: Record<NodeKey, Rule[]> = {
   ],
   [key(0, 8)]: [{ match: "Lets Go", target: key(0, 6) }],
   [home]: [
-    { match: "View draft", target: key(1, 6), label: "Open Alex message draft" },
+    { match: "View draft", target: key(1, 6), label: "Open Jim message draft" },
     { match: "Start New Chat", target: key(1, 1) },
     { match: ["Review Drafts", "Review Paths"], target: key(1, 6) },
     { match: ["Conversation Help", "AI Suggestions"], target: key(1, 6) },
     { match: ["AI Control", "Safety Center"], target: key(3, 0) },
     { match: "View all conversations", target: key(5, 0) },
     { match: ["CHAT", "SOCIAL"], target: key(1, 6) },
-    { match: ["COMMUNITY", "社区"], target: key(7, 0) },
+    { match: ["COMMUNITY", "SPACE", "绀惧尯"], target: key(7, 0) },
     { match: "AI", target: home },
-    { match: "PRESENCE", target: key(7, 8) },
-    { match: ["SETTINGS", "PROFILE"], target: key(3, 0) },
+    { match: "PRESENCE", target: key(7, 7) },
+    { match: ["SETTINGS", "PROFILE"], target: key(3, 18) },
   ],
 
   [key(1, 1)]: [
-    { match: "Photography", target: key(7, 3) },
-    { match: "AI_SYNTH", target: key(7, 4) },
+    { match: "Photography", target: key(7, 1) },
+    { match: "AI_SYNTH", target: key(7, 1) },
     { match: "Review path", target: key(1, 6) },
     { match: "Spaces", target: key(7, 0) },
     { match: "HOME", target: home },
-    { match: "PRESENCE", target: key(7, 8) },
+    { match: "PRESENCE", target: key(7, 7) },
   ],
   [key(1, 2)]: [
     { match: "View more", target: key(1, 3) },
@@ -76,10 +76,10 @@ const graph: Record<NodeKey, Rule[]> = {
       target: key(1, 3),
       label: "Choose tone and open Spark Reply",
     },
-    { match: "Write your own message", target: key(2, 1), label: "Type a sensitive reply" },
+    { match: "Write your own message", target: key(2, 0), label: "Type a reply" },
   ],
   [key(1, 3)]: [
-    { match: "Insert Draft", target: key(2, 1) },
+    { match: "Insert Draft", target: key(2, 0) },
     { match: "Regenerate", target: key(1, 3) },
     { match: "Back to Chat", target: key(1, 2) },
   ],
@@ -91,18 +91,10 @@ const graph: Record<NodeKey, Rule[]> = {
   ],
 
   [key(2, 0)]: [
-    { match: "View more", target: key(2, 1) },
-    { match: "Warm", target: key(2, 1) },
+    { match: "View more", target: key(2, 0) },
+    { match: "Warm", target: key(2, 0) },
+    { match: "Back", target: key(1, 6) },
   ],
-  [key(2, 1)]: [
-    { match: "Learn more", target: key(2, 2) },
-    { match: "Take over and reply yourself", target: key(2, 0) },
-    { match: "Stay in human-led mode", target: key(2, 3) },
-    { match: "Ask again later", target: key(2, 4) },
-  ],
-  [key(2, 2)]: [{ match: "Got it", target: key(2, 3) }],
-  [key(2, 3)]: [{ match: "Stay Human-led", target: key(2, 4) }],
-  [key(2, 4)]: [{ match: "Confirm", target: home }],
 
   [key(3, 0)]: [
     { match: "Continue", target: key(6, 0) },
@@ -113,7 +105,7 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "Quick Edit", target: key(3, 16) },
     { match: "HOME", target: home },
     { match: "SOCIAL", target: key(1, 1) },
-    { match: "PRESENCE", target: key(7, 8) },
+    { match: "PRESENCE", target: key(7, 7) },
   ],
   [key(3, 3)]: [
     { match: "Confirm Mode", target: key(3, 5) },
@@ -176,9 +168,9 @@ const graph: Record<NodeKey, Rule[]> = {
 
   [key(5, 0)]: [
     { match: "Review signals", target: key(5, 1) },
-    { match: "Alex Chen", target: key(5, 2) },
+    { match: "Jim Chen", target: key(5, 2) },
   ],
-  [key(5, 1)]: [{ match: "Alex Chen", target: key(5, 2) }],
+  [key(5, 1)]: [{ match: "Jim Chen", target: key(5, 2) }],
   [key(5, 2)]: [
     { match: "Relationship Check-in", target: key(5, 3) },
     { match: "View AI Trail", target: key(4, 4) },
@@ -188,7 +180,7 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "View detail", target: key(5, 2) },
   ],
   [key(5, 4)]: [
-    { match: "Back to Alex Chen", target: key(5, 2) },
+    { match: "Back to Jim Chen", target: key(5, 2) },
     { match: "View AI Trail", target: key(4, 4) },
   ],
   [key(5, 5)]: [
@@ -240,47 +232,44 @@ const graph: Record<NodeKey, Rule[]> = {
 
   [key(7, 0)]: [
     { match: "Connections", target: key(1, 1) },
-    { match: "Photography", target: key(7, 3) },
-    { match: "AI_SYNTH", target: key(7, 4) },
+    { match: "Photography", target: key(7, 1) },
+    { match: "AI_SYNTH", target: key(7, 1) },
     { match: "Review path", target: key(7, 1) },
+    { match: "Explore", target: key(7, 1) },
     { match: "HOME", target: home },
   ],
-  [key(7, 1)]: [{ match: "Preview", target: key(7, 2) }],
-  [key(7, 2)]: [{ match: "Got it", target: key(7, 3) }],
-  [key(7, 3)]: [
-    { match: "SYNTH_UNIT_91", target: key(7, 7) },
-    { match: "ERIK_S_08", target: key(7, 7) },
-    { match: ["New Post", "New Space"], target: key(7, 5) },
-    { match: "RAW_DATA", target: key(7, 6) },
-    { match: "HUMAN_AUTH", target: key(7, 7) },
-    { match: "AI_SYNTH", target: key(7, 4) },
-    { match: "PRESENCE", target: key(7, 8) },
+  [key(7, 1)]: [
+    { match: ["New Post", "New Space"], target: key(7, 2) },
+    { match: ["RAW_DATA", "Info"], target: key(7, 3) },
+    {
+      match: ["HUMAN_AUTH", "Human verified", "Jim", "Joe", "Sabrina", "James"],
+      target: key(7, 4),
+    },
+    { match: "PRESENCE", target: key(7, 7) },
   ],
+  [key(7, 2)]: [{ match: "Publish", target: key(7, 1) }],
+  [key(7, 3)]: [{ match: "Profile", target: key(7, 4) }],
   [key(7, 4)]: [
-    { match: "VALERIE_ARCH", target: key(7, 7) },
-    { match: "HUMAN_AUTH", target: key(7, 7) },
-    { match: "Post", target: key(7, 5) },
+    { match: ["AI Activity", "AI Presence"], target: key(7, 5) },
+    { match: ["Message", "Private chat"], target: key(1, 6) },
   ],
-  [key(7, 5)]: [{ match: "Publish", target: key(7, 6) }],
-  [key(7, 6)]: [{ match: "Profile", target: key(7, 7) }],
-  [key(7, 7)]: [{ match: ["AI Activity", "AI Presence"], target: key(7, 8) }],
+  [key(7, 5)]: [
+    { match: "View Details", target: key(7, 6) },
+    { match: "Adjust Visibility", target: key(7, 7) },
+    { match: "Device Access", target: key(7, 8) },
+    { match: "HOME", target: home },
+  ],
+  [key(7, 6)]: [{ match: "PRESENCE", target: key(7, 7) }],
+  [key(7, 7)]: [
+    { match: "Pause AI Social Presence", target: home },
+    { match: "View Details", target: key(7, 8) },
+  ],
   [key(7, 8)]: [
     { match: "View Details", target: key(7, 9) },
     { match: "Adjust Visibility", target: key(7, 10) },
-    { match: "Device Access", target: key(7, 11) },
-    { match: "HOME", target: home },
   ],
-  [key(7, 9)]: [{ match: "PRESENCE", target: key(7, 10) }],
-  [key(7, 10)]: [
-    { match: "Pause AI Social Presence", target: home },
-    { match: "View Details", target: key(7, 11) },
-  ],
-  [key(7, 11)]: [
-    { match: "View Details", target: key(7, 12) },
-    { match: "Adjust Visibility", target: key(7, 13) },
-  ],
-  [key(7, 12)]: [{ match: "Pause All Device Presence", target: key(7, 13) }],
-  [key(7, 13)]: [{ match: "Pause All Device Presence", target: home }],
+  [key(7, 9)]: [{ match: "Pause All Device Presence", target: key(7, 10) }],
+  [key(7, 10)]: [{ match: "Pause All Device Presence", target: home }],
 };
 
 function normalize(text: string) {
@@ -307,11 +296,12 @@ const tabTargets: Record<string, NodeKey> = {
   home,
   chat: home,
   community: key(7, 0),
+  space: key(7, 0),
   social: key(1, 1),
   ai: home,
-  presence: key(7, 8),
-  settings: key(3, 0),
-  profile: key(3, 0),
+  presence: key(7, 7),
+  settings: key(3, 18),
+  profile: key(3, 18),
 };
 
 function tabFromText(text: string) {
@@ -321,7 +311,8 @@ function tabFromText(text: string) {
       "home",
       "chat",
       "community",
-      "社区",
+      "space",
+      "绀惧尯",
       "social",
       "ai",
       "presence",
@@ -329,7 +320,7 @@ function tabFromText(text: string) {
       "profile",
     ].includes(n)
   )
-    return n === "社区" ? "community" : n;
+    return n === "绀惧尯" ? "community" : n;
   return null;
 }
 
@@ -617,7 +608,10 @@ export function FlowPlayer({ onOpenGallery }: Props) {
                 style={{ transform: `scale(${displayScale})` }}
                 onClickCapture={handlePrototypeTap}
               >
-                <PhoneFrame title={`${flow.id.toUpperCase()} · ${step.label}`} subtitle={step.hint}>
+                <PhoneFrame
+                  title={`${flow.id.toUpperCase()} 路 ${step.label}`}
+                  subtitle={step.hint}
+                >
                   <StepComponent />
                   {activeTab && <FloatingBottomNav active={activeTab} />}
                 </PhoneFrame>

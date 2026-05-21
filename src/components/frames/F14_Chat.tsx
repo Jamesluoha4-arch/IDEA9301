@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+﻿import { useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Bookmark,
@@ -14,7 +14,7 @@ import {
   TrendingUp,
   User,
 } from "lucide-react";
-import alexUrl from "@/assets/radar-avatar-1.png";
+import JimUrl from "@/assets/radar-avatar-1.png";
 import { SparkReplySheet, type StyleTab } from "./F10_CandidateChat";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
 
@@ -74,7 +74,7 @@ export function ChatScaffold({
           <ChevronLeft size={14} className="text-brand-purple" />
         </div>
         <div className="flex-1 text-center">
-          <div className="text-[15px] font-bold">Alex AI</div>
+          <div className="text-[15px] font-bold">Jim AI</div>
           <div className="text-[9px] text-brand-purple flex items-center justify-center gap-1 font-bold">
             <ShieldCheck size={9} /> Possible coworker
           </div>
@@ -125,7 +125,7 @@ export function ChatScaffold({
                     </div>
                   )
                 ) : (
-                  <img src={alexUrl} alt="" className="h-[130%] w-[130%] object-cover object-top" />
+                  <img src={JimUrl} alt="" className="h-[130%] w-[130%] object-cover object-top" />
                 )}
               </div>
               <div className={`max-w-[75%] ${isMe ? "text-right" : ""} relative`}>

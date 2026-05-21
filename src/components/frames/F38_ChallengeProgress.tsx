@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, TrendingUp, Check, Star, Bot } from "lucide-react";
 
 export function F38_ChallengeProgress() {
@@ -12,7 +12,7 @@ export function F38_ChallengeProgress() {
 
       <div className="mt-2 flex justify-center">
         <div className="px-3 py-1.5 rounded-full bg-white border border-brand-bg text-[11px] font-bold text-brand-purple shadow-soft">
-          🕐 1 task left today
+          馃晲 1 task left today
         </div>
       </div>
 

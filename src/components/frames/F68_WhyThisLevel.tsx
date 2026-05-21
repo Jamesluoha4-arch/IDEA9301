@@ -1,13 +1,13 @@
-import { ChevronLeft, Info, User, Users, Heart, CheckCircle2, XCircle, Sparkles } from "lucide-react";
+﻿import { ChevronLeft, Info, User, Users, Heart, CheckCircle2, XCircle, Sparkles } from "lucide-react";
 
 const PERMS = [
-  { key: "Strangers", Icon: User, label: "People you don't know", level: "Suggest level", intro: "AI can suggest safe topics for strangers, but you decide what to say.", in: "Hi, I'm new here. Any tips for getting started?", out: ["Check out the getting started guide.", "Try introducing yourself in the community.", "The FAQ section might be helpful."], cap: "Suggested by AI • You decide what to say", buttons: ["Use suggestion", "Write my own reply"], summary: [
+  { key: "Strangers", Icon: User, label: "People you don't know", level: "Suggest level", intro: "AI can suggest safe topics for strangers, but you decide what to say.", in: "Hi, I'm new here. Any tips for getting started?", out: ["Check out the getting started guide.", "Try introducing yourself in the community.", "The FAQ section might be helpful."], cap: "Suggested by AI 鈥?You decide what to say", buttons: ["Use suggestion", "Write my own reply"], summary: [
     { ok: true, t: "AI can suggest topics and reply ideas" },
     { ok: false, t: "AI cannot draft full replies" },
     { ok: false, t: "AI cannot send messages automatically" },
     { ok: false, t: "AI cannot start conversations" },
   ]},
-  { key: "Friends", Icon: Users, label: "Known contacts", level: "Draft level", intro: "AI can help prepare replies for friends, but you approve before anything is sent.", in: "Hey! How was your weekend?", out: ["It was great! Went hiking with some friends. The weather was perfect."], cap: "Drafted by AI • Waiting for your approval", buttons: ["Edit draft", "Use draft"], summary: [
+  { key: "Friends", Icon: Users, label: "Known contacts", level: "Draft level", intro: "AI can help prepare replies for friends, but you approve before anything is sent.", in: "Hey! How was your weekend?", out: ["It was great! Went hiking with some friends. The weather was perfect."], cap: "Drafted by AI 鈥?Waiting for your approval", buttons: ["Edit draft", "Use draft"], summary: [
     { ok: true, t: "AI can suggest topics and draft replies" },
     { ok: false, t: "AI cannot send messages automatically" },
     { ok: false, t: "AI cannot start conversations" },

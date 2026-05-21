@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { ChevronLeft, MoreHorizontal, Heart, User, Smile, Meh, Frown, AlertTriangle, Clock, Bell } from "lucide-react";
 
 export function F77_RelationshipCheckin() {
@@ -28,7 +28,7 @@ export function F77_RelationshipCheckin() {
       <div className="mx-4 mt-3 flex items-center gap-3">
         <div className="w-12 h-12 rounded-full bg-brand-bg flex items-center justify-center"><User size={20} className="text-brand-mute"/></div>
         <div className="flex-1">
-          <div className="text-[16px] font-bold">Alex Chen</div>
+          <div className="text-[16px] font-bold">Jim Chen</div>
           <div className="text-[10px] text-brand-mute flex items-center gap-1.5">Cooling down <span className="w-1 h-1 rounded-full bg-brand-mute"/> Since May 2</div>
         </div>
         <button className="px-3 py-1.5 rounded-xl bg-white border border-brand-bg text-[10px] font-bold">View detail</button>
@@ -84,7 +84,7 @@ export function F77_RelationshipCheckin() {
       </div>
 
       <button className="mx-5 mt-4 w-[calc(100%-2.5rem)] py-3.5 rounded-2xl bg-brand-ink text-white text-[13px] font-bold">Save Check-in</button>
-      <div className="px-6 mt-2 text-center text-[10px] text-brand-mute">🔒 Your choice is private and only used to support this relationship.</div>
+      <div className="px-6 mt-2 text-center text-[10px] text-brand-mute">馃敀 Your choice is private and only used to support this relationship.</div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { ArrowLeft, Edit3, Sparkles, FileText, User } from "lucide-react";
 
 export function F75_ReconnectChoose() {
@@ -13,14 +13,14 @@ export function F75_ReconnectChoose() {
     <div className="relative w-full h-full pt-12 pb-20 overflow-y-auto font-sans text-brand-ink bg-white">
       <div className="px-5 pt-3 pb-3 flex items-center gap-3 border-b border-brand-bg">
         <ArrowLeft size={18} className="text-brand-ink"/>
-        <div className="flex-1 text-center text-[15px] font-bold">Reconnect with Alex</div>
+        <div className="flex-1 text-center text-[15px] font-bold">Reconnect with Jim</div>
         <div className="w-5"/>
       </div>
 
       <div className="mx-4 mt-4 bg-white border border-brand-bg rounded-2xl p-3.5 flex items-center gap-3 shadow-soft">
         <div className="w-12 h-12 rounded-full bg-brand-bg flex items-center justify-center"><User size={20} className="text-brand-mute"/></div>
         <div className="flex-1">
-          <div className="text-[14px] font-bold">Alex Chen</div>
+          <div className="text-[14px] font-bold">Jim Chen</div>
           <div className="text-[10px] text-brand-mute">Cooling down</div>
           <div className="text-[10px] text-brand-mute">Since May 2</div>
         </div>

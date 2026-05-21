@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, Play, Sparkles } from "lucide-react";
 import { BottomNav } from "./F09_Home";
 
@@ -56,7 +56,7 @@ export function F31_LiveSocialWorld() {
         <div className="w-8 h-8 rounded-full gradient-brand flex items-center justify-center"><Play size={12} className="text-white" fill="white"/></div>
         <div className="flex-1">
           <div className="text-[12px] font-bold">Replay Presence</div>
-          <div className="text-[10px] text-brand-mute font-mono">12:05 — now</div>
+          <div className="text-[10px] text-brand-mute font-mono">12:05 鈥?now</div>
         </div>
         <div className="flex-1 max-w-[100px] h-1 rounded-full bg-brand-bg relative">
           <div className="absolute left-0 top-0 h-1 w-3/4 rounded-full gradient-brand"/>
@@ -70,7 +70,7 @@ export function F31_LiveSocialWorld() {
           {[
             ["Current Location", "Interest Space"],
             ["Current Action", "Reviewing shared music interests"],
-            ["Recent Interaction", "Suggested reconnecting with Alex"],
+            ["Recent Interaction", "Suggested reconnecting with Jim"],
             ["Visibility Level", "Shared Presence Enabled"],
           ].map(([k, v]) => (
             <div key={k} className="flex justify-between gap-2">

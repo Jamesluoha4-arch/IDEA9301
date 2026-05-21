@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { BriefcaseBusiness, CheckCircle2, Lock, Sparkles } from "lucide-react";
-import alexUrl from "@/assets/radar-avatar-1.png";
+import JimUrl from "@/assets/radar-avatar-1.png";
 import joeUrl from "@/assets/radar-avatar-2.png";
 import jamesUrl from "@/assets/radar-avatar-3.png";
 import sabrinaUrl from "@/assets/radar-avatar-4.png";
@@ -8,7 +8,7 @@ import { BottomNav } from "./F09_Home";
 
 const candidates = [
   {
-    name: "Alex",
+    name: "Jim",
     role: "company coworker",
     signal: "Same workplace context - shared onboarding signal - draft ready",
     match: "92%",
@@ -16,7 +16,7 @@ const candidates = [
     distance: 132,
     angle: 18,
     duration: 34,
-    img: alexUrl,
+    img: JimUrl,
     ring: "from-brand-purple to-brand-pink",
   },
   {
@@ -139,11 +139,11 @@ export function F10_Social() {
               STRONGEST POSSIBILITY FOUND
             </div>
           </div>
-          <div className="mt-1.5 text-[14px] font-bold">Alex - possible company coworker</div>
+          <div className="mt-1.5 text-[14px] font-bold">Jim - possible company coworker</div>
           <div className="text-[11px] text-brand-mute mt-1">{candidates[0].signal}</div>
           <div
             data-prototype-target="1:6"
-            data-prototype-person="Alex"
+            data-prototype-person="Jim"
             data-prototype-source="avatar"
             className="mt-3 relative h-[144px] rounded-2xl bg-gradient-to-br from-[#fff7fb] to-[#eef7ff] border border-brand-bg flex items-center justify-center overflow-visible cursor-pointer"
           >
@@ -163,7 +163,7 @@ export function F10_Social() {
           </div>
           <motion.button
             data-prototype-target="1:6"
-            data-prototype-person="Alex"
+            data-prototype-person="Jim"
             data-prototype-source="review-path"
             whileTap={{ scale: 0.98 }}
             whileHover={{ y: -1 }}
@@ -221,7 +221,7 @@ export function F10_Social() {
 function RadarCandidate({ person, index }: { person: (typeof candidates)[number]; index: number }) {
   const x = Math.cos((person.angle * Math.PI) / 180) * person.distance;
   const y = Math.sin((person.angle * Math.PI) / 180) * person.distance;
-  const isAlex = person.name === "Alex";
+  const isJim = person.name === "Jim";
 
   return (
     <motion.div
@@ -238,9 +238,9 @@ function RadarCandidate({ person, index }: { person: (typeof candidates)[number]
       initial={{ opacity: 0, scale: 0.45 }}
       animate={{
         opacity: 1,
-        scale: isAlex ? [1, 1.06, 1] : [1, 1.03, 1],
-        x: [0, isAlex ? 8 : 5, 0, isAlex ? -7 : -4, 0],
-        y: [0, isAlex ? -5 : -3, 0, isAlex ? 6 : 4, 0],
+        scale: isJim ? [1, 1.06, 1] : [1, 1.03, 1],
+        x: [0, isJim ? 8 : 5, 0, isJim ? -7 : -4, 0],
+        y: [0, isJim ? -5 : -3, 0, isJim ? 6 : 4, 0],
       }}
       transition={{
         opacity: { duration: 0.45, delay: 0.75 + index * 0.55 },
@@ -259,15 +259,15 @@ function RadarCandidate({ person, index }: { person: (typeof candidates)[number]
       </div>
       <motion.div
         className={`absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-white border shadow px-2 py-1 text-center ${
-          isAlex ? "-bottom-12 border-brand-purple/30" : "-bottom-8 border-brand-bg"
+          isJim ? "-bottom-12 border-brand-purple/30" : "-bottom-8 border-brand-bg"
         }`}
         animate={{ y: [0, -2, 0] }}
         transition={{ duration: 2.6, repeat: Infinity }}
       >
-        <div className={`${isAlex ? "text-[10px]" : "text-[8px]"} font-bold text-brand-ink`}>
+        <div className={`${isJim ? "text-[10px]" : "text-[8px]"} font-bold text-brand-ink`}>
           {person.name} - {person.match}
         </div>
-        {isAlex && <div className="text-[8px] text-brand-purple font-bold">{person.role}</div>}
+        {isJim && <div className="text-[8px] text-brand-purple font-bold">{person.role}</div>}
       </motion.div>
     </motion.div>
   );

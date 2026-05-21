@@ -1,4 +1,4 @@
-import { Bell, User, ChevronRight, Zap } from "lucide-react";
+﻿import { Bell, User, ChevronRight, Zap } from "lucide-react";
 import { BottomNav } from "./F09_Home";
 
 const FILTERS = ["All", "Needs response", "Cooling down", "Active"];
@@ -11,7 +11,7 @@ const PEOPLE = [
     priority: "High",
   },
   {
-    name: "Alex Chen",
+    name: "Jim Chen",
     status: "Cooling down",
     time: "Reply gap increased",
     level: "Draft",
@@ -94,7 +94,7 @@ export function F80_RelationshipsList() {
               <div className="text-[10px] text-brand-mute">{p.status}</div>
               <div className="text-[9px] text-brand-mute">{p.time}</div>
               <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-brand-bg text-[9px] font-bold">
-                ✦ AI Level: {p.level}
+                鉁?AI Level: {p.level}
               </div>
             </div>
             <div className="flex flex-col items-end gap-1.5">

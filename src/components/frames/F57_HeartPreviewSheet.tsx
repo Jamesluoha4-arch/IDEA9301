@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, Heart, CheckCircle2 } from "lucide-react";
 
 export function F57_HeartPreviewSheet() {
@@ -27,7 +27,7 @@ export function F57_HeartPreviewSheet() {
             <Heart size={20} className="text-brand-pink absolute bottom-4 right-5 fill-brand-pink/40"/>
             <motion.div animate={{ rotate: 360 }} transition={{ duration: 22, repeat: Infinity, ease: "linear" }} className="w-32 h-32 rounded-full border-2 border-dashed border-brand-pink/40 flex items-center justify-center">
               <motion.div animate={{ rotate: -360 }} transition={{ duration: 22, repeat: Infinity, ease: "linear" }} className="w-20 h-20 rounded-3xl gradient-pink-peach flex items-center justify-center shadow-glow">
-                <div className="text-3xl">🤖</div>
+                <div className="text-3xl">馃</div>
               </motion.div>
             </motion.div>
           </div>

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, Bot, HelpCircle, Target, ShieldCheck, Star, Flame, CheckCircle2 } from "lucide-react";
 
 export function F45_ReflectionSaved() {

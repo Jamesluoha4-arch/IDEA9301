@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, Bot, Edit3, Wand2, CheckSquare, Heart, Info } from "lucide-react";
 import { BottomNav } from "./F09_Home";
 

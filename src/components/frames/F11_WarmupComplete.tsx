@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, ShieldCheck, CheckCircle2, Calendar, FlaskConical, Users, MessageSquare, Bookmark, Lock, ChevronRight, Bot } from "lucide-react";
 
 export function F11_WarmupComplete() {
@@ -14,7 +14,7 @@ export function F11_WarmupComplete() {
 
       <div className="px-5 mt-5">
         <h1 className="text-[20px] font-bold leading-[26px]"><span className="bg-gradient-to-r from-brand-purple to-brand-pink bg-clip-text text-transparent">AI Warm-up</span> Complete</h1>
-        <p className="text-[12px] text-brand-mute leading-[18px] mt-2">Your Second Self started a low-risk warm-up with Alex AI and found a safe opening.</p>
+        <p className="text-[12px] text-brand-mute leading-[18px] mt-2">Your Second Self started a low-risk warm-up with Jim AI and found a safe opening.</p>
         <div className="mt-2 flex items-center gap-1.5 text-[11px] text-brand-purple font-bold">
           <motion.span animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 1.6, repeat: Infinity }} className="w-2 h-2 rounded-full bg-brand-mint"/> Ready for you
         </div>
@@ -32,7 +32,7 @@ export function F11_WarmupComplete() {
               <motion.div key={i} className="w-1.5 h-1.5 rounded-full bg-brand-lavender" animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.1, 0.8] }} transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.15 }}/>
             ))}
           </div>
-          <PathBot label="Alex AI" gradient="gradient-pink-peach"/>
+          <PathBot label="Jim AI" gradient="gradient-pink-peach"/>
         </div>
         <motion.div initial={{ y: 8, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="absolute top-[58px] left-1/2 -translate-x-1/2 w-[62%] bg-white rounded-xl p-2.5 shadow-soft border border-brand-mint/40">
           <div className="flex items-start gap-1.5">

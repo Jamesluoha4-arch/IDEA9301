@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, Bot, Zap, Send, Clock, Bell, Info } from "lucide-react";
 
 export function F63_AutopilotMode() {

@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+﻿import type { ComponentType } from "react";
 import { F1_Welcome } from "@/components/frames/F1_Welcome";
 import { F2_SelfDescription } from "@/components/frames/F2_SelfDescription";
 import { F3_ImportChat } from "@/components/frames/F3_ImportChat";
@@ -12,17 +12,8 @@ import { F10_Social } from "@/components/frames/F10_Social";
 import { F10_CandidateChat } from "@/components/frames/F10_CandidateChat";
 import { F14_Chat, F15_ChatReaction, F16_ChatFinished } from "@/components/frames/F14_Chat";
 import { F17_SparkReplySheet } from "@/components/frames/F17_SparkReplySheet";
-import { F18_SensitiveCrossing } from "@/components/frames/F18_SensitiveCrossing";
-import {
-  F19_AboutSensitiveCrossing,
-  F20_StayHumanLed,
-  F21_AskAILater,
-} from "@/components/frames/F19_Modals";
 import { F22_SpacesRadar } from "@/components/frames/F22_SpacesRadar";
-import { F23_SpaceWarmupComplete } from "@/components/frames/F23_SpaceWarmupComplete";
-import { F24_PrivateBlocked } from "@/components/frames/F24_PrivateBlocked";
 import { F25_SpacesFeed } from "@/components/frames/F25_SpacesFeed";
-import { F26_CuratedStream } from "@/components/frames/F26_CuratedStream";
 import { F27_NewSpace } from "@/components/frames/F27_NewSpace";
 import { F28_Interactions } from "@/components/frames/F28_Interactions";
 import { F29_ArchitectProfile } from "@/components/frames/F29_ArchitectProfile";
@@ -80,6 +71,7 @@ import { F78_RelationshipProfile } from "@/components/frames/F78_RelationshipPro
 import { F79_RelationshipSignals } from "@/components/frames/F79_RelationshipSignals";
 import { F80_RelationshipsList } from "@/components/frames/F80_RelationshipsList";
 import { F81_AITrailSpiral, F82_AITrailLined } from "@/components/frames/F81_AITrail";
+import { F83_Settings } from "@/components/frames/F83_Settings";
 
 export type Step = {
   label: string;
@@ -97,153 +89,169 @@ export type Flow = {
 export const flows: Flow[] = [
   {
     id: "f1",
-    title: "Flow 1 · 创建 AI Second Self",
-    subtitle: "Welcome → 自我描述 → 导入聊天 → Persona → Face Scan → Chat → Home",
+    title: "Flow 1 - Create AI Second Self",
+    subtitle: "Welcome / self description / import chat / persona / face scan / chat / home",
     steps: [
       { label: "Welcome", hint: "Tap Get started", Component: F1_Welcome },
-      { label: "Self description", hint: "填写个性 / 语音输入", Component: F2_SelfDescription },
-      { label: "Import chat", hint: "TXT / PDF / 平台", Component: F3_ImportChat },
-      { label: "Pick history", hint: "按时间或条数", Component: F4_ImportHistory },
-      { label: "AI Persona 总结", hint: "确认风格、能量、标签", Component: F5_AIPersona },
-      { label: "Face Scan", hint: "生成风格", Component: F6_FaceScan },
-      { label: "AI Assistant Chat", hint: "首次对话", Component: F8_AIChat },
-      { label: "Home Dashboard", hint: "进入主页", Component: F09_Home },
+      { label: "Self description", hint: "Name and voice input", Component: F2_SelfDescription },
+      { label: "Import chat", hint: "TXT / PDF / 骞冲彴", Component: F3_ImportChat },
+      { label: "Pick history", hint: "鎸夋椂闂存垨鏉℃暟", Component: F4_ImportHistory },
+      {
+        label: "AI Persona Summary",
+        hint: "Confirm style, energy, and tags",
+        Component: F5_AIPersona,
+      },
+      { label: "Face Scan", hint: "鐢熸垚椋庢牸", Component: F6_FaceScan },
+      { label: "AI Assistant Chat", hint: "棣栨瀵硅瘽", Component: F8_AIChat },
+      { label: "Home Dashboard", hint: "杩涘叆涓婚〉", Component: F09_Home },
       { label: "Shy Support", hint: "Gentle start", Component: F6_ShySupport },
     ],
   },
   {
     id: "f2",
-    title: "Flow 2 · 低风险社交预热",
-    subtitle: "Radar → 匹配信号 → 数据透明 → Spark Reply",
+    title: "Flow 2 - Low-risk Social Warm-up",
+    subtitle: "Radar / match signal / data transparency / Spark Reply",
     steps: [
-      { label: "Home", hint: "点击 Social", Component: F09_Home },
-      { label: "Social Radar", hint: "探索潜在连接", Component: F10_Social },
-      { label: "Alex 聊天", hint: "Spark 回复建议", Component: F14_Chat },
-      { label: "Spark Reply Sheet", hint: "推理 + 上下文", Component: F17_SparkReplySheet },
-      { label: "Reactions", hint: "表情反应", Component: F15_ChatReaction },
-      { label: "Warm-up Done", hint: "交接给真人", Component: F16_ChatFinished },
+      { label: "Home", hint: "鐐瑰嚮 Social", Component: F09_Home },
+      { label: "Social Radar", hint: "鎺㈢储娼滃湪杩炴帴", Component: F10_Social },
+      { label: "Jim 鑱婂ぉ", hint: "Spark 鍥炲寤鸿", Component: F14_Chat },
+      { label: "Spark Reply Sheet", hint: "Reasoning and context", Component: F17_SparkReplySheet },
+      { label: "Reactions", hint: "琛ㄦ儏鍙嶅簲", Component: F15_ChatReaction },
+      { label: "Warm-up Done", hint: "Hand off to human", Component: F16_ChatFinished },
       { label: "Candidate chat", hint: "AI recommended opener", Component: F10_CandidateChat },
     ],
   },
   {
     id: "f3",
-    title: "Flow 3 · 敏感场景边界",
-    subtitle: "Sensitive Crossing → 选择如何继续",
-    steps: [
-      { label: "Alex 聊天", hint: "情绪话题升温", Component: F14_Chat },
-      { label: "Sensitive Crossing", hint: "AI 暂停，未发送", Component: F18_SensitiveCrossing },
-      { label: "About this pause", hint: "Learn More", Component: F19_AboutSensitiveCrossing },
-      { label: "Stay human-led", hint: "AI 在此聊天停建议", Component: F20_StayHumanLed },
-      { label: "Ask AI later", hint: "话题变化 / 明天 / 手动", Component: F21_AskAILater },
-    ],
+    title: "Flow 3 路 Live Reply",
+    subtitle: "AI reply suggestions inside the chat",
+    steps: [{ label: "Jim chat", hint: "Live reply suggestions", Component: F14_Chat }],
   },
   {
     id: "f4",
-    title: "Flow 4 · AI Control Center",
-    subtitle: "Mode → Influence Level → 权限 → Context Rules",
+    title: "Flow 4 路 AI Control Center",
+    subtitle: "Mode 鈫?Influence Level 鈫?鏉冮檺 鈫?Context Rules",
     steps: [
-      { label: "AI Control Center", hint: "Assistant · Custom", Component: F36_AIControlCenter },
-      { label: "Full layout (alt)", hint: "权限 · 行为", Component: F73_AICenterFullAlt },
-      { label: "AI Center Full", hint: "Custom · Permissions", Component: F51_AICenterFull },
+      { label: "AI Control Center", hint: "Assistant 路 Custom", Component: F36_AIControlCenter },
+      { label: "Full layout (alt)", hint: "鏉冮檺 路 琛屼负", Component: F73_AICenterFullAlt },
+      { label: "AI Center Full", hint: "Custom 路 Permissions", Component: F51_AICenterFull },
       { label: "Change AI Mode", hint: "4 modes sheet", Component: F59_ChangeAIMode },
-      { label: "Observer", hint: "Idle · minimal", Component: F60_ObserverMode },
-      { label: "Co-pilot", hint: "Active · balanced", Component: F61_CopilotModeDetail },
+      { label: "Observer", hint: "Idle 路 minimal", Component: F60_ObserverMode },
+      { label: "Co-pilot", hint: "Active 路 balanced", Component: F61_CopilotModeDetail },
       { label: "Assistant", hint: "Drafts replies", Component: F62_AssistantMode },
       { label: "Auto-pilot", hint: "Max autonomy", Component: F63_AutopilotMode },
-      { label: "Influence · Off", hint: "完全控制", Component: F64_InfluenceOff },
-      { label: "Influence · Suggest", hint: "Ideas only", Component: F65_InfluenceSuggest },
-      { label: "Influence · Draft", hint: "AI 起草", Component: F66_InfluenceDraft },
-      { label: "Influence · Act", hint: "AI 在边界内行动", Component: F67_InfluenceAct },
-      { label: "Why · Strangers", hint: "Suggest 示例", Component: F68_WhyStrangers },
-      { label: "Why · Friends", hint: "Draft 示例", Component: F69_WhyFriends },
-      { label: "Why · Close", hint: "Off 示例", Component: F70_WhyClose },
-      { label: "Context Rules", hint: "敏感场景限制", Component: F71_ContextRules },
-      { label: "Quick Edit", hint: "默认级别 · apply", Component: F72_QuickEdit },
+      { label: "Influence 路 Off", hint: "瀹屽叏鎺у埗", Component: F64_InfluenceOff },
+      { label: "Influence 路 Suggest", hint: "Ideas only", Component: F65_InfluenceSuggest },
+      { label: "Influence 路 Draft", hint: "AI 璧疯崏", Component: F66_InfluenceDraft },
+      { label: "Influence 路 Act", hint: "AI 鍦ㄨ竟鐣屽唴琛屽姩", Component: F67_InfluenceAct },
+      { label: "Why 路 Strangers", hint: "Suggest 绀轰緥", Component: F68_WhyStrangers },
+      { label: "Why 路 Friends", hint: "Draft 绀轰緥", Component: F69_WhyFriends },
+      { label: "Why 路 Close", hint: "Off 绀轰緥", Component: F70_WhyClose },
+      { label: "Context Rules", hint: "鏁忔劅鍦烘櫙闄愬埗", Component: F71_ContextRules },
+      { label: "Quick Edit", hint: "榛樿绾у埆 路 apply", Component: F72_QuickEdit },
       {
-        label: "Co-pilot 最近行为",
+        label: "Co-pilot recent actions",
         hint: "Drafted / Suggested / Blocked",
         Component: F41_CopilotMode,
       },
+      { label: "Settings", hint: "Account / help / diagnostics", Component: F83_Settings },
     ],
   },
   {
     id: "f5",
-    title: "Flow 5 · Second Self 状态变化",
-    subtitle: "Autonomy / Similarity / Risk → Change Details",
+    title: "Flow 5 - Second Self State Changes",
+    subtitle: "Autonomy / Similarity / Risk / Change Details",
     steps: [
-      { label: "Your Second Self", hint: "Assistant 状态", Component: F46_SecondSelf },
-      { label: "Second Self · alt", hint: "Tagged reasons", Component: F47_SecondSelfAlt },
-      { label: "Change Details", hint: "状态路径 · 洞察", Component: F48_ChangeDetails },
+      { label: "Your Second Self", hint: "Assistant state", Component: F46_SecondSelf },
+      { label: "Second Self 路 alt", hint: "Tagged reasons", Component: F47_SecondSelfAlt },
+      { label: "Change Details", hint: "鐘舵€佽矾寰?路 娲炲療", Component: F48_ChangeDetails },
       {
-        label: "Change Detail · Draft",
-        hint: "What happened / 影响",
+        label: "Change Detail 路 Draft",
+        hint: "What happened / 褰卞搷",
         Component: F74_ChangeDetailDraft,
       },
-      { label: "AI Trail · Spiral", hint: "时间线 · 曲线", Component: F81_AITrailSpiral },
-      { label: "AI Trail · Lined", hint: "时间线 · 虚线", Component: F82_AITrailLined },
-      { label: "进入 Control Center 调整", hint: "Change mode", Component: F36_AIControlCenter },
+      { label: "AI Trail 路 Spiral", hint: "鏃堕棿绾?路 鏇茬嚎", Component: F81_AITrailSpiral },
+      { label: "AI Trail 路 Lined", hint: "鏃堕棿绾?路 铏氱嚎", Component: F82_AITrailLined },
+      {
+        label: "杩涘叆 Control Center 璋冩暣",
+        hint: "Change mode",
+        Component: F36_AIControlCenter,
+      },
     ],
   },
   {
     id: "f6",
-    title: "Flow 6 · 关系维护",
-    subtitle: "Signals → Profile → Check-in → Reconnect",
+    title: "Flow 6 路 鍏崇郴缁存姢",
+    subtitle: "Signals 鈫?Profile 鈫?Check-in 鈫?Reconnect",
     steps: [
       {
         label: "Relationships List",
         hint: "All / Cooling / Active",
         Component: F80_RelationshipsList,
       },
-      { label: "Today's Signals", hint: "3 关系需关注", Component: F79_RelationshipSignals },
-      { label: "Alex Chen Profile", hint: "Cooling down", Component: F78_RelationshipProfile },
+      { label: "Today's Signals", hint: "3 鍏崇郴闇€鍏虫敞", Component: F79_RelationshipSignals },
+      { label: "Jim Chen Profile", hint: "Cooling down", Component: F78_RelationshipProfile },
       {
         label: "Relationship Check-in",
-        hint: "Feeling · step · note",
+        hint: "Feeling 路 step 路 note",
         Component: F77_RelationshipCheckin,
       },
-      { label: "Check-in Saved", hint: "提醒已调整", Component: F76_CheckinSaved },
-      { label: "Reconnect with Alex", hint: "自己 / 建议 / 草稿", Component: F75_ReconnectChoose },
+      { label: "Check-in Saved", hint: "Reminder adjusted", Component: F76_CheckinSaved },
+      {
+        label: "Reconnect with Jim",
+        hint: "鑷繁 / 寤鸿 / 鑽夌",
+        Component: F75_ReconnectChoose,
+      },
     ],
   },
   {
     id: "f7",
-    title: "Flow 7 · 每日挑战与积分",
-    subtitle: "Challenge → 完成 → Streak → Frame Shop",
+    title: "Flow 7 - Daily Challenge and Points",
+    subtitle: "Challenge 鈫?瀹屾垚 鈫?Streak 鈫?Frame Shop",
     steps: [
-      { label: "Daily Challenge", hint: "今日任务 1/3", Component: F37_DailyChallenge },
+      { label: "Daily Challenge", hint: "浠婃棩浠诲姟 1/3", Component: F37_DailyChallenge },
       { label: "Progress 67%", hint: "2 of 3 done", Component: F38_ChallengeProgress },
-      { label: "Challenge Done", hint: "+20 pts 奖励", Component: F39_ChallengeDone },
-      { label: "Challenge History", hint: "Streak · 周记录", Component: F40_ChallengeHistory },
+      { label: "Challenge Done", hint: "+20 pts 濂栧姳", Component: F39_ChallengeDone },
+      {
+        label: "Challenge History",
+        hint: "Streak and weekly record",
+        Component: F40_ChallengeHistory,
+      },
       { label: "Missed Challenge", hint: "Streak at risk", Component: F42_MissedChallenge },
-      { label: "Daily · Missed", hint: "Quick Reflection 提示", Component: F43_MissedDaily },
-      { label: "Quick Reflection", hint: "Why · 明天 · 备注", Component: F44_QuickReflection },
-      { label: "Reflection Saved", hint: "+5 pts · streak 保住", Component: F45_ReflectionSaved },
-      { label: "Frame Shop", hint: "用积分解锁装饰", Component: F49_FrameShop },
+      { label: "Daily 路 Missed", hint: "Quick Reflection 鎻愮ず", Component: F43_MissedDaily },
+      {
+        label: "Quick Reflection",
+        hint: "Why 路 鏄庡ぉ 路 澶囨敞",
+        Component: F44_QuickReflection,
+      },
+      {
+        label: "Reflection Saved",
+        hint: "+5 pts 路 streak 淇濅綇",
+        Component: F45_ReflectionSaved,
+      },
+      { label: "Frame Shop", hint: "Unlock decorations with points", Component: F49_FrameShop },
       { label: "Frame Shop Grid", hint: "All frames", Component: F54_FrameShopGrid },
       { label: "Frame Unlock", hint: "80 pts sheet", Component: F50_FrameUnlock },
-      { label: "Heart Halo Unlock", hint: "Owned · apply", Component: F52_HeartUnlockSheet },
+      { label: "Heart Halo Unlock", hint: "Owned 路 apply", Component: F52_HeartUnlockSheet },
       { label: "Heart Halo Preview", hint: "Large preview", Component: F57_HeartPreviewSheet },
       { label: "Cloud Float Unlock", hint: "80 pts sheet", Component: F53_CloudUnlockSheet },
-      { label: "Points Guide", hint: "Earn · use · streak", Component: F55_PointsGuide },
+      { label: "Points Guide", hint: "Earn 路 use 路 streak", Component: F55_PointsGuide },
     ],
   },
   {
     id: "f8",
-    title: "Flow 8 · Spaces 与 AI 可见性",
-    subtitle: "Feed → Profile → System Visibility → 设备",
+    title: "Flow 8 - Spaces and AI Visibility",
+    subtitle: "Feed 鈫?Profile 鈫?System Visibility 鈫?璁惧",
     steps: [
-      { label: "Spaces Radar", hint: "空间节点同步", Component: F22_SpacesRadar },
-      { label: "Space Warm-up Done", hint: "预览就绪", Component: F23_SpaceWarmupComplete },
-      { label: "Private Data Blocked", hint: "Got it", Component: F24_PrivateBlocked },
+      { label: "Spaces Radar", hint: "Topic nodes synced", Component: F22_SpacesRadar },
       { label: "Spaces Feed", hint: "HUMAN / AI_SYNTH / RAW", Component: F25_SpacesFeed },
-      { label: "Curated Stream", hint: "Live sync · drafts", Component: F26_CuratedStream },
       { label: "New Space", hint: "Create + publish", Component: F27_NewSpace },
-      { label: "Interactions", hint: "活动流", Component: F28_Interactions },
-      { label: "Architect Profile", hint: "兴趣匹配", Component: F29_ArchitectProfile },
+      { label: "Interactions", hint: "Activity stream", Component: F28_Interactions },
+      { label: "Architect Profile", hint: "鍏磋叮鍖归厤", Component: F29_ArchitectProfile },
       { label: "System Visibility", hint: "Mini social world", Component: F30_SystemVisibility },
-      { label: "Live Social World", hint: "Replay · 气泡", Component: F31_LiveSocialWorld },
-      { label: "Presence Reflection", hint: "语气 · 关系", Component: F32_PresenceReflection },
-      { label: "Device Visibility", hint: "物理层", Component: F33_DeviceVisibility },
+      { label: "Live Social World", hint: "Replay 路 姘旀场", Component: F31_LiveSocialWorld },
+      { label: "Presence Reflection", hint: "璇皵 路 鍏崇郴", Component: F32_PresenceReflection },
+      { label: "Device Visibility", hint: "Physical layer", Component: F33_DeviceVisibility },
       { label: "Microphone Access", hint: "Voice flow", Component: F34_MicAccess },
       {
         label: "AI Presence Insight",

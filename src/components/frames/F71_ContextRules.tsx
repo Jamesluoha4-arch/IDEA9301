@@ -1,4 +1,4 @@
-import { ChevronLeft, Frown, Heart, CloudRain, MessageCircle, Shield } from "lucide-react";
+﻿import { ChevronLeft, Frown, Heart, CloudRain, MessageCircle, Shield } from "lucide-react";
 
 const RULES = [
   { Icon: Frown, g: "gradient-brand-soft", title: "Conflict", sub: "Detected tension or disagreement", tag: "Human Only", desc: "AI won't suggest or draft. You stay in full control." },

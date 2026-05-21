@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Edit3, Bot, ShieldCheck, TrendingUp, Info, MessageSquare, CheckCircle2, User, Calendar } from "lucide-react";
 
 export function F47_SecondSelfAlt() {
@@ -38,7 +38,7 @@ export function F47_SecondSelfAlt() {
         <div className="px-4 py-1.5 rounded-full bg-brand-ink text-white text-[13px] font-bold flex items-center gap-1.5"><ShieldCheck size={13}/> Assistant</div>
         <div className="text-[11px] text-brand-mute mt-1.5">Medium AI involvement</div>
         <div className="mt-1 flex items-center gap-1 text-[10px] font-bold text-brand-purple">
-          <TrendingUp size={11}/> Changed from Co-pilot 🙂
+          <TrendingUp size={11}/> Changed from Co-pilot 馃檪
         </div>
       </div>
 
@@ -70,7 +70,7 @@ export function F47_SecondSelfAlt() {
         {[
           { Icon: MessageSquare, t: "AI drafted 4 replies today", tag: "ACTIVITY" },
           { Icon: CheckCircle2, t: "You accepted 2 suggestions", tag: "DECISION" },
-          { Icon: User, t: "High involvement in Alex's chat", tag: "RELATIONSHIP" },
+          { Icon: User, t: "High involvement in Jim's chat", tag: "RELATIONSHIP" },
           { Icon: Calendar, t: "You kept Co-pilot mode for 3 days", tag: "PATTERN" },
         ].map((r) => (
           <div key={r.t} className="p-3 flex items-center gap-2.5">

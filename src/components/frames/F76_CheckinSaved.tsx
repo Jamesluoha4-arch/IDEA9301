@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { X, Check, Smile, Clock, Bell, Sparkles, Calendar, ChevronRight } from "lucide-react";
 
 export function F76_CheckinSaved() {
@@ -55,7 +55,7 @@ export function F76_CheckinSaved() {
         <div className="text-[11px] text-brand-mute">This relationship stays in your active list.</div>
       </div>
 
-      <button className="mx-5 mt-6 w-[calc(100%-2.5rem)] py-3.5 rounded-2xl bg-brand-ink text-white text-[13px] font-bold">Back to Alex Chen</button>
+      <button className="mx-5 mt-6 w-[calc(100%-2.5rem)] py-3.5 rounded-2xl bg-brand-ink text-white text-[13px] font-bold">Back to Jim Chen</button>
       <button className="mx-5 mt-2 w-[calc(100%-2.5rem)] py-3.5 rounded-2xl bg-white border border-brand-bg text-[13px] font-bold flex items-center justify-center gap-1">View AI Trail <ChevronRight size={13}/></button>
     </div>
   );

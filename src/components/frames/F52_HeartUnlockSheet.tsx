@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, Heart, CheckCircle2 } from "lucide-react";
 
 export function F52_HeartUnlockSheet() {
@@ -28,7 +28,7 @@ export function F52_HeartUnlockSheet() {
             <Heart size={14} className="text-brand-pink absolute top-2 right-2 fill-brand-pink"/>
             <Heart size={14} className="text-brand-pink absolute bottom-3 right-4 fill-brand-pink"/>
             <motion.div animate={{ rotate: -360 }} transition={{ duration: 22, repeat: Infinity, ease: "linear" }} className="w-16 h-16 rounded-2xl gradient-pink-peach flex items-center justify-center shadow-glow">
-              <div className="text-2xl">🤖</div>
+              <div className="text-2xl">馃</div>
             </motion.div>
           </motion.div>
           <div className="text-[22px] font-bold mt-3">Heart Halo</div>

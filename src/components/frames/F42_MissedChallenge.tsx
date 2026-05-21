@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { Settings, AlertTriangle, Bot, Ban, Lightbulb, PenLine, Send, User, Users, Heart, ChevronRight, Clock, Flame } from "lucide-react";
 
 const modes = [{ Icon: Ban, t: "Off" }, { Icon: Lightbulb, t: "Suggest" }, { Icon: PenLine, t: "Draft" }, { Icon: Send, t: "Act" }];

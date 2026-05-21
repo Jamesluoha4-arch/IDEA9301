@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { ArrowLeft, ShieldCheck, CheckCircle2, Bot, Camera, Target, Heart, ShieldAlert, Bookmark, Image, MessageSquare, ShieldHalf, Lock, ChevronRight } from "lucide-react";
 
 const sources = [
@@ -77,7 +77,7 @@ export function F23_SpaceWarmupComplete() {
           {[
             { Icon: Target, t: "Topic Match", d: "Architecture 92% match", g: "from-brand-purple to-brand-lavender" },
             { Icon: Heart, t: "Community Tone", d: "Supportive Visual feedback", g: "from-brand-pink to-brand-peach" },
-            { Icon: ShieldAlert, t: "Entry Safety", d: "Preview only · no auto post", g: "from-brand-mint to-brand-sky" },
+            { Icon: ShieldAlert, t: "Entry Safety", d: "Preview only 路 no auto post", g: "from-brand-mint to-brand-sky" },
           ].map((s) => (
             <div key={s.t} className="bg-white rounded-2xl p-2.5 shadow-soft text-center border border-brand-bg">
               <div className={`mx-auto w-9 h-9 rounded-xl bg-gradient-to-br ${s.g} flex items-center justify-center`}>

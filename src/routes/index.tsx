@@ -21,10 +21,7 @@ import {
   F21_AskAILater,
 } from "@/components/frames/F19_Modals";
 import { F22_SpacesRadar } from "@/components/frames/F22_SpacesRadar";
-import { F23_SpaceWarmupComplete } from "@/components/frames/F23_SpaceWarmupComplete";
-import { F24_PrivateBlocked } from "@/components/frames/F24_PrivateBlocked";
 import { F25_SpacesFeed } from "@/components/frames/F25_SpacesFeed";
-import { F26_CuratedStream } from "@/components/frames/F26_CuratedStream";
 import { F27_NewSpace } from "@/components/frames/F27_NewSpace";
 import { F28_Interactions } from "@/components/frames/F28_Interactions";
 import { F29_ArchitectProfile } from "@/components/frames/F29_ArchitectProfile";
@@ -178,28 +175,10 @@ const frames = [
     Component: F22_SpacesRadar,
   },
   {
-    id: "3888-12876",
-    title: "23 · Space Warm-up Complete",
-    sub: "Path · preview ready",
-    Component: F23_SpaceWarmupComplete,
-  },
-  {
-    id: "3888-2396",
-    title: "24 · Private Data Blocked",
-    sub: "Sheet · got it",
-    Component: F24_PrivateBlocked,
-  },
-  {
     id: "3888-3154",
     title: "26 · Spaces Feed",
     sub: "Synth + human posts",
     Component: F25_SpacesFeed,
-  },
-  {
-    id: "3888-2910",
-    title: "27 · Curated Stream",
-    sub: "Live sync · drafts",
-    Component: F26_CuratedStream,
   },
   { id: "3888-3318", title: "28 · New Space", sub: "Create + publish", Component: F27_NewSpace },
   {

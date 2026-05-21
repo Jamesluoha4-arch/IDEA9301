@@ -459,6 +459,13 @@ export function FlowPlayer({ onOpenGallery }: Props) {
         candidateTarget.dataset.prototypePerson,
       );
     }
+    const spaceTarget = target.closest("[data-prototype-space]") as HTMLElement | null;
+    if (spaceTarget?.dataset.prototypeSpace) {
+      window.sessionStorage.setItem(
+        "second-self.selected-space",
+        spaceTarget.dataset.prototypeSpace,
+      );
+    }
     const avatarNavMode = avatarNavModeFromElement(target);
     if (avatarNavMode) {
       window.sessionStorage.setItem("second-self.avatar-nav-mode", avatarNavMode);

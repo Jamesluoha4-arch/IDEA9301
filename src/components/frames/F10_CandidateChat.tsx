@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Bookmark,
@@ -6,8 +6,10 @@ import {
   Calendar,
   Check,
   ChevronLeft,
+  Delete,
   Layers,
   MemoryStick,
+  Mic,
   Plus,
   Send,
   ShieldCheck,
@@ -24,7 +26,7 @@ import { readGeneratedAvatar } from "@/lib/avatar-generation";
 const styleTabs = ["Friendly", "Direct", "Playful", "Brief", "Warm"] as const;
 export type StyleTab = (typeof styleTabs)[number];
 type CandidateName = keyof typeof candidateOpeners;
-type ChatMessage = { from: "ai" | "me"; text: string };
+type ChatMessage = { from: "ai" | "me"; text: string } | { from: "system"; text: string };
 
 const chatListStorageKey = "second-self.chat-list";
 const openedCandidateStorageKey = "second-self.opened-candidate-chat";
@@ -32,7 +34,7 @@ const openedCandidateStorageKey = "second-self.opened-candidate-chat";
 const candidateOpeners = {
   Alex: {
     title: "Alex AI",
-    relationship: "Possible company coworker",
+    relationship: "Possible coworker",
     avatar: alexUrl,
     reason: "Same workplace context - shared onboarding signal",
     preview: "Same workplace context - shared onboarding signal - draft ready",
@@ -99,6 +101,39 @@ const candidateOpeners = {
   },
 };
 
+const replyVariants: Record<CandidateName, string[]> = {
+  Alex: [
+    "Good idea. Maybe we can compare notes after the onboarding briefing and keep it useful for both of us.",
+    "That works. I can keep it simple: one thing we learned, one question we still have, and one easy next step.",
+    "I like that. We can make the first message low-pressure, so it feels helpful rather than forced.",
+    "Totally fair. I would start with a small note after the session, then see whether the conversation naturally continues.",
+  ],
+  Joe: [
+    "Good point. I can share one onboarding resource that helped me frame my design notes, and you can tell me what feels useful from your side.",
+    "I like the angle. Maybe we trade one useful reference and one tiny design observation from the week.",
+    "That sounds useful. We could make it visual: one resource, one screenshot, one quick takeaway.",
+    "Nice. I would keep the tone curious and creative, almost like swapping desk-side inspiration.",
+  ],
+  Sabrina: [
+    "I'm in. A quick coffee or lunch check-in feels low pressure, and we can swap first-week tips while we are there.",
+    "Yeah, that works. I would keep it simple and practical: compare what we know, then decide if it is worth following up.",
+    "Nice. We can start casual and see where it goes. First week is easier when someone nearby is also figuring it out.",
+    "That feels approachable. A quick hello plus one shared company-space question should be enough to begin.",
+  ],
+  James: [
+    "That sounds helpful. We could compare the task expectations first, then note what each of us still needs to clarify.",
+    "I think so. I would suggest a gentle first step: share one note from onboarding and ask whether it matches their experience.",
+    "That is a clear starting point. I can keep it warm but structured, so it feels thoughtful rather than too formal.",
+    "Good direction. We can make the message specific enough to be useful, but not so formal that it feels like work.",
+  ],
+};
+
+const qwertyRows = [
+  ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+  ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+  ["z", "x", "c", "v", "b", "n", "m"],
+];
+
 function readUserName() {
   if (typeof window === "undefined") return "David";
   return window.localStorage.getItem("second-self-user-name")?.trim() || "David";
@@ -162,56 +197,86 @@ function saveConversation(name: CandidateName, preview: string) {
   window.dispatchEvent(new Event("second-self-chat-list-updated"));
 }
 
-function buildPersonaReply(candidateName: CandidateName, userText: string, userName: string) {
+function chooseReply(candidateName: CandidateName, turn: number, userText: string) {
   const lower = userText.toLowerCase();
-  const asksQuestion = userText.includes("?") || userText.includes("？");
+  const variants = replyVariants[candidateName];
+  const keywordBoost =
+    lower.includes("coffee") || lower.includes("lunch")
+      ? 1
+      : lower.includes("task") || lower.includes("project")
+        ? 2
+        : lower.includes("nervous") || lower.includes("awkward")
+          ? 3
+          : 0;
+  return variants[(turn + keywordBoost) % variants.length];
+}
 
-  if (candidateName === "Joe") {
-    if (lower.includes("design") || lower.includes("portfolio")) {
-      return `Good point, ${userName}. I can share one onboarding resource that helped me frame my design notes, and you can tell me what feels useful from your side.`;
-    }
-    return asksQuestion
-      ? `I like that question, ${userName}. Maybe we can compare what each of us noticed and turn it into a small shared checklist.`
-      : "That makes sense. I am thinking we keep it easy: one useful resource, one thing we are unsure about, and one tiny design observation.";
+function initialMessages(candidateName: CandidateName, userName: string): ChatMessage[] {
+  if (candidateName !== "Alex") {
+    return [
+      { from: "ai", text: personalize(candidateOpeners[candidateName].drafts.Friendly, userName) },
+    ];
   }
 
-  if (candidateName === "Sabrina") {
-    if (lower.includes("lunch") || lower.includes("coffee")) {
-      return "I'm in. A quick coffee or lunch check-in feels low pressure, and we can swap first-week tips while we are there.";
-    }
-    return asksQuestion
-      ? "Yeah, that works. I would keep it simple and practical: compare what we know, then decide if it is worth following up."
-      : "Nice. We can start casual and see where it goes. First week is easier when someone nearby is also figuring it out.";
-  }
+  return [
+    { from: "ai", text: "Hey, are you also joining the new starter session this week?" },
+    { from: "me", text: "Yeah, I am. Still getting used to everything, but excited to start." },
+    { from: "ai", text: "Same here. Have you figured out which team area you will sit with?" },
+    { from: "me", text: "Not fully yet. I am planning to ask after the onboarding briefing." },
+    { from: "ai", text: "Good idea. Maybe we can compare notes after the session." },
+  ];
+}
 
-  if (candidateName === "James") {
-    if (lower.includes("task") || lower.includes("project")) {
-      return `That sounds helpful, ${userName}. We could compare the task expectations first, then note what each of us still needs to clarify.`;
-    }
-    return asksQuestion
-      ? "I think so. I would suggest a gentle first step: share one note from onboarding and ask whether it matches their experience."
-      : "That is a clear starting point. I can help keep it warm but structured, so it feels thoughtful rather than too formal.";
-  }
-
-  if (lower.includes("nervous") || lower.includes("awkward")) {
-    return `Totally fair, ${userName}. We can keep it small: one friendly sentence, no pressure to continue unless it feels natural.`;
-  }
-  return asksQuestion
-    ? "Good idea. Maybe we can compare notes after the onboarding briefing and keep it useful for both of us."
-    : "Good idea. Maybe we can compare notes after the session and keep the first message simple and easy to answer.";
+function buildRegeneratedDraft(
+  candidateName: CandidateName,
+  style: StyleTab,
+  userName: string,
+  seed: number,
+) {
+  const base = candidateOpeners[candidateName];
+  const variants: Record<StyleTab, string[]> = {
+    Friendly: [
+      `Hi, ${userName}. I am ${candidateName}. I noticed we may have overlapping onboarding context. Want to compare one useful note from this week?`,
+      `Hi, ${userName}. I am ${candidateName}. We seem to share a low-pressure work signal. Want to swap what has helped us settle in so far?`,
+    ],
+    Direct: [
+      `Hi, ${userName}. I am ${candidateName}. Our onboarding context overlaps. Want to compare notes after the next session?`,
+      `Hi, ${userName}. I am ${candidateName}. Want to exchange one practical first-week tip today?`,
+    ],
+    Playful: [
+      `Hey ${userName}, I am ${candidateName}. New-starter radar says we may have useful notes to trade. Want to swap one?`,
+      `Hi ${userName}, I am ${candidateName}. Want to trade one tiny survival tip from onboarding?`,
+    ],
+    Brief: [
+      `Hi, ${userName}. I am ${candidateName}. Want to compare onboarding notes?`,
+      `Hi, ${userName}. I am ${candidateName}. Want to swap one useful first-week tip?`,
+    ],
+    Warm: [
+      `Hi, ${userName}. I am ${candidateName}. I am still getting oriented too, and I would be happy to compare notes if that feels useful.`,
+      `Hi, ${userName}. I am ${candidateName}. It might be nice to share what has helped us feel more settled this week.`,
+    ],
+  };
+  return (
+    variants[style][seed % variants[style].length] || personalize(base.drafts[style], userName)
+  );
 }
 
 export function F10_CandidateChat() {
   const candidateName = readCandidateName();
   const candidate = candidateOpeners[candidateName];
   const userName = readUserName();
-  const [selectedStyle, setSelectedStyle] = useState<StyleTab>("Friendly");
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    { from: "ai", text: personalize(candidate.drafts.Friendly, userName) },
-  ]);
-  const [input, setInput] = useState("");
-  const [sheetOpen, setSheetOpen] = useState(false);
   const userAvatar = readGeneratedAvatar();
+  const holdTimer = useRef<number | null>(null);
+  const [selectedStyle, setSelectedStyle] = useState<StyleTab>("Friendly");
+  const [messages, setMessages] = useState<ChatMessage[]>(() =>
+    initialMessages(candidateName, userName),
+  );
+  const [input, setInput] = useState("");
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [commentTarget, setCommentTarget] = useState<string | null>(null);
+  const [replyTurn, setReplyTurn] = useState(0);
+  const [draftSeed, setDraftSeed] = useState(0);
 
   useEffect(() => {
     const openedName = window.sessionStorage.getItem(openedCandidateStorageKey);
@@ -221,7 +286,10 @@ export function F10_CandidateChat() {
     }
   }, [candidate.drafts.Friendly, candidateName, userName]);
 
-  const selectedDraft = personalize(candidate.drafts[selectedStyle], userName);
+  const selectedDraft = useMemo(
+    () => personalize(candidate.drafts[selectedStyle], userName),
+    [candidate.drafts, selectedStyle, userName],
+  );
   const visibleSuggestions = useMemo(
     () => [
       personalize(candidate.drafts[selectedStyle], userName),
@@ -233,10 +301,34 @@ export function F10_CandidateChat() {
   const sendMessage = () => {
     const text = input.trim();
     if (!text) return;
-    const reply = buildPersonaReply(candidateName, text, userName);
-    setMessages((items) => [...items, { from: "me", text }, { from: "ai", text: reply }]);
+    const reply = chooseReply(candidateName, replyTurn, text);
+    const nextMessages: ChatMessage[] = [];
+    if (candidateName === "Alex" && replyTurn === 0) {
+      nextMessages.push({ from: "system", text: "AI WARM-UP FINISHED" });
+    }
+    nextMessages.push({ from: "me", text }, { from: "ai", text: reply });
+    setMessages((items) => [...items, ...nextMessages]);
+    setReplyTurn((value) => value + 1);
     saveConversation(candidateName, reply);
     setInput("");
+  };
+
+  const appendInput = (value: string) => {
+    setInput((current) => `${current}${value}`);
+  };
+
+  const deleteInput = () => {
+    setInput((current) => current.slice(0, -1));
+  };
+
+  const startHold = (message: ChatMessage) => {
+    if (message.from === "system") return;
+    window.clearTimeout(holdTimer.current ?? undefined);
+    holdTimer.current = window.setTimeout(() => setCommentTarget(message.text), 520);
+  };
+
+  const cancelHold = () => {
+    window.clearTimeout(holdTimer.current ?? undefined);
   };
 
   return (
@@ -262,7 +354,7 @@ export function F10_CandidateChat() {
 
       <div
         className="px-3 py-3 flex flex-col gap-3 overflow-y-auto prototype-scroll"
-        style={{ height: "calc(100% - 326px)" }}
+        style={{ height: keyboardOpen ? "calc(100% - 438px)" : "calc(100% - 326px)" }}
       >
         <div className="bg-white rounded-2xl p-3 flex items-start gap-2 shadow-soft border border-brand-purple/20">
           <div className="w-7 h-7 rounded-lg gradient-brand flex items-center justify-center shrink-0">
@@ -279,13 +371,29 @@ export function F10_CandidateChat() {
         </div>
 
         {messages.map((message, index) => {
+          if (message.from === "system") {
+            return (
+              <div key={`${message.text}-${index}`} className="py-1 text-center">
+                <div className="flex items-center gap-2 text-[9px] text-brand-purple">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-brand-lavender to-transparent" />
+                  <ShieldCheck size={10} />
+                  <span className="font-bold tracking-[0.5px]">{message.text}</span>
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-brand-lavender to-transparent" />
+                </div>
+                <p className="mt-1 text-[9px] leading-[13px] text-brand-mute">
+                  Warm-up sequence complete. Awaiting human input to finalize the session.
+                </p>
+              </div>
+            );
+          }
+
           const isMe = message.from === "me";
           return (
             <motion.div
               key={`${message.text}-${index}`}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`flex items-end gap-2 ${isMe ? "flex-row-reverse" : ""}`}
+              className={`relative flex items-end gap-2 ${isMe ? "flex-row-reverse" : ""}`}
             >
               <div className="w-8 h-8 rounded-full bg-white shadow-sm overflow-hidden flex items-center justify-center shrink-0">
                 {isMe ? (
@@ -309,17 +417,31 @@ export function F10_CandidateChat() {
                 )}
               </div>
               <div className={`max-w-[78%] ${isMe ? "text-right" : ""}`}>
-                <div
-                  className={`px-3 py-2.5 rounded-2xl text-[12px] leading-[17px] shadow-soft ${
+                <motion.button
+                  type="button"
+                  onPointerDown={() => startHold(message)}
+                  onPointerUp={cancelHold}
+                  onPointerLeave={cancelHold}
+                  whileTap={{ scale: 0.985 }}
+                  className={`px-3 py-2.5 rounded-2xl text-left text-[12px] leading-[17px] shadow-soft ${
                     isMe ? "gradient-brand text-white" : "bg-white"
                   }`}
                 >
                   {message.text}
-                </div>
+                </motion.button>
                 {!isMe && (
                   <div className="text-[8px] text-brand-mute mt-1 tracking-wider font-bold flex items-center gap-1">
                     <Sparkles size={8} /> AI SUGGESTION ONLY
                   </div>
+                )}
+                {commentTarget === message.text && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    className={`absolute -top-10 ${isMe ? "right-12" : "left-12"} rounded-2xl border border-white/80 bg-white/90 px-3 py-2 text-[10px] font-bold text-brand-purple shadow-soft backdrop-blur-xl`}
+                  >
+                    Comment saved for later
+                  </motion.div>
                 )}
               </div>
             </motion.div>
@@ -376,15 +498,13 @@ export function F10_CandidateChat() {
         <div className="w-8 h-8 rounded-full bg-brand-bg flex items-center justify-center">
           <Plus size={16} className="text-brand-purple" />
         </div>
-        <input
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") sendMessage();
-          }}
-          placeholder="Write your own message..."
-          className="flex-1 px-3 py-2 rounded-full bg-brand-bg outline-none text-[11px] text-brand-ink placeholder:text-brand-mute"
-        />
+        <button
+          type="button"
+          onClick={() => setKeyboardOpen(true)}
+          className="flex-1 px-3 py-2 rounded-full bg-brand-bg text-left text-[11px] text-brand-ink"
+        >
+          {input || <span className="text-brand-mute">Write your own message...</span>}
+        </button>
         <Sparkles size={12} className="text-brand-purple" />
         <Smile size={12} className="text-brand-mute" />
         <motion.button
@@ -398,14 +518,34 @@ export function F10_CandidateChat() {
       </div>
 
       <AnimatePresence>
+        {keyboardOpen && (
+          <PrototypeKeyboard
+            value={input}
+            onType={appendInput}
+            onDelete={deleteInput}
+            onSend={() => {
+              sendMessage();
+              setKeyboardOpen(false);
+            }}
+            onClose={() => setKeyboardOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
         {sheetOpen && (
           <SparkReplySheet
             selectedStyle={selectedStyle}
             selectedDraft={selectedDraft}
+            draftSeed={draftSeed}
+            candidateName={candidateName}
+            userName={userName}
             onStyleChange={setSelectedStyle}
+            onRegenerate={() => setDraftSeed((value) => value + 1)}
             onClose={() => setSheetOpen(false)}
-            onInsert={() => {
-              setInput(selectedDraft);
+            onInsert={(draft) => {
+              setInput(draft);
+              setKeyboardOpen(true);
               setSheetOpen(false);
             }}
           />
@@ -415,19 +555,142 @@ export function F10_CandidateChat() {
   );
 }
 
+function PrototypeKeyboard({
+  value,
+  onType,
+  onDelete,
+  onSend,
+  onClose,
+}: {
+  value: string;
+  onType: (value: string) => void;
+  onDelete: () => void;
+  onSend: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <motion.div
+      initial={{ y: 280 }}
+      animate={{ y: 0 }}
+      exit={{ y: 280 }}
+      transition={{ type: "spring", stiffness: 360, damping: 38 }}
+      className="absolute bottom-0 left-0 right-0 z-[110] bg-[#d7dde7] px-2 pt-2 pb-3 shadow-[0_-18px_34px_rgba(31,31,46,0.18)]"
+    >
+      <div className="mb-2 flex items-center gap-2">
+        <button className="h-10 w-10 rounded-full bg-white/70 flex items-center justify-center">
+          <Mic size={18} />
+        </button>
+        <div className="flex-1 rounded-xl bg-white px-3 py-2 text-[13px] min-h-10">
+          {value || <span className="text-brand-mute">Message...</span>}
+        </div>
+        <button className="h-10 w-10 rounded-full bg-white/70 flex items-center justify-center">
+          <Smile size={18} />
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="h-10 w-10 rounded-full bg-white/70 text-[16px] font-bold"
+        >
+          v
+        </button>
+      </div>
+      <div className="mb-2 flex justify-around text-[22px] text-brand-ink">
+        {["I", "you", "we", "this", "good", "not", "in", "yes"].map((word) => (
+          <button key={word} type="button" onClick={() => onType(`${word} `)}>
+            {word}
+          </button>
+        ))}
+      </div>
+      <div className="space-y-2">
+        {qwertyRows.map((row, rowIndex) => (
+          <div key={row.join("")} className="flex justify-center gap-1.5">
+            {rowIndex === 2 && (
+              <button
+                type="button"
+                onClick={() => onType("")}
+                className="h-12 w-12 rounded-lg bg-[#b7bfca] text-[22px]"
+              >
+                ⇧
+              </button>
+            )}
+            {row.map((key) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => onType(key)}
+                className="h-12 min-w-[35px] flex-1 rounded-lg bg-white text-[28px] text-black shadow-sm"
+              >
+                {key}
+              </button>
+            ))}
+            {rowIndex === 2 && (
+              <button
+                type="button"
+                onClick={onDelete}
+                className="h-12 w-12 rounded-lg bg-[#b7bfca] flex items-center justify-center"
+              >
+                <Delete size={22} />
+              </button>
+            )}
+          </div>
+        ))}
+        <div className="flex gap-2">
+          <button type="button" className="h-12 w-16 rounded-lg bg-[#b7bfca] text-[18px]">
+            123
+          </button>
+          <button
+            type="button"
+            onClick={() => onType(" ")}
+            className="h-12 flex-1 rounded-lg bg-white text-[18px]"
+          >
+            space
+          </button>
+          <button
+            type="button"
+            onClick={onSend}
+            className="h-12 w-20 rounded-lg bg-[#b7bfca] text-[17px] font-bold"
+          >
+            send
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export function SparkReplySheet({
   selectedStyle,
   selectedDraft,
+  draftSeed,
+  candidateName,
+  userName,
   onStyleChange,
+  onRegenerate,
   onClose,
   onInsert,
 }: {
   selectedStyle: StyleTab;
   selectedDraft: string;
+  draftSeed?: number;
+  candidateName?: CandidateName;
+  userName?: string;
   onStyleChange: (style: StyleTab) => void;
+  onRegenerate?: () => void;
   onClose: () => void;
-  onInsert: () => void;
+  onInsert: (draft: string) => void;
 }) {
+  const [editableDraft, setEditableDraft] = useState(selectedDraft);
+
+  useEffect(() => {
+    if (candidateName && userName) {
+      setEditableDraft(
+        buildRegeneratedDraft(candidateName, selectedStyle, userName, draftSeed ?? 0),
+      );
+      return;
+    }
+    setEditableDraft(selectedDraft);
+  }, [candidateName, draftSeed, selectedDraft, selectedStyle, userName]);
+
   return (
     <motion.div
       className="absolute inset-0 z-[120]"
@@ -471,12 +734,16 @@ export function SparkReplySheet({
             </button>
           ))}
         </div>
-        <div className="mt-4 rounded-3xl border-2 border-brand-lavender/45 bg-brand-bg/30 p-4">
+        <label className="mt-4 block rounded-3xl border-2 border-brand-lavender/45 bg-brand-bg/30 p-4">
           <div className="text-[10px] font-bold tracking-[0.14em] text-brand-purple">
             SELECTED DRAFT
           </div>
-          <div className="mt-2 text-[13px] leading-[18px]">"{selectedDraft}"</div>
-        </div>
+          <textarea
+            value={editableDraft}
+            onChange={(event) => setEditableDraft(event.target.value)}
+            className="mt-2 min-h-[86px] w-full resize-none bg-transparent text-[13px] leading-[18px] outline-none"
+          />
+        </label>
         <div className="mt-5 text-[10px] font-bold tracking-[0.14em] text-brand-mute">
           REASONING TRAIL
         </div>
@@ -514,13 +781,13 @@ export function SparkReplySheet({
         </div>
         <div className="mt-4 flex gap-2">
           <button
-            onClick={onClose}
+            onClick={onRegenerate}
             className="flex-1 rounded-2xl bg-brand-bg py-3 text-[12px] font-bold"
           >
-            Edit Before Sending
+            Regenerate
           </button>
           <button
-            onClick={onInsert}
+            onClick={() => onInsert(editableDraft)}
             className="flex-1 rounded-2xl gradient-brand py-3 text-[12px] font-bold text-white"
           >
             Insert Draft

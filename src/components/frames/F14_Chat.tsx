@@ -281,8 +281,9 @@ export function ChatScaffold({
             selectedDraft={selectedDrafts[selectedStyle]}
             onStyleChange={setSelectedStyle}
             onClose={() => setSheetOpen(false)}
-            onInsert={() => {
-              setInput(selectedDrafts[selectedStyle]);
+            onRegenerate={() => undefined}
+            onInsert={(draft) => {
+              setInput(draft);
               setSheetOpen(false);
             }}
           />

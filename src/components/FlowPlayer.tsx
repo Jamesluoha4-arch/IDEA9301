@@ -48,13 +48,13 @@ const graph: Record<NodeKey, Rule[]> = {
   ],
   [key(0, 8)]: [{ match: "Lets Go", target: key(0, 6) }],
   [home]: [
-    { match: "View draft", target: key(1, 5), label: "Open Alex message draft" },
+    { match: "View draft", target: key(1, 6), label: "Open Alex message draft" },
     { match: "Start New Chat", target: key(1, 1) },
-    { match: ["Review Drafts", "Review Paths"], target: key(1, 2) },
-    { match: ["Conversation Help", "AI Suggestions"], target: key(1, 5) },
+    { match: ["Review Drafts", "Review Paths"], target: key(1, 6) },
+    { match: ["Conversation Help", "AI Suggestions"], target: key(1, 6) },
     { match: ["AI Control", "Safety Center"], target: key(3, 0) },
     { match: "View all conversations", target: key(5, 0) },
-    { match: ["CHAT", "SOCIAL"], target: key(1, 5) },
+    { match: ["CHAT", "SOCIAL"], target: key(1, 6) },
     { match: ["COMMUNITY", "社区"], target: key(7, 3) },
     { match: "AI", target: home },
     { match: "PRESENCE", target: key(7, 8) },
@@ -64,43 +64,28 @@ const graph: Record<NodeKey, Rule[]> = {
   [key(1, 1)]: [
     { match: "Photography", target: key(7, 3) },
     { match: "AI_SYNTH", target: key(7, 4) },
-    { match: "Review path", target: key(1, 2) },
+    { match: "Review path", target: key(1, 6) },
     { match: "Spaces", target: key(7, 0) },
     { match: "HOME", target: home },
     { match: "PRESENCE", target: key(7, 8) },
   ],
   [key(1, 2)]: [
-    { match: "Private data blocked", target: key(1, 3) },
-    { match: "Review draft in Message", target: key(1, 5) },
-  ],
-  [key(1, 3)]: [
-    { match: "Manage Permissions", target: key(1, 4) },
-    { match: "Got it", target: key(1, 5) },
-  ],
-  [key(1, 4)]: [
-    {
-      match: ["Strict", "Balanced", "Flexible"],
-      target: key(1, 5),
-      label: "Save permissions and open message",
-    },
-  ],
-  [key(1, 5)]: [
-    { match: "View more", target: key(1, 6) },
+    { match: "View more", target: key(1, 3) },
     {
       match: ["Friendly", "Direct", "Warm"],
-      target: key(1, 6),
+      target: key(1, 3),
       label: "Choose tone and open Spark Reply",
     },
     { match: "Write your own message", target: key(2, 1), label: "Type a sensitive reply" },
   ],
-  [key(1, 6)]: [
+  [key(1, 3)]: [
     { match: "Insert Draft", target: key(2, 1) },
-    { match: "Edit Before Sending", target: key(1, 5) },
-    { match: "Back to Chat", target: key(1, 5) },
+    { match: "Regenerate", target: key(1, 3) },
+    { match: "Back to Chat", target: key(1, 2) },
   ],
-  [key(1, 7)]: [{ match: "Reply", target: key(1, 8) }],
-  [key(1, 8)]: [
-    { match: "View more", target: key(1, 6) },
+  [key(1, 4)]: [{ match: "Reply", target: key(1, 5) }],
+  [key(1, 5)]: [
+    { match: "View more", target: key(1, 3) },
     { match: ["HOME", "Back to Home"], target: home },
     { match: "SOCIAL", target: key(1, 1) },
   ],
@@ -207,7 +192,7 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "View AI Trail", target: key(4, 4) },
   ],
   [key(5, 5)]: [
-    { match: "Continue", target: key(1, 5) },
+    { match: "Continue", target: key(1, 6) },
     { match: "Back", target: key(5, 2) },
   ],
 
@@ -261,10 +246,7 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "HOME", target: home },
   ],
   [key(7, 1)]: [{ match: "Preview", target: key(7, 2) }],
-  [key(7, 2)]: [
-    { match: "Manage Permissions", target: key(1, 4) },
-    { match: "Got it", target: key(7, 3) },
-  ],
+  [key(7, 2)]: [{ match: "Got it", target: key(7, 3) }],
   [key(7, 3)]: [
     { match: "SYNTH_UNIT_91", target: key(7, 7) },
     { match: "ERIK_S_08", target: key(7, 7) },
@@ -380,7 +362,7 @@ function prototypeBackTarget(target: HTMLElement): NodeKey | null {
 function activeTabFor(node: NodeKey) {
   const [flowIdx, stepIdx] = node.split(":").map(Number);
   if (node === home) return "CHAT";
-  if (flowIdx === 1 && [1, 2, 3, 4, 5, 6, 7, 8, 9].includes(stepIdx)) return "CHAT";
+  if (flowIdx === 1 && [1, 2, 3, 4, 5, 6].includes(stepIdx)) return "CHAT";
   if (flowIdx === 7 && [0, 3, 4, 5, 6, 7].includes(stepIdx)) return "COMMUNITY";
   if (flowIdx === 7 && stepIdx >= 8) return "PRESENCE";
   if (flowIdx === 3) return "SETTINGS";

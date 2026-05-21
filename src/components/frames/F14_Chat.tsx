@@ -200,7 +200,7 @@ export function ChatScaffold({
             <div className="text-[12px] font-bold flex items-center gap-1.5">
               <Sparkles size={12} className="text-brand-purple" /> SPARK REPLY SUGGESTIONS
             </div>
-            <div className="text-[8px] text-brand-mute font-bold">AI SUGGESTION ONLY</div>
+            <div className="text-[8px] text-brand-mute font-bold">AI Reply</div>
           </div>
           <div className="mt-2 flex gap-1.5">
             {(["Friendly", "Direct", "Playful", "Brief", "Warm"] as StyleTab[]).map((style) => (

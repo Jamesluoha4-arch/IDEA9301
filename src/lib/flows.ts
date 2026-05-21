@@ -10,9 +10,6 @@ import { F8_AIChat } from "@/components/frames/F8_AIChat";
 import { F09_Home } from "@/components/frames/F09_Home";
 import { F10_Social } from "@/components/frames/F10_Social";
 import { F10_CandidateChat } from "@/components/frames/F10_CandidateChat";
-import { F11_WarmupComplete } from "@/components/frames/F11_WarmupComplete";
-import { F12_PrivacyLock } from "@/components/frames/F12_PrivacyLock";
-import { F13_Permissions } from "@/components/frames/F13_Permissions";
 import { F14_Chat, F15_ChatReaction, F16_ChatFinished } from "@/components/frames/F14_Chat";
 import { F17_SparkReplySheet } from "@/components/frames/F17_SparkReplySheet";
 import { F18_SensitiveCrossing } from "@/components/frames/F18_SensitiveCrossing";
@@ -121,9 +118,6 @@ export const flows: Flow[] = [
     steps: [
       { label: "Home", hint: "点击 Social", Component: F09_Home },
       { label: "Social Radar", hint: "探索潜在连接", Component: F10_Social },
-      { label: "Warm-up Complete", hint: "Path 已批准", Component: F11_WarmupComplete },
-      { label: "被阻止的私密数据", hint: "情绪 / 日记 / 跨平台", Component: F12_PrivacyLock },
-      { label: "管理权限", hint: "类别 + 模式", Component: F13_Permissions },
       { label: "Alex 聊天", hint: "Spark 回复建议", Component: F14_Chat },
       { label: "Spark Reply Sheet", hint: "推理 + 上下文", Component: F17_SparkReplySheet },
       { label: "Reactions", hint: "表情反应", Component: F15_ChatReaction },

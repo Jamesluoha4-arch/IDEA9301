@@ -322,6 +322,7 @@ export function F10_CandidateChat() {
   const sendMessage = () => {
     const text = input.trim();
     if (!text) return;
+    setShowWarmupSignal(false);
     const reply = chooseReply(candidateName, replyTurn, text);
     const nextMessages: ChatMessage[] = [];
     if (candidateName === "Alex" && replyTurn === 0) {
@@ -376,7 +377,7 @@ export function F10_CandidateChat() {
       <div
         ref={messageListRef}
         className="px-3 py-3 flex flex-col gap-3 overflow-y-auto prototype-scroll"
-        style={{ height: keyboardOpen ? "calc(100% - 488px)" : "calc(100% - 316px)" }}
+        style={{ height: keyboardOpen ? "calc(100% - 610px)" : "calc(100% - 420px)" }}
       >
         <div className="bg-white rounded-2xl p-3 flex items-start gap-2 shadow-soft border border-brand-purple/20">
           <div className="w-7 h-7 rounded-lg gradient-brand flex items-center justify-center shrink-0">
@@ -455,7 +456,7 @@ export function F10_CandidateChat() {
                 </motion.button>
                 {!isMe && (
                   <div className="text-[8px] text-brand-mute mt-1 tracking-wider font-bold flex items-center gap-1">
-                    <Sparkles size={8} /> AI SUGGESTION ONLY
+                    <Sparkles size={8} /> AI Reply
                   </div>
                 )}
                 {commentTarget === message.text && (
@@ -501,7 +502,7 @@ export function F10_CandidateChat() {
             </div>
           </motion.div>
         )}
-        <div ref={messageEndRef} className="h-5 shrink-0" />
+        <div ref={messageEndRef} className="h-16 shrink-0" />
       </div>
 
       <motion.div
@@ -513,7 +514,7 @@ export function F10_CandidateChat() {
           <div className="text-[12px] font-bold flex items-center gap-1.5">
             <Sparkles size={12} className="text-brand-purple" /> SPARK REPLY SUGGESTIONS
           </div>
-          <div className="text-[8px] text-brand-mute font-bold">AI SUGGESTION ONLY</div>
+          <div className="text-[8px] text-brand-mute font-bold">AI Reply</div>
         </div>
         <div className="mt-2 flex gap-1.5 overflow-x-auto pb-1">
           {styleTabs.map((style) => (
@@ -789,7 +790,7 @@ export function SparkReplySheet({
             <Sparkles size={18} className="text-brand-purple" /> Spark Reply
           </div>
           <div className="rounded-full bg-brand-bg px-3 py-1 text-[10px] font-bold text-brand-purple">
-            AI SUGGESTION ONLY
+            AI Reply
           </div>
         </div>
         <p className="mt-1 text-[12px] text-brand-mute">Nothing will be sent until you approve.</p>

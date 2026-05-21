@@ -142,7 +142,7 @@ export function F10_Social() {
           <div className="mt-1.5 text-[14px] font-bold">Alex - possible company coworker</div>
           <div className="text-[11px] text-brand-mute mt-1">{candidates[0].signal}</div>
           <div
-            data-prototype-target="1:9"
+            data-prototype-target="1:6"
             data-prototype-person="Alex"
             data-prototype-source="avatar"
             className="mt-3 relative h-[144px] rounded-2xl bg-gradient-to-br from-[#fff7fb] to-[#eef7ff] border border-brand-bg flex items-center justify-center overflow-visible cursor-pointer"
@@ -162,7 +162,7 @@ export function F10_Social() {
             </motion.div>
           </div>
           <motion.button
-            data-prototype-target="1:9"
+            data-prototype-target="1:6"
             data-prototype-person="Alex"
             data-prototype-source="review-path"
             whileTap={{ scale: 0.98 }}
@@ -185,7 +185,7 @@ export function F10_Social() {
               <motion.button
                 key={person.name}
                 type="button"
-                data-prototype-target="1:9"
+                data-prototype-target="1:6"
                 data-prototype-person={person.name}
                 whileTap={{ scale: 0.985 }}
                 className="w-full rounded-2xl border border-brand-bg bg-white/78 px-3 py-2.5 text-left shadow-[0_8px_18px_rgba(108,92,231,0.06)]"
@@ -225,7 +225,7 @@ function RadarCandidate({ person, index }: { person: (typeof candidates)[number]
 
   return (
     <motion.div
-      data-prototype-target="1:9"
+      data-prototype-target="1:6"
       data-prototype-person={person.name}
       data-prototype-source="avatar"
       className="absolute z-20 cursor-pointer"

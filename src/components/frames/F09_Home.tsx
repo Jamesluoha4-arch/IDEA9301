@@ -318,7 +318,7 @@ function ConversationRow({
       </motion.div>
       <motion.button
         type="button"
-        data-prototype-target="1:9"
+        data-prototype-target="1:6"
         data-prototype-person={conversation.name}
         drag="x"
         dragConstraints={{ left: -144, right: 0 }}

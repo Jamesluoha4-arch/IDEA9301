@@ -31,12 +31,13 @@ export function F27_NewSpace() {
       avatar: readGeneratedAvatar() || defaultAvatarUrl,
       auth: "AI Second Self" as const,
       cover: imageUrl ? ("photo" as const) : ("design" as const),
+      imageUrl: imageUrl || undefined,
       body:
         text.trim() || `Hi, I am ${userName}. I am sharing a small observation from this space.`,
       tags: tags.map((tag) => tag.replace(/^#/, "")),
       starter: "",
       id: `custom-${Date.now()}`,
-      time: "JUST NOW",
+      time: "NOW",
     };
     const key = `second-self.posts.${spaceKey}`;
     const existing = JSON.parse(window.sessionStorage.getItem(key) || "[]");

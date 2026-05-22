@@ -799,7 +799,7 @@ export function FloatingBottomNav({ active }: { active: string }) {
         animate={{ y: [0, -2, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         aria-label="Second Self"
-        data-prototype-tab="ai"
+        data-prototype-target="3:0"
       >
         {avatarBubble && (
           <motion.span

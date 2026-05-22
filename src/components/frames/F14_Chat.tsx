@@ -1,4 +1,5 @@
 ﻿import { useState, type ReactNode } from "react";
+import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Bookmark,
@@ -41,7 +42,10 @@ export function ChatScaffold({
   const [input, setInput] = useState("");
   const [selectedStyle, setSelectedStyle] = useState<StyleTab>("Friendly");
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [findSecondSelf, setFindSecondSelf] = useState(false);
+  const [presenceToast, setPresenceToast] = useState("");
   const userAvatar = readGeneratedAvatar();
+  const replyLabel = findSecondSelf ? "Human Reply" : "AI Reply";
   const selectedDrafts: Record<StyleTab, string> = {
     Friendly: "That sounds good. Want to compare notes after the onboarding session?",
     Direct: "Yes, let's compare notes after onboarding.",
@@ -50,6 +54,22 @@ export function ChatScaffold({
     Warm: "That would be great. I am still getting oriented too, so comparing notes would help.",
   };
   const visibleSuggestions = [selectedDrafts[selectedStyle], selectedDrafts.Warm];
+
+  useEffect(() => {
+    if (!presenceToast) return;
+    const timer = window.setTimeout(() => setPresenceToast(""), 1900);
+    return () => window.clearTimeout(timer);
+  }, [presenceToast]);
+
+  const toggleFindMode = () => {
+    setFindSecondSelf((current) => {
+      const next = !current;
+      setPresenceToast(
+        next ? "Jim's Second Self is back." : "Jim's Second Self is not here for now.",
+      );
+      return next;
+    });
+  };
   const sendMessage = () => {
     const text = input.trim();
     if (!text) return;
@@ -83,6 +103,22 @@ export function ChatScaffold({
           <Layers size={11} /> AI Context
         </div>
       </div>
+
+      <AnimatePresence>
+        {presenceToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            className="absolute left-4 right-4 top-[92px] z-40 rounded-2xl border border-white/80 bg-white/92 px-3 py-2.5 text-[11px] font-bold text-brand-ink shadow-soft backdrop-blur-2xl"
+          >
+            <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-mint/20 text-brand-purple">
+              <ShieldCheck size={12} />
+            </span>
+            {presenceToast}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div
         className="px-3 py-3 flex flex-col gap-3 overflow-y-auto prototype-scroll"
@@ -136,13 +172,11 @@ export function ChatScaffold({
                 >
                   {message.text}
                 </div>
-                <div
-                  className={`text-[8px] text-brand-mute mt-1 tracking-wider font-bold flex items-center gap-1 ${
-                    isMe ? "justify-end" : ""
-                  }`}
-                >
-                  <Sparkles size={8} /> SENT BY AI
-                </div>
+                {!isMe && (
+                  <div className="text-[8px] text-brand-mute mt-1 tracking-wider font-bold flex items-center gap-1">
+                    <Sparkles size={8} /> {replyLabel}
+                  </div>
+                )}
                 {reactionOnLast && isLast && (
                   <motion.div
                     initial={{ scale: 0, y: -10 }}
@@ -200,7 +234,7 @@ export function ChatScaffold({
             <div className="text-[12px] font-bold flex items-center gap-1.5">
               <Sparkles size={12} className="text-brand-purple" /> SPARK REPLY SUGGESTIONS
             </div>
-            <div className="text-[8px] text-brand-mute font-bold">AI Reply</div>
+            <div className="text-[8px] text-brand-mute font-bold">{replyLabel}</div>
           </div>
           <div className="mt-2 flex gap-1.5">
             {(["Friendly", "Direct", "Playful", "Brief", "Warm"] as StyleTab[]).map((style) => (
@@ -247,6 +281,30 @@ export function ChatScaffold({
       )}
 
       <div className="absolute bottom-[86px] left-0 right-0 bg-white border-t border-brand-bg px-3 py-2.5 flex items-center gap-2">
+        <motion.button
+          type="button"
+          onClick={toggleFindMode}
+          whileTap={{ scale: 0.96 }}
+          className={`absolute -top-11 left-3 flex h-8 items-center gap-2 rounded-full border px-2.5 text-[10px] font-bold shadow-soft backdrop-blur-xl transition-colors ${
+            findSecondSelf
+              ? "border-brand-lavender/50 gradient-brand text-white"
+              : "border-white/80 bg-white/82 text-brand-ink"
+          }`}
+        >
+          <span>{findSecondSelf ? "Find Second Self" : "Find person"}</span>
+          <span
+            className={`relative h-4 w-7 rounded-full ${
+              findSecondSelf ? "bg-white/28" : "bg-brand-bg"
+            }`}
+          >
+            <motion.span
+              layout
+              className={`absolute top-0.5 h-3 w-3 rounded-full ${
+                findSecondSelf ? "right-0.5 bg-white" : "left-0.5 bg-brand-mute"
+              }`}
+            />
+          </span>
+        </motion.button>
         <div className="w-8 h-8 rounded-full bg-brand-bg flex items-center justify-center">
           <Plus size={16} className="text-brand-purple" />
         </div>

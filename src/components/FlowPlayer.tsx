@@ -56,8 +56,8 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "View all conversations", target: key(5, 0) },
     { match: ["CHAT", "SOCIAL"], target: key(1, 6) },
     { match: ["COMMUNITY", "SPACE", "绀惧尯"], target: key(7, 0) },
-    { match: "AI", target: home },
-    { match: "PRESENCE", target: key(7, 7) },
+    { match: "AI", target: key(3, 0) },
+    { match: "PRESENCE", target: key(7, 5) },
     { match: ["SETTINGS", "PROFILE"], target: key(3, 18) },
   ],
 
@@ -67,7 +67,7 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "Review path", target: key(1, 6) },
     { match: "Spaces", target: key(7, 0) },
     { match: "HOME", target: home },
-    { match: "PRESENCE", target: key(7, 7) },
+    { match: "PRESENCE", target: key(7, 5) },
   ],
   [key(1, 2)]: [
     { match: "View more", target: key(1, 3) },
@@ -100,12 +100,10 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "Continue", target: key(6, 0) },
     { match: "Change Mode", target: key(3, 3) },
     { match: "View details", target: key(3, 8) },
-    { match: "Manage all", target: key(3, 16) },
-    { match: "Context Rules", target: key(3, 15) },
-    { match: "Quick Edit", target: key(3, 16) },
+    { match: "Manage all", target: key(3, 15) },
     { match: "HOME", target: home },
     { match: "SOCIAL", target: key(1, 1) },
-    { match: "PRESENCE", target: key(7, 7) },
+    { match: "PRESENCE", target: key(7, 5) },
   ],
   [key(3, 3)]: [
     { match: "Confirm Mode", target: key(3, 5) },
@@ -116,25 +114,21 @@ const graph: Record<NodeKey, Rule[]> = {
   [key(3, 6)]: [{ match: "Switch to Assistant", target: key(3, 0) }],
   [key(3, 7)]: [{ match: "Switch to Auto-pilot", target: key(3, 0) }],
   [key(3, 8)]: [
-    { match: "View contexts", target: key(3, 15) },
     { match: "Suggest", target: key(3, 9) },
     { match: "Draft", target: key(3, 10) },
     { match: "Act", target: key(3, 11) },
   ],
   [key(3, 9)]: [
-    { match: "View contexts", target: key(3, 15) },
     { match: "Off", target: key(3, 8) },
     { match: "Draft", target: key(3, 10) },
     { match: "Act", target: key(3, 11) },
   ],
   [key(3, 10)]: [
-    { match: "View contexts", target: key(3, 15) },
     { match: "Off", target: key(3, 8) },
     { match: "Suggest", target: key(3, 9) },
     { match: "Act", target: key(3, 11) },
   ],
   [key(3, 11)]: [
-    { match: "View contexts", target: key(3, 15) },
     { match: "Off", target: key(3, 8) },
     { match: "Suggest", target: key(3, 9) },
     { match: "Draft", target: key(3, 10) },
@@ -142,9 +136,8 @@ const graph: Record<NodeKey, Rule[]> = {
   [key(3, 12)]: [{ match: "Friends", target: key(3, 13) }],
   [key(3, 13)]: [{ match: "Close Relationships", target: key(3, 14) }],
   [key(3, 14)]: [{ match: "Write by myself", target: key(3, 0) }],
-  [key(3, 15)]: [{ match: "Back", target: key(3, 0) }],
-  [key(3, 16)]: [{ match: "Apply Changes", target: key(3, 0) }],
-  [key(3, 17)]: [{ match: "Change Mode", target: key(3, 3) }],
+  [key(3, 15)]: [{ match: "Apply Changes", target: key(3, 0) }],
+  [key(3, 16)]: [{ match: "Change Mode", target: key(3, 3) }],
 
   [key(4, 0)]: [
     { match: "View Change Details", target: key(4, 2) },
@@ -195,11 +188,10 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "Back to Home", target: home },
     { match: "Come back tomorrow for a new challenge", target: key(6, 3) },
   ],
-  [key(6, 3)]: [{ match: "Back to Daily Challenge", target: key(3, 17) }],
+  [key(6, 3)]: [{ match: "Back to Daily Challenge", target: key(3, 16) }],
   [key(6, 4)]: [
     { match: "Reflect Now", target: key(6, 5) },
-    { match: "Context Rules", target: key(3, 15) },
-    { match: "Quick Edit", target: key(3, 16) },
+    { match: "Quick Edit", target: key(3, 15) },
   ],
   [key(6, 5)]: [
     { match: "Start Reflection", target: key(6, 6) },
@@ -245,7 +237,7 @@ const graph: Record<NodeKey, Rule[]> = {
       match: ["HUMAN_AUTH", "Human verified", "Jim", "Joe", "Sabrina", "James"],
       target: key(7, 4),
     },
-    { match: "PRESENCE", target: key(7, 7) },
+    { match: "PRESENCE", target: key(7, 5) },
   ],
   [key(7, 2)]: [{ match: "Publish", target: key(7, 1) }],
   [key(7, 3)]: [{ match: "Profile", target: key(7, 4) }],
@@ -255,21 +247,11 @@ const graph: Record<NodeKey, Rule[]> = {
   ],
   [key(7, 5)]: [
     { match: "View Details", target: key(7, 6) },
-    { match: "Adjust Visibility", target: key(7, 7) },
-    { match: "Device Access", target: key(7, 8) },
+    { match: "Adjust Visibility", target: key(7, 6) },
+    { match: "Device Access", target: key(7, 6) },
     { match: "HOME", target: home },
   ],
-  [key(7, 6)]: [{ match: "PRESENCE", target: key(7, 7) }],
-  [key(7, 7)]: [
-    { match: "Pause AI Social Presence", target: home },
-    { match: "View Details", target: key(7, 8) },
-  ],
-  [key(7, 8)]: [
-    { match: "View Details", target: key(7, 9) },
-    { match: "Adjust Visibility", target: key(7, 10) },
-  ],
-  [key(7, 9)]: [{ match: "Pause All Device Presence", target: key(7, 10) }],
-  [key(7, 10)]: [{ match: "Pause All Device Presence", target: home }],
+  [key(7, 6)]: [{ match: "PRESENCE", target: key(7, 5) }],
 };
 
 function normalize(text: string) {
@@ -298,8 +280,8 @@ const tabTargets: Record<string, NodeKey> = {
   community: key(7, 0),
   space: key(7, 0),
   social: key(1, 1),
-  ai: home,
-  presence: key(7, 7),
+  ai: key(3, 0),
+  presence: key(7, 5),
   settings: key(3, 18),
   profile: key(3, 18),
 };
@@ -354,8 +336,8 @@ function activeTabFor(node: NodeKey) {
   const [flowIdx, stepIdx] = node.split(":").map(Number);
   if (node === home) return "CHAT";
   if (flowIdx === 1 && [1, 2, 3, 4, 5, 6].includes(stepIdx)) return "CHAT";
-  if (flowIdx === 7 && [0, 3, 4, 5, 6, 7].includes(stepIdx)) return "COMMUNITY";
-  if (flowIdx === 7 && stepIdx >= 8) return "PRESENCE";
+  if (flowIdx === 7 && [0, 1, 2, 3, 4].includes(stepIdx)) return "COMMUNITY";
+  if (flowIdx === 7 && stepIdx >= 5) return "PRESENCE";
   if (flowIdx === 3) return "SETTINGS";
   if (flowIdx === 5 && [0, 1].includes(stepIdx)) return "CHAT";
   if (flowIdx === 4) return "SETTINGS";
@@ -416,6 +398,10 @@ export function FlowPlayer({ onOpenGallery }: Props) {
     const candidateTarget = target.closest("[data-prototype-person]") as HTMLElement | null;
     if (candidateTarget?.dataset.prototypePerson) {
       window.sessionStorage.setItem(
+        "second-self.selected-profile",
+        candidateTarget.dataset.prototypePerson,
+      );
+      window.sessionStorage.setItem(
         "second-self.selected-candidate",
         candidateTarget.dataset.prototypePerson,
       );
@@ -455,6 +441,9 @@ export function FlowPlayer({ onOpenGallery }: Props) {
     if (backTarget) {
       setTapPulse(true);
       window.setTimeout(() => setTapPulse(false), 260);
+      if (node === key(0, 5) && backTarget === key(3, 0)) {
+        window.sessionStorage.removeItem("second-self.face-scan-return");
+      }
       navigate(backTarget);
       return;
     }
@@ -521,7 +510,7 @@ export function FlowPlayer({ onOpenGallery }: Props) {
       }
     }
 
-    if (node === key(3, 16) && normalizedText.includes("apply changes")) {
+    if (node === key(3, 15) && normalizedText.includes("apply changes")) {
       setTapPulse(true);
       window.setTimeout(() => setTapPulse(false), 260);
       goBack();

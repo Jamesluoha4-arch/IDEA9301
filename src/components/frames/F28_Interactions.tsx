@@ -70,8 +70,20 @@ const initialItems: Activity[] = [
 ];
 
 export function F28_Interactions() {
-  const [items, setItems] = useState<Activity[]>(initialItems);
-  const [approved, setApproved] = useState(false);
+  const [approved, setApproved] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.sessionStorage.getItem("second-self.ai-activity-approved") === "true",
+  );
+  const [items, setItems] = useState<Activity[]>(() =>
+    approved
+      ? initialItems.map((item) =>
+          item.type === "AI Activity"
+            ? { ...item, type: "Human Approved", body: `${item.body} Human approval recorded.` }
+            : item,
+        )
+      : initialItems,
+  );
 
   const sorted = [...items].sort((a, b) => Number(Boolean(b.pinned)) - Number(Boolean(a.pinned)));
 
@@ -86,7 +98,9 @@ export function F28_Interactions() {
   };
 
   const approveActivity = () => {
+    if (approved) return;
     setApproved(true);
+    window.sessionStorage.setItem("second-self.ai-activity-approved", "true");
     setItems((list) =>
       list.map((item) =>
         item.type === "AI Activity"

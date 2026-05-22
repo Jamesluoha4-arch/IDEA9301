@@ -20,7 +20,7 @@ import jamesUrl from "@/assets/radar-avatar-4.png";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
 import { BottomNav } from "./F09_Home";
 
-type CoverKind = "ai" | "design" | "music" | "photo";
+type CoverKind = "ai" | "design" | "music" | "photo" | "none";
 type SpacePostData = {
   key: string;
   name: string;
@@ -31,6 +31,7 @@ type SpacePostData = {
   body: string;
   tags: string[];
   starter: string;
+  imageUrl?: string;
   id?: string;
   time?: string;
 };
@@ -163,6 +164,7 @@ export function F25_SpacesFeed() {
       user: userName,
       avatar: userAvatar,
       auth: "AI Second Self",
+      cover: "none",
       body: starter,
       tags: ["AI-created", "Approved opening"],
       time: "JUST NOW",
@@ -171,7 +173,7 @@ export function F25_SpacesFeed() {
     setComposerGone(true);
   };
 
-  const friendPosts = [
+  const friendPosts: SpacePostData[] = [
     ...(publishedStarter ? [publishedStarter] : []),
     ...customPosts,
     space,
@@ -180,6 +182,7 @@ export function F25_SpacesFeed() {
       id: "sabrina-reflection",
       user: "Sabrina",
       avatar: sabrinaUrl,
+      cover: "none" as const,
       body: "I like how this topic gives new starters a small and safe reason to speak. It feels easier than forcing a big introduction.",
       tags: ["Human post", "New starter note"],
     },
@@ -304,7 +307,6 @@ export function F25_SpacesFeed() {
               </button>
               <button
                 type="button"
-                onClick={approve}
                 className="relative flex-1 overflow-hidden rounded-full gradient-brand py-3 text-[12px] font-bold text-white shadow-soft"
               >
                 <motion.span
@@ -344,8 +346,48 @@ export function F25_SpacesFeed() {
 function SpacePost({ space, index }: { space: SpacePostData; index: number }) {
   const [liked, setLiked] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
+  const [newComment, setNewComment] = useState("");
+  const [userComments, setUserComments] = useState<
+    { name: string; tag: string; text: string; avatar: string }[]
+  >([]);
   const isAi = space.auth === "AI Second Self";
-  const isStarter = space.id === "starter-post" || space.time === "JUST NOW";
+  const isStarter = space.id === "starter-post";
+  const aiApproved =
+    typeof window !== "undefined" &&
+    window.sessionStorage.getItem("second-self.ai-activity-approved") === "true";
+  const comments = [
+    {
+      name: "Joe",
+      tag: "Human verified",
+      text: "This is useful. I care most about where the AI clearly explains what it used.",
+      avatar: joeUrl,
+    },
+    {
+      name: "Second Self",
+      tag: aiApproved ? "Human Approved" : "AI Reply",
+      text: aiApproved
+        ? "Human approval recorded. This reply now reflects approved Second Self activity."
+        : "I can summarize the thread and keep private context out of the response.",
+      avatar: defaultAvatarUrl,
+    },
+    ...userComments,
+  ];
+
+  const submitComment = () => {
+    const text = newComment.trim();
+    if (!text) return;
+    setUserComments((items) => [
+      ...items,
+      {
+        name: readUserName(),
+        tag: "Human verified",
+        text,
+        avatar: readGeneratedAvatar() || defaultAvatarUrl,
+      },
+    ]);
+    setNewComment("");
+  };
+
   return (
     <motion.div
       layout
@@ -377,7 +419,7 @@ function SpacePost({ space, index }: { space: SpacePostData; index: number }) {
         </div>
       </div>
 
-      {!isStarter && <PostCover kind={space.cover} />}
+      <PostCover kind={space.cover} imageUrl={space.imageUrl} />
 
       <div className="px-3 mt-3 flex flex-wrap gap-1.5">
         {space.tags.map((tag) => (
@@ -393,17 +435,27 @@ function SpacePost({ space, index }: { space: SpacePostData; index: number }) {
       <div className="px-3 mt-2.5 text-[12px] leading-[16px]">{space.body}</div>
 
       <div className="px-3 mt-3 mb-3 pt-2.5 border-t border-brand-bg flex items-center gap-4 text-[11px] text-brand-mute">
-        <button onClick={() => setLiked((value) => !value)} className="flex items-center gap-1.5">
-          <Heart size={13} className={liked ? "text-red-500 fill-red-500" : "text-brand-pink"} />{" "}
-          {isStarter ? "" : index === 0 ? "1.2K" : "84"}
-        </button>
-        <button
-          onClick={() => setCommentsOpen((value) => !value)}
-          className="flex items-center gap-1.5"
-        >
-          <MessageSquare size={13} className="text-brand-purple" />{" "}
-          {isStarter ? "" : index === 0 ? "42" : "9"}
-        </button>
+        {!isStarter && (
+          <>
+            <button
+              onClick={() => setLiked((value) => !value)}
+              className="flex items-center gap-1.5"
+            >
+              <Heart
+                size={13}
+                className={liked ? "text-red-500 fill-red-500" : "text-brand-pink"}
+              />{" "}
+              {index === 0 ? "1.2K" : "84"}
+            </button>
+            <button
+              onClick={() => setCommentsOpen((value) => !value)}
+              className="flex items-center gap-1.5"
+            >
+              <MessageSquare size={13} className="text-brand-purple" />{" "}
+              {comments.length + (index === 0 ? 40 : 7)}
+            </button>
+          </>
+        )}
         <button className="ml-auto flex items-center gap-1.5 text-[9px] font-mono font-bold text-brand-ink">
           <Send size={12} /> REF: #{isAi ? "772-BX" : "ORIG-19"}
         </button>
@@ -417,21 +469,8 @@ function SpacePost({ space, index }: { space: SpacePostData; index: number }) {
             className="overflow-hidden border-t border-brand-bg bg-[#fbfaff]"
           >
             <div className="px-3 py-3 space-y-2">
-              {[
-                {
-                  name: "Joe",
-                  tag: "Human verified",
-                  text: "This is useful. I care most about where the AI clearly explains what it used.",
-                  avatar: joeUrl,
-                },
-                {
-                  name: "Second Self",
-                  tag: "AI Reply",
-                  text: "I can summarize the thread and keep private context out of the response.",
-                  avatar: defaultAvatarUrl,
-                },
-              ].map((comment) => (
-                <div key={comment.name} className="flex gap-2">
+              {comments.map((comment, commentIndex) => (
+                <div key={`${comment.name}-${commentIndex}`} className="flex gap-2">
                   <img
                     src={comment.avatar}
                     alt=""
@@ -440,7 +479,15 @@ function SpacePost({ space, index }: { space: SpacePostData; index: number }) {
                   <div className="flex-1 rounded-2xl bg-white px-3 py-2 shadow-sm">
                     <div className="text-[10px] font-bold">
                       {comment.name}
-                      <span className="ml-1 rounded-md bg-brand-bg px-1.5 py-0.5 text-[8px] text-brand-purple">
+                      <span
+                        className={`ml-1 rounded-md px-1.5 py-0.5 text-[8px] ${
+                          comment.tag === "Human verified"
+                            ? "bg-brand-mint/15 text-brand-mint"
+                            : comment.tag === "Human Approved"
+                              ? "bg-brand-purple/10 text-brand-purple"
+                              : "bg-brand-bg text-brand-purple"
+                        }`}
+                      >
                         {comment.tag}
                       </span>
                     </div>
@@ -450,9 +497,23 @@ function SpacePost({ space, index }: { space: SpacePostData; index: number }) {
                   </div>
                 </div>
               ))}
-              <div className="mt-2 rounded-full bg-white px-3 py-2 text-[11px] text-brand-mute flex items-center justify-between">
-                Expecting your comment...
-                <span className="text-brand-mint">??</span>
+              <div className="mt-2 rounded-full bg-white px-3 py-2 text-[11px] text-brand-mute flex items-center gap-2">
+                <input
+                  value={newComment}
+                  onChange={(event) => setNewComment(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") submitComment();
+                  }}
+                  className="min-w-0 flex-1 bg-transparent outline-none"
+                  placeholder="Write a comment..."
+                />
+                <button
+                  type="button"
+                  onClick={submitComment}
+                  className="rounded-full bg-brand-mint/15 px-2.5 py-1 text-[10px] font-bold text-brand-mint"
+                >
+                  Send
+                </button>
               </div>
             </div>
           </motion.div>
@@ -462,7 +523,15 @@ function SpacePost({ space, index }: { space: SpacePostData; index: number }) {
   );
 }
 
-function PostCover({ kind }: { kind: string }) {
+function PostCover({ kind, imageUrl }: { kind: string; imageUrl?: string }) {
+  if (kind === "none") return null;
+  if (imageUrl) {
+    return (
+      <div className="mx-3 mt-3 h-[132px] rounded-2xl overflow-hidden bg-brand-bg">
+        <img src={imageUrl} alt="" className="h-full w-full object-cover" />
+      </div>
+    );
+  }
   if (kind === "ai") {
     return (
       <div className="mx-3 mt-3 h-[132px] rounded-2xl overflow-hidden relative bg-[radial-gradient(circle_at_62%_44%,rgba(167,139,250,0.8),transparent_18%),linear-gradient(135deg,#142035_0%,#2d3153_45%,#9279e8_100%)]">

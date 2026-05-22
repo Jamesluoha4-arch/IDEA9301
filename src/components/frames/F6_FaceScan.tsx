@@ -15,6 +15,10 @@ export function F6_FaceScan() {
   const [generationState, setGenerationState] = useState<
     "idle" | "scanning" | "generating" | "fallback" | "done"
   >("idle");
+  const backTarget =
+    typeof window !== "undefined"
+      ? window.sessionStorage.getItem("second-self.face-scan-return") || "0:4"
+      : "0:4";
 
   const capturePhoto = useCallback(() => {
     const video = videoRef.current;
@@ -108,7 +112,7 @@ export function F6_FaceScan() {
     <div className="relative w-full h-full bg-white pt-12">
       <div className="absolute top-12 left-0 right-0 px-4 py-3 flex items-center gap-3 z-10 bg-white/80 backdrop-blur-md border-b border-brand-bg">
         <motion.button
-          data-prototype-back="0:4"
+          data-prototype-back={backTarget}
           whileTap={{ scale: 0.9 }}
           className="w-9 h-9 rounded-full bg-brand-bg flex items-center justify-center"
         >

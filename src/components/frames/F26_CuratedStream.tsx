@@ -9,6 +9,8 @@ import {
   Send,
   ShieldCheck,
 } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import joeUrl from "@/assets/radar-avatar-2.png";
 import sabrinaUrl from "@/assets/radar-avatar-3.png";
 import jamesUrl from "@/assets/radar-avatar-4.png";
@@ -77,67 +79,106 @@ export function F26_CuratedStream() {
 
       <div className="px-4 mt-3 space-y-3">
         {posts.map((post, idx) => (
-          <motion.div
-            key={post.user}
-            initial={{ y: 12, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.05 * idx }}
-            className="bg-white rounded-3xl shadow-soft overflow-hidden border border-brand-bg"
-          >
-            <div className="px-3 pt-3 flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-white shadow-sm overflow-hidden flex items-center justify-center">
-                <img
-                  src={post.avatar}
-                  alt=""
-                  className="h-[125%] w-[125%] object-cover object-top"
-                />
-              </div>
-              <div className="flex-1">
-                <div className="text-[12px] font-bold tracking-[0.3px]">{post.user}</div>
-                <div className="text-[9px] font-mono text-brand-mute">{post.time}</div>
-              </div>
-              <div
-                className={`px-2 py-0.5 rounded-md text-[8px] font-bold tracking-[0.4px] flex items-center gap-1 ${
-                  post.auth === "AI Second Self"
-                    ? "bg-brand-purple/10 text-brand-purple"
-                    : "bg-brand-mint/15 text-brand-mint"
-                }`}
-              >
-                {post.auth === "AI Second Self" ? <Bot size={9} /> : <ShieldCheck size={9} />}
-                {post.auth}
-              </div>
-            </div>
-
-            <CuratedCover kind={post.cover} />
-
-            <div className="px-3 mt-3 flex flex-wrap gap-1.5">
-              {post.tags.map((tag) => (
-                <div
-                  key={tag}
-                  className="px-2 py-0.5 rounded-md bg-brand-bg text-[8px] font-bold tracking-[0.3px] text-brand-purple"
-                >
-                  [{tag}]
-                </div>
-              ))}
-            </div>
-
-            <div className="px-3 mt-2.5 text-[12px] leading-[16px]">{post.body}</div>
-
-            <div className="px-3 mt-3 mb-3 pt-2.5 border-t border-brand-bg flex items-center gap-4 text-[11px] text-brand-mute">
-              <button className="flex items-center gap-1.5">
-                <Heart size={13} className="text-brand-pink" /> 84
-              </button>
-              <button className="flex items-center gap-1.5">
-                <MessageSquare size={13} className="text-brand-purple" /> 9
-              </button>
-              <button className="ml-auto flex items-center gap-1.5 text-[9px] font-mono font-bold text-brand-ink">
-                <Send size={12} /> REF: #{post.auth === "AI Second Self" ? "772-BX" : "ORIG-19"}
-              </button>
-            </div>
-          </motion.div>
+          <CuratedPost key={post.user} post={post} index={idx} />
         ))}
       </div>
     </div>
+  );
+}
+
+function CuratedPost({ post, index }: { post: (typeof posts)[number]; index: number }) {
+  const [liked, setLiked] = useState(false);
+  const [commentsOpen, setCommentsOpen] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ y: 12, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.05 * index }}
+      className="bg-white rounded-3xl shadow-soft overflow-hidden border border-brand-bg"
+    >
+      <div className="px-3 pt-3 flex items-center gap-2">
+        <div
+          data-prototype-target="7:4"
+          data-prototype-person={post.user}
+          className="w-8 h-8 rounded-xl bg-white shadow-sm overflow-hidden flex items-center justify-center cursor-pointer"
+        >
+          <img src={post.avatar} alt="" className="h-[125%] w-[125%] object-cover object-top" />
+        </div>
+        <div className="flex-1">
+          <div className="text-[12px] font-bold tracking-[0.3px]">{post.user}</div>
+          <div className="text-[9px] font-mono text-brand-mute">{post.time}</div>
+        </div>
+        <div
+          className={`px-2 py-0.5 rounded-md text-[8px] font-bold tracking-[0.4px] flex items-center gap-1 ${
+            post.auth === "AI Second Self"
+              ? "bg-brand-purple/10 text-brand-purple"
+              : "bg-brand-mint/15 text-brand-mint"
+          }`}
+        >
+          {post.auth === "AI Second Self" ? <Bot size={9} /> : <ShieldCheck size={9} />}
+          {post.auth}
+        </div>
+      </div>
+
+      <CuratedCover kind={post.cover} />
+
+      <div className="px-3 mt-3 flex flex-wrap gap-1.5">
+        {post.tags.map((tag) => (
+          <div
+            key={tag}
+            className="px-2 py-0.5 rounded-md bg-brand-bg text-[8px] font-bold tracking-[0.3px] text-brand-purple"
+          >
+            [{tag}]
+          </div>
+        ))}
+      </div>
+
+      <div className="px-3 mt-2.5 text-[12px] leading-[16px]">{post.body}</div>
+
+      <div className="px-3 mt-3 mb-3 pt-2.5 border-t border-brand-bg flex items-center gap-4 text-[11px] text-brand-mute">
+        <button onClick={() => setLiked((value) => !value)} className="flex items-center gap-1.5">
+          <Heart size={13} className={liked ? "text-red-500 fill-red-500" : "text-brand-pink"} /> 84
+        </button>
+        <button
+          onClick={() => setCommentsOpen((value) => !value)}
+          className="flex items-center gap-1.5"
+        >
+          <MessageSquare size={13} className="text-brand-purple" /> 9
+        </button>
+        <button className="ml-auto flex items-center gap-1.5 text-[9px] font-mono font-bold text-brand-ink">
+          <Send size={12} /> REF: #{post.auth === "AI Second Self" ? "772-BX" : "ORIG-19"}
+        </button>
+      </div>
+      <AnimatePresence>
+        {commentsOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden border-t border-brand-bg bg-[#fbfaff]"
+          >
+            <div className="px-3 py-3 space-y-2">
+              <div className="rounded-2xl bg-white px-3 py-2 shadow-sm">
+                <div className="text-[10px] font-bold">
+                  Second Self
+                  <span className="ml-1 rounded-md bg-brand-bg px-1.5 py-0.5 text-[8px] text-brand-purple">
+                    AI Reply
+                  </span>
+                </div>
+                <div className="mt-1 text-[10px] leading-[14px]">
+                  I can help turn this into a respectful first comment.
+                </div>
+              </div>
+              <input
+                className="w-full rounded-full bg-white px-3 py-2 text-[11px] outline-none"
+                placeholder="Write a comment..."
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 

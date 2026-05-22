@@ -284,6 +284,8 @@ export function F10_CandidateChat() {
   const [replyTurn, setReplyTurn] = useState(0);
   const [draftSeed, setDraftSeed] = useState(0);
   const [showWarmupSignal, setShowWarmupSignal] = useState(false);
+  const [findSecondSelf, setFindSecondSelf] = useState(false);
+  const [presenceToast, setPresenceToast] = useState("");
 
   useEffect(() => {
     const openedName = window.sessionStorage.getItem(openedCandidateStorageKey);
@@ -307,6 +309,12 @@ export function F10_CandidateChat() {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, keyboardOpen]);
 
+  useEffect(() => {
+    if (!presenceToast) return;
+    const timer = window.setTimeout(() => setPresenceToast(""), 1900);
+    return () => window.clearTimeout(timer);
+  }, [presenceToast]);
+
   const selectedDraft = useMemo(
     () => personalize(candidate.drafts[selectedStyle], userName),
     [candidate.drafts, selectedStyle, userName],
@@ -318,6 +326,7 @@ export function F10_CandidateChat() {
     ],
     [candidate, selectedStyle, userName],
   );
+  const replyLabel = findSecondSelf ? "Human Reply" : "AI Reply";
 
   const sendMessage = () => {
     const text = input.trim();
@@ -353,6 +362,18 @@ export function F10_CandidateChat() {
     window.clearTimeout(holdTimer.current ?? undefined);
   };
 
+  const toggleFindMode = () => {
+    setFindSecondSelf((current) => {
+      const next = !current;
+      setPresenceToast(
+        next
+          ? `${candidateName}'s Second Self is back.`
+          : `${candidateName}'s Second Self is not here for now.`,
+      );
+      return next;
+    });
+  };
+
   return (
     <div className="relative w-full h-full pt-12 font-sans text-brand-ink overflow-hidden gradient-brand-soft">
       <div className="px-3 py-2 flex items-center gap-2 glass border-b border-brand-bg">
@@ -373,6 +394,22 @@ export function F10_CandidateChat() {
           <Layers size={11} /> AI Context
         </div>
       </div>
+
+      <AnimatePresence>
+        {presenceToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            className="absolute left-4 right-4 top-[92px] z-40 rounded-2xl border border-white/80 bg-white/92 px-3 py-2.5 text-[11px] font-bold text-brand-ink shadow-soft backdrop-blur-2xl"
+          >
+            <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-mint/20 text-brand-purple">
+              <Check size={12} />
+            </span>
+            {presenceToast}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div
         ref={messageListRef}
@@ -456,7 +493,7 @@ export function F10_CandidateChat() {
                 </motion.button>
                 {!isMe && (
                   <div className="text-[8px] text-brand-mute mt-1 tracking-wider font-bold flex items-center gap-1">
-                    <Sparkles size={8} /> AI Reply
+                    <Sparkles size={8} /> {replyLabel}
                   </div>
                 )}
                 {commentTarget === message.text && (
@@ -514,7 +551,7 @@ export function F10_CandidateChat() {
           <div className="text-[12px] font-bold flex items-center gap-1.5">
             <Sparkles size={12} className="text-brand-purple" /> SPARK REPLY SUGGESTIONS
           </div>
-          <div className="text-[8px] text-brand-mute font-bold">AI Reply</div>
+          <div className="text-[8px] text-brand-mute font-bold">{replyLabel}</div>
         </div>
         <div className="mt-2 flex gap-1.5 overflow-x-auto pb-1">
           {styleTabs.map((style) => (
@@ -559,6 +596,30 @@ export function F10_CandidateChat() {
         transition={{ type: "spring", stiffness: 360, damping: 34 }}
         className="absolute bottom-[86px] left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-brand-bg px-3 py-2.5 flex items-center gap-2"
       >
+        <motion.button
+          type="button"
+          onClick={toggleFindMode}
+          whileTap={{ scale: 0.96 }}
+          className={`absolute -top-11 left-3 flex h-8 items-center gap-2 rounded-full border px-2.5 text-[10px] font-bold shadow-soft backdrop-blur-xl transition-colors ${
+            findSecondSelf
+              ? "border-brand-lavender/50 gradient-brand text-white"
+              : "border-white/80 bg-white/82 text-brand-ink"
+          }`}
+        >
+          <span>{findSecondSelf ? "Find Second Self" : "Find person"}</span>
+          <span
+            className={`relative h-4 w-7 rounded-full ${
+              findSecondSelf ? "bg-white/28" : "bg-brand-bg"
+            }`}
+          >
+            <motion.span
+              layout
+              className={`absolute top-0.5 h-3 w-3 rounded-full ${
+                findSecondSelf ? "right-0.5 bg-white" : "left-0.5 bg-brand-mute"
+              }`}
+            />
+          </span>
+        </motion.button>
         <div className="w-8 h-8 rounded-full bg-brand-bg flex items-center justify-center">
           <Plus size={16} className="text-brand-purple" />
         </div>
@@ -674,7 +735,8 @@ function PrototypeKeyboard({
                 onClick={() => onType("")}
                 className="h-12 w-12 rounded-xl bg-white/55 text-[22px] text-brand-purple shadow-sm border border-white/70"
               >
-                鈬?              </button>
+                鈬?{" "}
+              </button>
             )}
             {row.map((key) => (
               <button

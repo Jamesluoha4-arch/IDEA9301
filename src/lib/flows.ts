@@ -19,10 +19,6 @@ import { F28_Interactions } from "@/components/frames/F28_Interactions";
 import { F29_ArchitectProfile } from "@/components/frames/F29_ArchitectProfile";
 import { F30_SystemVisibility } from "@/components/frames/F30_SystemVisibility";
 import { F31_LiveSocialWorld } from "@/components/frames/F31_LiveSocialWorld";
-import { F32_PresenceReflection } from "@/components/frames/F32_PresenceReflection";
-import { F33_DeviceVisibility } from "@/components/frames/F33_DeviceVisibility";
-import { F34_MicAccess } from "@/components/frames/F34_MicAccess";
-import { F35_PresenceInsight } from "@/components/frames/F35_PresenceInsight";
 import { F36_AIControlCenter } from "@/components/frames/F36_AIControlCenter";
 import { F37_DailyChallenge } from "@/components/frames/F37_DailyChallenge";
 import { F38_ChallengeProgress } from "@/components/frames/F38_ChallengeProgress";
@@ -60,7 +56,6 @@ import {
   F69_WhyFriends,
   F70_WhyClose,
 } from "@/components/frames/F68_WhyThisLevel";
-import { F71_ContextRules } from "@/components/frames/F71_ContextRules";
 import { F72_QuickEdit } from "@/components/frames/F72_QuickEdit";
 import { F73_AICenterFullAlt } from "@/components/frames/F73_AICenterFullAlt";
 import { F74_ChangeDetailDraft } from "@/components/frames/F74_ChangeDetailDraft";
@@ -130,7 +125,7 @@ export const flows: Flow[] = [
   {
     id: "f4",
     title: "Flow 4 路 AI Control Center",
-    subtitle: "Mode 鈫?Influence Level 鈫?鏉冮檺 鈫?Context Rules",
+    subtitle: "Mode 鈫?Influence Level 鈫?editable control",
     steps: [
       { label: "AI Control Center", hint: "Assistant 路 Custom", Component: F36_AIControlCenter },
       { label: "Full layout (alt)", hint: "鏉冮檺 路 琛屼负", Component: F73_AICenterFullAlt },
@@ -147,7 +142,6 @@ export const flows: Flow[] = [
       { label: "Why 路 Strangers", hint: "Suggest 绀轰緥", Component: F68_WhyStrangers },
       { label: "Why 路 Friends", hint: "Draft 绀轰緥", Component: F69_WhyFriends },
       { label: "Why 路 Close", hint: "Off 绀轰緥", Component: F70_WhyClose },
-      { label: "Context Rules", hint: "鏁忔劅鍦烘櫙闄愬埗", Component: F71_ContextRules },
       { label: "Quick Edit", hint: "榛樿绾у埆 路 apply", Component: F72_QuickEdit },
       {
         label: "Co-pilot recent actions",
@@ -250,14 +244,6 @@ export const flows: Flow[] = [
       { label: "Architect Profile", hint: "鍏磋叮鍖归厤", Component: F29_ArchitectProfile },
       { label: "System Visibility", hint: "Mini social world", Component: F30_SystemVisibility },
       { label: "Live Social World", hint: "Replay 路 姘旀场", Component: F31_LiveSocialWorld },
-      { label: "Presence Reflection", hint: "璇皵 路 鍏崇郴", Component: F32_PresenceReflection },
-      { label: "Device Visibility", hint: "Physical layer", Component: F33_DeviceVisibility },
-      { label: "Microphone Access", hint: "Voice flow", Component: F34_MicAccess },
-      {
-        label: "AI Presence Insight",
-        hint: "Device participation",
-        Component: F35_PresenceInsight,
-      },
     ],
   },
 ];

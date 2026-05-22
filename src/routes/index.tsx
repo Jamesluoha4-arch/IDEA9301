@@ -21,10 +21,6 @@ import { F28_Interactions } from "@/components/frames/F28_Interactions";
 import { F29_ArchitectProfile } from "@/components/frames/F29_ArchitectProfile";
 import { F30_SystemVisibility } from "@/components/frames/F30_SystemVisibility";
 import { F31_LiveSocialWorld } from "@/components/frames/F31_LiveSocialWorld";
-import { F32_PresenceReflection } from "@/components/frames/F32_PresenceReflection";
-import { F33_DeviceVisibility } from "@/components/frames/F33_DeviceVisibility";
-import { F34_MicAccess } from "@/components/frames/F34_MicAccess";
-import { F35_PresenceInsight } from "@/components/frames/F35_PresenceInsight";
 import { F36_AIControlCenter } from "@/components/frames/F36_AIControlCenter";
 import { F37_DailyChallenge } from "@/components/frames/F37_DailyChallenge";
 import { F38_ChallengeProgress } from "@/components/frames/F38_ChallengeProgress";
@@ -64,7 +60,6 @@ import {
   F69_WhyFriends,
   F70_WhyClose,
 } from "@/components/frames/F68_WhyThisLevel";
-import { F71_ContextRules } from "@/components/frames/F71_ContextRules";
 import { F72_QuickEdit } from "@/components/frames/F72_QuickEdit";
 import { F73_AICenterFullAlt } from "@/components/frames/F73_AICenterFullAlt";
 import { F74_ChangeDetailDraft } from "@/components/frames/F74_ChangeDetailDraft";
@@ -185,30 +180,6 @@ const frames = [
     title: "32 路 Live Social World",
     sub: "Replay 路 bubble map",
     Component: F31_LiveSocialWorld,
-  },
-  {
-    id: "3888-3703",
-    title: "33 路 Presence Reflection",
-    sub: "Tone 路 relationships",
-    Component: F32_PresenceReflection,
-  },
-  {
-    id: "3888-3839",
-    title: "34 路 Device Visibility",
-    sub: "Physical layers",
-    Component: F33_DeviceVisibility,
-  },
-  {
-    id: "3888-3956",
-    title: "35 路 Microphone Access",
-    sub: "Voice flow detail",
-    Component: F34_MicAccess,
-  },
-  {
-    id: "3888-4066",
-    title: "36 路 AI Presence Insight",
-    sub: "Device participation",
-    Component: F35_PresenceInsight,
   },
   {
     id: "3888-8101",
@@ -419,12 +390,6 @@ const frames = [
     title: "71 路 Why 路 Close",
     sub: "Off level example",
     Component: F70_WhyClose,
-  },
-  {
-    id: "3888-4976",
-    title: "72 路 Context Rules",
-    sub: "Sensitive situation limits",
-    Component: F71_ContextRules,
   },
   {
     id: "3888-4500",

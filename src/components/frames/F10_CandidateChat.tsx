@@ -23,6 +23,7 @@ import joeUrl from "@/assets/radar-avatar-2.png";
 import sabrinaUrl from "@/assets/radar-avatar-3.png";
 import jamesUrl from "@/assets/radar-avatar-4.png";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
+import { recordJimIcebreakerMessage } from "@/lib/icebreaking-challenge";
 
 const styleTabs = ["Friendly", "Direct", "Playful", "Brief", "Warm"] as const;
 export type StyleTab = (typeof styleTabs)[number];
@@ -331,6 +332,9 @@ export function F10_CandidateChat() {
   const sendMessage = () => {
     const text = input.trim();
     if (!text) return;
+    if (candidateName === "Jim") {
+      recordJimIcebreakerMessage(text);
+    }
     setShowWarmupSignal(false);
     const reply = chooseReply(candidateName, replyTurn, text);
     const nextMessages: ChatMessage[] = [];

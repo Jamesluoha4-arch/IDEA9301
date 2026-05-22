@@ -196,45 +196,18 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: "Back", target: key(5, 2) },
   ],
 
-  [key(6, 0)]: [{ match: "Continue Challenge", target: key(6, 1) }],
-  [key(6, 1)]: [{ match: "Continue Challenge", target: key(6, 2) }],
+  [key(6, 0)]: [{ match: "Message Jim", target: key(1, 6) }],
+  [key(6, 1)]: [
+    { match: ["Star Glow", "Orbit Path", "Heart Halo", "Mint Wreath", "Cloud Float", "Dot Circle"], target: key(6, 2) },
+    { match: "Points Guide", target: key(6, 3) },
+  ],
   [key(6, 2)]: [
-    { match: "Go to Frame Shop", target: key(6, 8) },
-    { match: "Back to Home", target: home },
-    { match: "Come back tomorrow for a new challenge", target: key(6, 3) },
+    { match: ["Cancel", "Back to Frame Shop"], target: key(6, 1) },
+    { match: ["Unlock and Apply", "Apply Frame"], target: key(6, 2) },
   ],
-  [key(6, 3)]: [{ match: "Back to Daily Challenge", target: key(3, 16) }],
-  [key(6, 4)]: [
-    { match: "Reflect Now", target: key(6, 5) },
-    { match: "Quick Edit", target: key(3, 15) },
-  ],
-  [key(6, 5)]: [
-    { match: "Start Reflection", target: key(6, 6) },
-    { match: "Back to Home", target: home },
-  ],
-  [key(6, 6)]: [{ match: "Submit Reflection", target: key(6, 7) }],
-  [key(6, 7)]: [
-    { match: "Back to Home", target: home },
-    { match: "Go to Frame Shop", target: key(6, 9) },
-    { match: "Come back tomorrow for a new challenge", target: key(3, 0) },
-  ],
-  [key(6, 8)]: [
-    { match: "Heart Halo", target: key(6, 11) },
-    { match: "Cloud Float", target: key(6, 10) },
-    { match: "Unlock", target: key(6, 10) },
-    { match: "Points Guide", target: key(6, 14) },
-  ],
-  [key(6, 9)]: [{ match: "Unlock and Apply", target: key(6, 11) }],
-  [key(6, 10)]: [{ match: "Unlock and Apply", target: key(6, 12) }],
-  [key(6, 11)]: [{ match: "Apply Frame", target: key(6, 9) }],
-  [key(6, 12)]: [
-    { match: "Apply Frame", target: key(6, 9) },
-    { match: "Cancel", target: key(6, 8) },
-  ],
-  [key(6, 13)]: [{ match: "Apply Frame", target: key(6, 8) }],
-  [key(6, 14)]: [
-    { match: "Go to Daily Challenge", target: key(6, 0) },
-    { match: "Back to Frame Shop", target: key(6, 8) },
+  [key(6, 3)]: [
+    { match: "Go to Icebreaking Challenge", target: key(6, 0) },
+    { match: "Back to Frame Shop", target: key(6, 1) },
   ],
 
   [key(7, 0)]: [
@@ -357,7 +330,7 @@ function activeTabFor(node: NodeKey) {
   if (flowIdx === 3) return "AI";
   if (flowIdx === 5 && [0, 1].includes(stepIdx)) return "CHAT";
   if (flowIdx === 4) return "SETTINGS";
-  if (flowIdx === 6 && [8, 9].includes(stepIdx)) return "SETTINGS";
+  if (flowIdx === 6 && [1, 2, 3].includes(stepIdx)) return "SETTINGS";
   return null;
 }
 

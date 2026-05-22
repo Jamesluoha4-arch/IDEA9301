@@ -18,6 +18,7 @@ import {
 import JimUrl from "@/assets/radar-avatar-1.png";
 import { SparkReplySheet, type StyleTab } from "./F10_CandidateChat";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
+import { recordJimIcebreakerMessage } from "@/lib/icebreaking-challenge";
 
 const initialMessages = [
   { from: "them", text: "Hey, are you also joining the new starter session this week?" },
@@ -73,6 +74,7 @@ export function ChatScaffold({
   const sendMessage = () => {
     const text = input.trim();
     if (!text) return;
+    recordJimIcebreakerMessage(text);
     const lower = text.toLowerCase();
     const reply =
       lower.includes("coffee") || lower.includes("lunch")

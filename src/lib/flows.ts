@@ -21,25 +21,14 @@ import { F30_SystemVisibility } from "@/components/frames/F30_SystemVisibility";
 import { F31_LiveSocialWorld } from "@/components/frames/F31_LiveSocialWorld";
 import { F36_AIControlCenter } from "@/components/frames/F36_AIControlCenter";
 import { F37_DailyChallenge } from "@/components/frames/F37_DailyChallenge";
-import { F38_ChallengeProgress } from "@/components/frames/F38_ChallengeProgress";
-import { F39_ChallengeDone } from "@/components/frames/F39_ChallengeDone";
-import { F40_ChallengeHistory } from "@/components/frames/F40_ChallengeHistory";
 import { F41_CopilotMode } from "@/components/frames/F41_CopilotMode";
-import { F42_MissedChallenge } from "@/components/frames/F42_MissedChallenge";
-import { F43_MissedDaily } from "@/components/frames/F43_MissedDaily";
-import { F44_QuickReflection } from "@/components/frames/F44_QuickReflection";
-import { F45_ReflectionSaved } from "@/components/frames/F45_ReflectionSaved";
 import { F46_SecondSelf } from "@/components/frames/F46_SecondSelf";
 import { F47_SecondSelfAlt } from "@/components/frames/F47_SecondSelfAlt";
 import { F48_ChangeDetails } from "@/components/frames/F48_ChangeDetails";
 import { F49_FrameShop } from "@/components/frames/F49_FrameShop";
-import { F50_FrameUnlock } from "@/components/frames/F50_FrameUnlock";
 import { F51_AICenterFull } from "@/components/frames/F51_AICenterFull";
-import { F52_HeartUnlockSheet } from "@/components/frames/F52_HeartUnlockSheet";
 import { F53_CloudUnlockSheet } from "@/components/frames/F53_CloudUnlockSheet";
-import { F54_FrameShopGrid } from "@/components/frames/F54_FrameShopGrid";
 import { F55_PointsGuide } from "@/components/frames/F55_PointsGuide";
-import { F57_HeartPreviewSheet } from "@/components/frames/F57_HeartPreviewSheet";
 import { F59_ChangeAIMode } from "@/components/frames/F59_ChangeAIMode";
 import { F60_ObserverMode } from "@/components/frames/F60_ObserverMode";
 import { F61_CopilotModeDetail } from "@/components/frames/F61_CopilotModeDetail";
@@ -202,35 +191,12 @@ export const flows: Flow[] = [
   },
   {
     id: "f7",
-    title: "Flow 7 - Daily Challenge and Points",
-    subtitle: "Challenge 鈫?瀹屾垚 鈫?Streak 鈫?Frame Shop",
+    title: "Flow 7 - Icebreaking Challenge and Points",
+    subtitle: "Icebreaking challenge / points / animated frame shop",
     steps: [
-      { label: "Daily Challenge", hint: "浠婃棩浠诲姟 1/3", Component: F37_DailyChallenge },
-      { label: "Progress 67%", hint: "2 of 3 done", Component: F38_ChallengeProgress },
-      { label: "Challenge Done", hint: "+20 pts 濂栧姳", Component: F39_ChallengeDone },
-      {
-        label: "Challenge History",
-        hint: "Streak and weekly record",
-        Component: F40_ChallengeHistory,
-      },
-      { label: "Missed Challenge", hint: "Streak at risk", Component: F42_MissedChallenge },
-      { label: "Daily 路 Missed", hint: "Quick Reflection 鎻愮ず", Component: F43_MissedDaily },
-      {
-        label: "Quick Reflection",
-        hint: "Why 路 鏄庡ぉ 路 澶囨敞",
-        Component: F44_QuickReflection,
-      },
-      {
-        label: "Reflection Saved",
-        hint: "+5 pts 路 streak 淇濅綇",
-        Component: F45_ReflectionSaved,
-      },
+      { label: "Icebreaking Challenge", hint: "Jim tasks / live points", Component: F37_DailyChallenge },
       { label: "Frame Shop", hint: "Unlock decorations with points", Component: F49_FrameShop },
-      { label: "Frame Shop Grid", hint: "All frames", Component: F54_FrameShopGrid },
-      { label: "Frame Unlock", hint: "80 pts sheet", Component: F50_FrameUnlock },
-      { label: "Heart Halo Unlock", hint: "Owned 路 apply", Component: F52_HeartUnlockSheet },
-      { label: "Heart Halo Preview", hint: "Large preview", Component: F57_HeartPreviewSheet },
-      { label: "Cloud Float Unlock", hint: "80 pts sheet", Component: F53_CloudUnlockSheet },
+      { label: "Frame Detail", hint: "Unlock and apply", Component: F53_CloudUnlockSheet },
       { label: "Points Guide", hint: "Earn 路 use 路 streak", Component: F55_PointsGuide },
     ],
   },

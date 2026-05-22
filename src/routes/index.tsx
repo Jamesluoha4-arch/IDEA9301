@@ -23,14 +23,7 @@ import { F30_SystemVisibility } from "@/components/frames/F30_SystemVisibility";
 import { F31_LiveSocialWorld } from "@/components/frames/F31_LiveSocialWorld";
 import { F36_AIControlCenter } from "@/components/frames/F36_AIControlCenter";
 import { F37_DailyChallenge } from "@/components/frames/F37_DailyChallenge";
-import { F38_ChallengeProgress } from "@/components/frames/F38_ChallengeProgress";
-import { F39_ChallengeDone } from "@/components/frames/F39_ChallengeDone";
-import { F40_ChallengeHistory } from "@/components/frames/F40_ChallengeHistory";
 import { F41_CopilotMode } from "@/components/frames/F41_CopilotMode";
-import { F42_MissedChallenge } from "@/components/frames/F42_MissedChallenge";
-import { F43_MissedDaily } from "@/components/frames/F43_MissedDaily";
-import { F44_QuickReflection } from "@/components/frames/F44_QuickReflection";
-import { F45_ReflectionSaved } from "@/components/frames/F45_ReflectionSaved";
 import { F46_SecondSelf } from "@/components/frames/F46_SecondSelf";
 import { F47_SecondSelfAlt } from "@/components/frames/F47_SecondSelfAlt";
 import { F48_ChangeDetails } from "@/components/frames/F48_ChangeDetails";
@@ -189,57 +182,15 @@ const frames = [
   },
   {
     id: "3888-7412",
-    title: "38 路 Daily Challenge",
-    sub: "Boundary task 路 1/3",
+    title: "38 路 Icebreaking Challenge",
+    sub: "Jim chat tasks 路 live points",
     Component: F37_DailyChallenge,
-  },
-  {
-    id: "3888-11064",
-    title: "39 路 Challenge Progress",
-    sub: "67% 路 2 of 3 done",
-    Component: F38_ChallengeProgress,
-  },
-  {
-    id: "3888-7563",
-    title: "40 路 Challenge Done",
-    sub: "Reward unlocked",
-    Component: F39_ChallengeDone,
-  },
-  {
-    id: "3888-7178",
-    title: "41 路 Challenge History",
-    sub: "Week streak 路 recent",
-    Component: F40_ChallengeHistory,
   },
   {
     id: "3888-8817",
     title: "42 路 Co-pilot Mode",
     sub: "Recent AI actions",
     Component: F41_CopilotMode,
-  },
-  {
-    id: "3888-8544",
-    title: "43 路 Missed Challenge",
-    sub: "Streak at risk",
-    Component: F42_MissedChallenge,
-  },
-  {
-    id: "3888-7945",
-    title: "44 路 Daily 路 Missed",
-    sub: "Quick reflection prompt",
-    Component: F43_MissedDaily,
-  },
-  {
-    id: "3888-11226",
-    title: "45 路 Quick Reflection",
-    sub: "Why 路 tomorrow 路 note",
-    Component: F44_QuickReflection,
-  },
-  {
-    id: "3888-9407",
-    title: "46 路 Reflection Saved",
-    sub: "Streak protected",
-    Component: F45_ReflectionSaved,
   },
   {
     id: "3888-9075",

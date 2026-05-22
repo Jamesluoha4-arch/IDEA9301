@@ -2,6 +2,11 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { ChevronRight, Gift, Plus, Shield } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
+import {
+  AvatarFrameEffect,
+  frameUpdatedEvent,
+  readAppliedAvatarFrame,
+} from "@/components/AvatarFrameEffect";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
 
 const modeStorageKey = "second-self.ai-control-mode";
@@ -61,6 +66,7 @@ export function F36_AIControlCenter() {
   const [challengeReady, setChallengeReady] = useState(false);
   const [savedProfile, setSavedProfile] = useState<ShapingProfile>(() => readShapingProfile());
   const [draftProfile, setDraftProfile] = useState<ShapingProfile>(() => readShapingProfile());
+  const [avatarFrame, setAvatarFrame] = useState(readAppliedAvatarFrame);
   const avatarUrl = readGeneratedAvatar() || defaultAvatarUrl;
   const activeMode = modeDetails[aiMode];
   const hasProfileChanges =
@@ -71,6 +77,12 @@ export function F36_AIControlCenter() {
   useEffect(() => {
     const timer = window.setTimeout(() => setChallengeReady(true), 2000);
     return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const refreshFrame = () => setAvatarFrame(readAppliedAvatarFrame());
+    window.addEventListener(frameUpdatedEvent, refreshFrame);
+    return () => window.removeEventListener(frameUpdatedEvent, refreshFrame);
   }, []);
 
   const updateProfile = (field: keyof ShapingProfile, value: string) => {
@@ -103,6 +115,7 @@ export function F36_AIControlCenter() {
       {challengeReady && (
         <motion.button
           type="button"
+          data-prototype-target="6:0"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="mx-4 mb-4 flex w-[calc(100%-2rem)] items-center gap-3 rounded-3xl border border-white bg-white/90 p-3 text-left shadow-soft backdrop-blur-xl"
@@ -111,9 +124,9 @@ export function F36_AIControlCenter() {
             <Shield size={18} />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-[12px] font-bold">Challenge ready</span>
+            <span className="block text-[12px] font-bold">Icebreaking challenge ready</span>
             <span className="mt-0.5 block text-[10px] leading-[14px] text-brand-mute">
-              Review one boundary choice before your next social move.
+              Practice three small Jim openers to earn your next avatar frame.
             </span>
           </span>
           <span className="rounded-full gradient-brand px-3 py-1.5 text-[10px] font-bold text-white">
@@ -125,17 +138,14 @@ export function F36_AIControlCenter() {
       <motion.div
         animate={{ y: [0, -4, 0], scale: [1, 1.02, 1] }}
         transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-        className="relative mx-auto mb-3 flex h-28 w-28 items-center justify-center"
+        className="relative mx-auto mb-3 flex h-32 w-32 items-center justify-center"
       >
         <motion.span
           animate={{ scale: [0.8, 1.18, 0.8], opacity: [0.5, 0.05, 0.5] }}
           transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
           className="absolute inset-0 rounded-full border border-brand-purple/25"
         />
-        <span className="absolute inset-3 rounded-full border-2 border-dashed border-brand-lavender/85" />
-        <span className="relative h-[84px] w-[84px] overflow-hidden rounded-full border-[5px] border-white bg-white shadow-[0_18px_38px_rgba(108,92,231,0.22)]">
-          <img src={avatarUrl} alt="" className="h-full w-full object-contain object-bottom" />
-        </span>
+        <AvatarFrameEffect avatar={avatarUrl} frame={avatarFrame} size={102} />
       </motion.div>
 
       <div className="mx-4 bg-white rounded-3xl p-4 shadow-soft border border-white">
@@ -159,7 +169,7 @@ export function F36_AIControlCenter() {
         </div>
         <button
           type="button"
-          data-prototype-target="6:8"
+          data-prototype-target="6:1"
           className="mt-2.5 flex w-full items-center justify-center gap-2 rounded-2xl border border-brand-lavender/25 bg-gradient-to-r from-brand-bg via-white to-brand-pink/15 py-2.5 text-[12px] font-bold text-brand-purple shadow-sm"
         >
           <Gift size={14} />

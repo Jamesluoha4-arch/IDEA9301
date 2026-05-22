@@ -60,21 +60,21 @@ function SettingsRow({
       type="button"
       whileTap={{ scale: 0.985 }}
       onClick={onClick}
-      className="w-full h-[54px] px-4 bg-white/88 backdrop-blur-xl border-b border-[#eee9e3] last:border-b-0 flex items-center gap-3 text-left"
+      className="w-full h-[54px] px-4 bg-white/88 backdrop-blur-xl border-b border-brand-bg/80 last:border-b-0 flex items-center gap-3 text-left"
     >
-      <Icon size={18} className={danger ? "text-[#ef6b82]" : "text-[#24190f]"} />
+      <Icon size={18} className={danger ? "text-[#ef6b82]" : "text-brand-purple"} />
       <span
         className={`flex-1 text-[14px] font-bold ${danger ? "text-[#ef6b82]" : "text-brand-ink"}`}
       >
         {title}
       </span>
-      {value && <span className="text-[12px] font-semibold text-[#9d968d]">{value}</span>}
+      {value && <span className="text-[12px] font-semibold text-brand-mute">{value}</span>}
       {toggle ? (
         <span className="w-12 h-7 rounded-full bg-brand-purple p-1 flex justify-end">
           <span className="h-5 w-5 rounded-full bg-white shadow" />
         </span>
       ) : (
-        <ChevronRight size={17} className="text-[#b9b1a7]" />
+        <ChevronRight size={17} className="text-brand-mute/70" />
       )}
     </motion.button>
   );
@@ -83,8 +83,8 @@ function SettingsRow({
 function SettingsSection({ title, children }: { title?: string; children: ReactNode }) {
   return (
     <div className="mt-6">
-      {title && <div className="px-5 mb-2 text-[15px] font-semibold text-[#beb7ad]">{title}</div>}
-      <div className="mx-5 overflow-hidden rounded-[18px] border border-white/70 shadow-[0_12px_28px_rgba(55,45,35,0.06)]">
+      {title && <div className="px-5 mb-2 text-[15px] font-semibold text-brand-mute">{title}</div>}
+      <div className="mx-5 overflow-hidden rounded-[18px] border border-white/70 shadow-[0_12px_28px_rgba(108,92,231,0.08)]">
         {children}
       </div>
     </div>
@@ -114,8 +114,8 @@ export function F83_Settings() {
     return <FeedbackPanel onBack={() => setPanel("settings")} userName={userName} />;
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-[#f4efe8] text-brand-ink">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(167,139,250,0.16),transparent_32%),radial-gradient(circle_at_90%_45%,rgba(246,180,219,0.12),transparent_34%)]" />
+    <div className="relative h-full w-full overflow-hidden gradient-brand-soft text-brand-ink">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(167,139,250,0.22),transparent_34%),radial-gradient(circle_at_90%_45%,rgba(246,180,219,0.18),transparent_34%),radial-gradient(circle_at_20%_80%,rgba(167,219,255,0.18),transparent_30%)]" />
       <div className="relative h-full overflow-y-auto pb-10 pt-10 prototype-scroll">
         <div className="relative h-10 px-5 flex items-center justify-center">
           <button
@@ -128,14 +128,14 @@ export function F83_Settings() {
           <div className="text-[16px] font-bold">Settings</div>
         </div>
 
-        <div className="mx-5 mt-5 h-[64px] rounded-[18px] bg-white/92 border border-white shadow-[0_12px_28px_rgba(55,45,35,0.06)] px-4 flex items-center gap-3">
-          <UserRound size={19} className="text-[#24190f]" />
+        <div className="mx-5 mt-5 h-[64px] rounded-[18px] bg-white/92 border border-white shadow-[0_12px_28px_rgba(108,92,231,0.08)] px-4 flex items-center gap-3">
+          <UserRound size={19} className="text-brand-purple" />
           <div className="flex-1 text-[15px] font-bold">Account Settings</div>
-          <span className="rounded-full bg-[#756f61] text-white px-3 py-1 text-[11px] font-bold">
+          <span className="rounded-full bg-brand-purple text-white px-3 py-1 text-[11px] font-bold">
             Free
           </span>
-          <img src={avatar} alt="" className="h-9 w-9 object-contain rounded-full bg-[#f8f4ef]" />
-          <ChevronRight size={17} className="text-[#b9b1a7]" />
+          <img src={avatar} alt="" className="h-9 w-9 object-contain rounded-full bg-brand-bg" />
+          <ChevronRight size={17} className="text-brand-mute/70" />
         </div>
 
         <SettingsSection title="General">
@@ -165,7 +165,7 @@ export function F83_Settings() {
           <SettingsRow icon={FileText} title="Terms of Use" />
         </SettingsSection>
 
-        <div className="mx-5 mt-8 overflow-hidden rounded-[18px] border border-white/70 shadow-[0_12px_28px_rgba(55,45,35,0.06)]">
+        <div className="mx-5 mt-8 overflow-hidden rounded-[18px] border border-white/70 shadow-[0_12px_28px_rgba(108,92,231,0.08)]">
           <SettingsRow icon={LogOut} title="Log Out" danger onClick={() => setShowLogout(true)} />
         </div>
       </div>
@@ -225,7 +225,7 @@ function NetworkDiagnostics({ onBack }: { onBack: () => void }) {
     ],
   ];
   return (
-    <div className="relative h-full w-full overflow-hidden bg-[#f4efe8] text-brand-ink">
+    <div className="relative h-full w-full overflow-hidden gradient-brand-soft text-brand-ink">
       <div className="relative h-full overflow-y-auto pb-7 pt-10 prototype-scroll">
         <div className="relative h-10 px-5 flex items-center justify-center">
           <button

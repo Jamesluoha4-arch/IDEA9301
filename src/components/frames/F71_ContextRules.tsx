@@ -49,6 +49,14 @@ export function F71_ContextRules() {
           <div className="text-[10px] text-brand-mute leading-[14px] mt-0.5">AI checks relationship type and conversation context before acting. When a situation becomes sensitive, the system temporarily limits AI involvement to protect your control.</div>
         </div>
       </div>
+
+      <button
+        type="button"
+        data-prototype-target="3:0"
+        className="mx-4 mt-5 w-[calc(100%-2rem)] rounded-2xl gradient-brand py-3.5 text-[14px] font-bold text-white shadow-glow"
+      >
+        Got it
+      </button>
     </div>
   );
 }

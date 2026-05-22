@@ -20,7 +20,13 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
+import {
+  AvatarFrameEffect,
+  frameUpdatedEvent,
+  readAppliedAvatarFrame,
+} from "@/components/AvatarFrameEffect";
 import { generatedAvatarStorageKey, readGeneratedAvatar } from "@/lib/avatar-generation";
+import { icebreakingTasks } from "@/lib/icebreaking-challenge";
 
 function readUserName() {
   return window.localStorage.getItem("second-self-user-name")?.trim() || "David";
@@ -555,14 +561,12 @@ function MenuBottomSheet({
             </div>
           ) : active === "Challenge" ? (
             <div className="w-full rounded-[28px] border border-brand-bg bg-brand-bg/50 p-4 space-y-3">
-              {["Say hi to one new coworker", "Review one AI draft", "Join a community space"].map(
-                (task) => (
-                  <div key={task} className="flex items-center gap-3 text-[13px] text-brand-ink">
+              {icebreakingTasks.map((task) => (
+                  <div key={task.id} className="flex items-center gap-3 text-[13px] text-brand-ink">
                     <CheckCircle2 size={16} className="text-brand-purple" />
-                    {task}
+                    {task.title}
                   </div>
-                ),
-              )}
+              ))}
             </div>
           ) : active === "Feedback" ? (
             <div className="w-full h-[170px] rounded-[28px] border border-brand-bg bg-brand-bg/50 p-4 text-left text-[14px] text-brand-mute">
@@ -581,6 +585,7 @@ function MenuBottomSheet({
 
         <button
           type="button"
+          data-prototype-target={active === "Challenge" ? "6:0" : undefined}
           className="mt-6 w-full rounded-full border-2 border-brand-lavender/55 bg-white py-4 text-[16px] font-bold text-brand-ink shadow-soft flex items-center justify-center gap-3"
         >
           <Icon size={19} className="text-brand-purple" />
@@ -723,6 +728,7 @@ export function FloatingBottomNav({ active }: { active: string }) {
   };
   const [avatarUrl, setAvatarUrl] = useState(() => resolveAvatarUrl());
   const [avatarBubble, setAvatarBubble] = useState(false);
+  const [avatarFrame, setAvatarFrame] = useState(readAppliedAvatarFrame);
 
   useEffect(() => {
     setAvatarUrl(resolveAvatarUrl());
@@ -743,6 +749,12 @@ export function FloatingBottomNav({ active }: { active: string }) {
       window.removeEventListener("second-self-avatar-ready", handleAvatarReady);
       window.clearTimeout(timer);
     };
+  }, []);
+
+  useEffect(() => {
+    const refreshFrame = () => setAvatarFrame(readAppliedAvatarFrame());
+    window.addEventListener(frameUpdatedEvent, refreshFrame);
+    return () => window.removeEventListener(frameUpdatedEvent, refreshFrame);
   }, []);
 
   return (
@@ -826,13 +838,8 @@ export function FloatingBottomNav({ active }: { active: string }) {
           </motion.span>
         )}
         <span className="sr-only">AI</span>
-        <span className="absolute inset-0 rounded-full bg-gradient-to-br from-[#f7f3ff] via-white to-[#fff4fb]" />
         {avatarUrl && (
-          <img
-            src={avatarUrl}
-            alt=""
-            className="relative h-[78px] w-[78px] rounded-full object-cover object-top"
-          />
+          <AvatarFrameEffect avatar={avatarUrl} frame={avatarFrame} size={78} compact />
         )}
       </motion.button>
     </motion.nav>

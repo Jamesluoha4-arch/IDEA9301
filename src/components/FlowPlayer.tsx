@@ -72,7 +72,7 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: ["COMMUNITY", "SPACE", "绀惧尯"], target: key(7, 0) },
     { match: "AI", target: key(3, 0) },
     { match: "PRESENCE", target: key(7, 5) },
-    { match: ["SETTINGS", "PROFILE"], target: key(3, 17) },
+    { match: ["SETTINGS", "PROFILE"], target: key(3, 9) },
   ],
 
   [key(1, 1)]: [
@@ -113,9 +113,7 @@ const graph: Record<NodeKey, Rule[]> = {
   [key(3, 0)]: [
     { match: "Continue", target: key(6, 0) },
     { match: "Change Mode", target: key(3, 3) },
-    { match: "Context Rules", target: key(3, 18) },
-    { match: "View details", target: key(3, 8) },
-    { match: "Manage all", target: key(3, 15) },
+    { match: "Context Rules", target: key(3, 10) },
     { match: "HOME", target: home },
     { match: "SOCIAL", target: key(1, 1) },
     { match: "PRESENCE", target: key(7, 5) },
@@ -128,51 +126,13 @@ const graph: Record<NodeKey, Rule[]> = {
   [key(3, 5)]: [{ match: "Switch to Co-pilot", target: key(3, 0) }],
   [key(3, 6)]: [{ match: "Switch to Assistant", target: key(3, 0) }],
   [key(3, 7)]: [{ match: "Switch to Auto-pilot", target: key(3, 0) }],
-  [key(3, 8)]: [
-    { match: "Suggest", target: key(3, 9) },
-    { match: "Draft", target: key(3, 10) },
-    { match: "Act", target: key(3, 11) },
-  ],
-  [key(3, 9)]: [
-    { match: "Off", target: key(3, 8) },
-    { match: "Draft", target: key(3, 10) },
-    { match: "Act", target: key(3, 11) },
-  ],
-  [key(3, 10)]: [
-    { match: "Off", target: key(3, 8) },
-    { match: "Suggest", target: key(3, 9) },
-    { match: "Act", target: key(3, 11) },
-  ],
-  [key(3, 11)]: [
-    { match: "Off", target: key(3, 8) },
-    { match: "Suggest", target: key(3, 9) },
-    { match: "Draft", target: key(3, 10) },
-  ],
-  [key(3, 12)]: [{ match: "Friends", target: key(3, 13) }],
-  [key(3, 13)]: [{ match: "Close Relationships", target: key(3, 14) }],
-  [key(3, 14)]: [{ match: "Write by myself", target: key(3, 0) }],
-  [key(3, 15)]: [{ match: "Apply Changes", target: key(3, 0) }],
-  [key(3, 16)]: [{ match: "Change Mode", target: key(3, 3) }],
+  [key(3, 8)]: [{ match: "Change Mode", target: key(3, 3) }],
 
   [key(4, 0)]: [
-    { match: "View Change Details", target: key(4, 2) },
-    { match: "Go to AI Control Center", target: key(3, 0) },
+    { match: "View details", target: key(4, 1) },
   ],
-  [key(4, 1)]: [
-    { match: "View Change Details", target: key(4, 2) },
-    { match: "Go to AI Control Center", target: key(3, 0) },
-  ],
-  [key(4, 2)]: [
-    { match: "Adjust AI Boundary", target: key(3, 0) },
-    { match: "View AI Trail", target: key(4, 4) },
-  ],
-  [key(4, 3)]: [
-    { match: "Adjust AI Boundary", target: key(3, 0) },
-    { match: "View AI Trail", target: key(4, 4) },
-  ],
-  [key(4, 4)]: [{ match: "View details", target: key(4, 5) }],
-  [key(4, 5)]: [{ match: "View details", target: key(4, 6) }],
-  [key(4, 6)]: [{ match: "Change Mode", target: key(3, 3) }],
+  [key(4, 1)]: [{ match: "View details", target: key(4, 2) }],
+  [key(4, 2)]: [{ match: "Change Mode", target: key(3, 3) }],
 
   [key(5, 0)]: [
     { match: "Review signals", target: key(5, 1) },
@@ -181,7 +141,7 @@ const graph: Record<NodeKey, Rule[]> = {
   [key(5, 1)]: [{ match: "Jim Chen", target: key(5, 2) }],
   [key(5, 2)]: [
     { match: "Relationship Check-in", target: key(5, 3) },
-    { match: "View AI Trail", target: key(4, 4) },
+    { match: "View AI Trail", target: key(4, 0) },
   ],
   [key(5, 3)]: [
     { match: "Save Check-in", target: key(5, 4) },
@@ -189,7 +149,7 @@ const graph: Record<NodeKey, Rule[]> = {
   ],
   [key(5, 4)]: [
     { match: "Back to Jim Chen", target: key(5, 2) },
-    { match: "View AI Trail", target: key(4, 4) },
+    { match: "View AI Trail", target: key(4, 0) },
   ],
   [key(5, 5)]: [
     { match: "Continue", target: key(1, 6) },
@@ -233,13 +193,7 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: ["AI Activity", "AI Presence"], target: key(7, 5) },
     { match: ["Message", "Private chat"], target: key(1, 6) },
   ],
-  [key(7, 5)]: [
-    { match: "View Details", target: key(7, 6) },
-    { match: "Adjust Visibility", target: key(7, 6) },
-    { match: "Device Access", target: key(7, 6) },
-    { match: "HOME", target: home },
-  ],
-  [key(7, 6)]: [{ match: "PRESENCE", target: key(7, 5) }],
+  [key(7, 5)]: [{ match: "HOME", target: home }],
 };
 
 function normalize(text: string) {
@@ -270,8 +224,8 @@ const tabTargets: Record<string, NodeKey> = {
   social: key(1, 1),
   ai: key(3, 0),
   presence: key(7, 5),
-  settings: key(3, 17),
-  profile: key(3, 17),
+  settings: key(3, 9),
+  profile: key(3, 9),
 };
 
 function tabFromText(text: string) {
@@ -326,9 +280,8 @@ function activeTabFor(node: NodeKey) {
   if (flowIdx === 1 && [1, 2, 3, 4, 5, 6].includes(stepIdx)) return "CHAT";
   if (flowIdx === 7 && [0, 1, 2, 3, 4].includes(stepIdx)) return "COMMUNITY";
   if (flowIdx === 7 && stepIdx >= 5) return "PRESENCE";
-  if (flowIdx === 3 && stepIdx === 17) return "SETTINGS";
+  if (flowIdx === 3 && stepIdx === 9) return "SETTINGS";
   if (flowIdx === 3) return "AI";
-  if (flowIdx === 5 && [0, 1].includes(stepIdx)) return "CHAT";
   if (flowIdx === 4) return "SETTINGS";
   if (flowIdx === 6 && [1, 2, 3].includes(stepIdx)) return "SETTINGS";
   return null;
@@ -508,13 +461,6 @@ export function FlowPlayer({ onOpenGallery }: Props) {
     }
     if (node === key(3, 7) && normalizedText.includes("switch to auto-pilot")) {
       window.sessionStorage.setItem(aiModeStorageKey, "Auto-pilot");
-    }
-
-    if (node === key(3, 15) && normalizedText.includes("apply changes")) {
-      setTapPulse(true);
-      window.setTimeout(() => setTapPulse(false), 260);
-      goBack();
-      return;
     }
 
     const rule = findRule(rules, text);

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowLeft, Coins, LockKeyhole, Sparkles } from "lucide-react";
+import { ArrowLeft, Coins, LockKeyhole, Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
 import {
@@ -100,7 +100,18 @@ export function F53_CloudUnlockSheet() {
         transition={{ type: "spring", damping: 24 }}
         className="absolute inset-x-0 bottom-0 rounded-t-[28px] bg-white p-5 pb-8 shadow-[0_-10px_40px_rgba(31,31,46,0.25)]"
       >
-        <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-brand-bg" />
+        <div className="mb-4 flex items-center justify-between">
+          <div className="w-9" />
+          <div className="h-1.5 w-10 rounded-full bg-brand-bg" />
+          <button
+            type="button"
+            data-prototype-target="6:1"
+            aria-label="Close frame detail"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-brand-bg bg-white text-brand-ink shadow-sm"
+          >
+            <X size={16} />
+          </button>
+        </div>
         <div className="flex items-center gap-4">
           <div
             className={`flex h-28 w-28 items-center justify-center rounded-3xl border border-white bg-gradient-to-br ${frame.accent} shadow-soft`}

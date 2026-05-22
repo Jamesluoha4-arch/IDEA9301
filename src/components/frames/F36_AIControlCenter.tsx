@@ -238,7 +238,7 @@ export function F36_AIControlCenter() {
 
       <button
         type="button"
-        data-prototype-target="3:18"
+        data-prototype-target="3:10"
         className="mx-4 mt-4 flex w-[calc(100%-2rem)] items-center justify-between rounded-3xl border border-white bg-white/82 px-4 py-3.5 text-left shadow-soft backdrop-blur-xl"
       >
         <span>

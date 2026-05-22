@@ -18,13 +18,9 @@ import { F27_NewSpace } from "@/components/frames/F27_NewSpace";
 import { F28_Interactions } from "@/components/frames/F28_Interactions";
 import { F29_ArchitectProfile } from "@/components/frames/F29_ArchitectProfile";
 import { F30_SystemVisibility } from "@/components/frames/F30_SystemVisibility";
-import { F31_LiveSocialWorld } from "@/components/frames/F31_LiveSocialWorld";
 import { F36_AIControlCenter } from "@/components/frames/F36_AIControlCenter";
 import { F37_DailyChallenge } from "@/components/frames/F37_DailyChallenge";
 import { F41_CopilotMode } from "@/components/frames/F41_CopilotMode";
-import { F46_SecondSelf } from "@/components/frames/F46_SecondSelf";
-import { F47_SecondSelfAlt } from "@/components/frames/F47_SecondSelfAlt";
-import { F48_ChangeDetails } from "@/components/frames/F48_ChangeDetails";
 import { F49_FrameShop } from "@/components/frames/F49_FrameShop";
 import { F51_AICenterFull } from "@/components/frames/F51_AICenterFull";
 import { F53_CloudUnlockSheet } from "@/components/frames/F53_CloudUnlockSheet";
@@ -35,20 +31,7 @@ import { F61_CopilotModeDetail } from "@/components/frames/F61_CopilotModeDetail
 import { F62_AssistantMode } from "@/components/frames/F62_AssistantMode";
 import { F63_AutopilotMode } from "@/components/frames/F63_AutopilotMode";
 import { F71_ContextRules } from "@/components/frames/F71_ContextRules";
-import {
-  F64_InfluenceOff,
-  F65_InfluenceSuggest,
-  F66_InfluenceDraft,
-  F67_InfluenceAct,
-} from "@/components/frames/F64_InfluenceLevels";
-import {
-  F68_WhyStrangers,
-  F69_WhyFriends,
-  F70_WhyClose,
-} from "@/components/frames/F68_WhyThisLevel";
-import { F72_QuickEdit } from "@/components/frames/F72_QuickEdit";
 import { F73_AICenterFullAlt } from "@/components/frames/F73_AICenterFullAlt";
-import { F74_ChangeDetailDraft } from "@/components/frames/F74_ChangeDetailDraft";
 import { F75_ReconnectChoose } from "@/components/frames/F75_ReconnectChoose";
 import { F76_CheckinSaved } from "@/components/frames/F76_CheckinSaved";
 import { F77_RelationshipCheckin } from "@/components/frames/F77_RelationshipCheckin";
@@ -115,7 +98,7 @@ export const flows: Flow[] = [
   {
     id: "f4",
     title: "Flow 4 路 AI Control Center",
-    subtitle: "Mode 鈫?Influence Level 鈫?editable control",
+    subtitle: "Mode / context rules / settings",
     steps: [
       { label: "AI Control Center", hint: "Assistant 路 Custom", Component: F36_AIControlCenter },
       { label: "Full layout (alt)", hint: "鏉冮檺 路 琛屼负", Component: F73_AICenterFullAlt },
@@ -125,14 +108,6 @@ export const flows: Flow[] = [
       { label: "Co-pilot", hint: "Active 路 balanced", Component: F61_CopilotModeDetail },
       { label: "Assistant", hint: "Drafts replies", Component: F62_AssistantMode },
       { label: "Auto-pilot", hint: "Max autonomy", Component: F63_AutopilotMode },
-      { label: "Influence 路 Off", hint: "瀹屽叏鎺у埗", Component: F64_InfluenceOff },
-      { label: "Influence 路 Suggest", hint: "Ideas only", Component: F65_InfluenceSuggest },
-      { label: "Influence 路 Draft", hint: "AI 璧疯崏", Component: F66_InfluenceDraft },
-      { label: "Influence 路 Act", hint: "AI 鍦ㄨ竟鐣屽唴琛屽姩", Component: F67_InfluenceAct },
-      { label: "Why 路 Strangers", hint: "Suggest 绀轰緥", Component: F68_WhyStrangers },
-      { label: "Why 路 Friends", hint: "Draft 绀轰緥", Component: F69_WhyFriends },
-      { label: "Why 路 Close", hint: "Off 绀轰緥", Component: F70_WhyClose },
-      { label: "Quick Edit", hint: "榛樿绾у埆 路 apply", Component: F72_QuickEdit },
       {
         label: "Co-pilot recent actions",
         hint: "Drafted / Suggested / Blocked",
@@ -144,17 +119,9 @@ export const flows: Flow[] = [
   },
   {
     id: "f5",
-    title: "Flow 5 - Second Self State Changes",
-    subtitle: "Autonomy / Similarity / Risk / Change Details",
+    title: "Flow 5 - AI Trail",
+    subtitle: "AI trail views and control center handoff",
     steps: [
-      { label: "Your Second Self", hint: "Assistant state", Component: F46_SecondSelf },
-      { label: "Second Self 路 alt", hint: "Tagged reasons", Component: F47_SecondSelfAlt },
-      { label: "Change Details", hint: "鐘舵€佽矾寰?路 娲炲療", Component: F48_ChangeDetails },
-      {
-        label: "Change Detail 路 Draft",
-        hint: "What happened / 褰卞搷",
-        Component: F74_ChangeDetailDraft,
-      },
       { label: "AI Trail 路 Spiral", hint: "鏃堕棿绾?路 鏇茬嚎", Component: F81_AITrailSpiral },
       { label: "AI Trail 路 Lined", hint: "鏃堕棿绾?路 铏氱嚎", Component: F82_AITrailLined },
       {
@@ -203,15 +170,14 @@ export const flows: Flow[] = [
   {
     id: "f8",
     title: "Flow 8 - Spaces and AI Visibility",
-    subtitle: "Feed 鈫?Profile 鈫?System Visibility 鈫?璁惧",
+    subtitle: "Spaces / profile / presence insight",
     steps: [
       { label: "Spaces Radar", hint: "Topic nodes synced", Component: F22_SpacesRadar },
       { label: "Spaces Feed", hint: "HUMAN / AI_SYNTH / RAW", Component: F25_SpacesFeed },
       { label: "New Space", hint: "Create + publish", Component: F27_NewSpace },
       { label: "Interactions", hint: "Activity stream", Component: F28_Interactions },
       { label: "Architect Profile", hint: "鍏磋叮鍖归厤", Component: F29_ArchitectProfile },
-      { label: "System Visibility", hint: "Mini social world", Component: F30_SystemVisibility },
-      { label: "Live Social World", hint: "Replay 路 姘旀场", Component: F31_LiveSocialWorld },
+      { label: "Presence", hint: "Live AI activity and user insight", Component: F30_SystemVisibility },
     ],
   },
 ];

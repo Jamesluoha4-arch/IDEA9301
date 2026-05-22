@@ -44,7 +44,7 @@ export function F50_FrameUnlock() {
           <div className="flex-1">
             <div className="text-[20px] font-bold">Cloud Float</div>
             <div className="mt-1 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-brand-bg text-[11px] font-bold text-brand-purple">
-              <Star size={11} className="text-brand-peach" /> 80 pts
+              <Star size={11} className="text-brand-peach" /> 10 pts
             </div>
             <div className="text-[11px] text-brand-mute mt-2">You have 180 pts available.</div>
           </div>

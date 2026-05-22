@@ -20,13 +20,9 @@ import { F27_NewSpace } from "@/components/frames/F27_NewSpace";
 import { F28_Interactions } from "@/components/frames/F28_Interactions";
 import { F29_ArchitectProfile } from "@/components/frames/F29_ArchitectProfile";
 import { F30_SystemVisibility } from "@/components/frames/F30_SystemVisibility";
-import { F31_LiveSocialWorld } from "@/components/frames/F31_LiveSocialWorld";
 import { F36_AIControlCenter } from "@/components/frames/F36_AIControlCenter";
 import { F37_DailyChallenge } from "@/components/frames/F37_DailyChallenge";
 import { F41_CopilotMode } from "@/components/frames/F41_CopilotMode";
-import { F46_SecondSelf } from "@/components/frames/F46_SecondSelf";
-import { F47_SecondSelfAlt } from "@/components/frames/F47_SecondSelfAlt";
-import { F48_ChangeDetails } from "@/components/frames/F48_ChangeDetails";
 import { F49_FrameShop } from "@/components/frames/F49_FrameShop";
 import { F50_FrameUnlock } from "@/components/frames/F50_FrameUnlock";
 import { F51_AICenterFull } from "@/components/frames/F51_AICenterFull";
@@ -42,20 +38,7 @@ import { F60_ObserverMode } from "@/components/frames/F60_ObserverMode";
 import { F61_CopilotModeDetail } from "@/components/frames/F61_CopilotModeDetail";
 import { F62_AssistantMode } from "@/components/frames/F62_AssistantMode";
 import { F63_AutopilotMode } from "@/components/frames/F63_AutopilotMode";
-import {
-  F64_InfluenceOff,
-  F65_InfluenceSuggest,
-  F66_InfluenceDraft,
-  F67_InfluenceAct,
-} from "@/components/frames/F64_InfluenceLevels";
-import {
-  F68_WhyStrangers,
-  F69_WhyFriends,
-  F70_WhyClose,
-} from "@/components/frames/F68_WhyThisLevel";
-import { F72_QuickEdit } from "@/components/frames/F72_QuickEdit";
 import { F73_AICenterFullAlt } from "@/components/frames/F73_AICenterFullAlt";
-import { F74_ChangeDetailDraft } from "@/components/frames/F74_ChangeDetailDraft";
 import { F75_ReconnectChoose } from "@/components/frames/F75_ReconnectChoose";
 import { F76_CheckinSaved } from "@/components/frames/F76_CheckinSaved";
 import { F77_RelationshipCheckin } from "@/components/frames/F77_RelationshipCheckin";
@@ -164,15 +147,9 @@ const frames = [
   },
   {
     id: "3888-3473",
-    title: "31 路 System Visibility",
-    sub: "Mini social world",
+    title: "31 路 Presence",
+    sub: "Live AI activity 路 user insight",
     Component: F30_SystemVisibility,
-  },
-  {
-    id: "3888-3589",
-    title: "32 路 Live Social World",
-    sub: "Replay 路 bubble map",
-    Component: F31_LiveSocialWorld,
   },
   {
     id: "3888-8101",
@@ -191,24 +168,6 @@ const frames = [
     title: "42 路 Co-pilot Mode",
     sub: "Recent AI actions",
     Component: F41_CopilotMode,
-  },
-  {
-    id: "3888-9075",
-    title: "47 路 Your Second Self",
-    sub: "Assistant 路 orbits",
-    Component: F46_SecondSelf,
-  },
-  {
-    id: "3888-9236",
-    title: "48 路 Second Self 路 alt",
-    sub: "Tagged reasons",
-    Component: F47_SecondSelfAlt,
-  },
-  {
-    id: "3888-10882",
-    title: "49 路 Change Details",
-    sub: "State path 路 insight",
-    Component: F48_ChangeDetails,
   },
   {
     id: "3888-9876",
@@ -301,64 +260,10 @@ const frames = [
     Component: F63_AutopilotMode,
   },
   {
-    id: "3888-5806",
-    title: "65 路 Influence 路 Off",
-    sub: "Full control & privacy",
-    Component: F64_InfluenceOff,
-  },
-  {
-    id: "3888-5260",
-    title: "66 路 Influence 路 Suggest",
-    sub: "Ideas, you write",
-    Component: F65_InfluenceSuggest,
-  },
-  {
-    id: "3888-5543",
-    title: "67 路 Influence 路 Draft",
-    sub: "AI drafts, you send",
-    Component: F66_InfluenceDraft,
-  },
-  {
-    id: "3888-6074",
-    title: "68 路 Influence 路 Act",
-    sub: "AI acts in boundaries",
-    Component: F67_InfluenceAct,
-  },
-  {
-    id: "3888-4821",
-    title: "69 路 Why 路 Strangers",
-    sub: "Suggest level example",
-    Component: F68_WhyStrangers,
-  },
-  {
-    id: "3888-4671",
-    title: "70 路 Why 路 Friends",
-    sub: "Draft level example",
-    Component: F69_WhyFriends,
-  },
-  {
-    id: "3888-5092",
-    title: "71 路 Why 路 Close",
-    sub: "Off level example",
-    Component: F70_WhyClose,
-  },
-  {
-    id: "3888-4500",
-    title: "73 路 Quick Edit",
-    sub: "Default level 路 apply",
-    Component: F72_QuickEdit,
-  },
-  {
     id: "3888-8324",
     title: "74 路 AI Control Center (alt)",
     sub: "Full layout 路 permissions",
     Component: F73_AICenterFullAlt,
-  },
-  {
-    id: "3888-11721",
-    title: "75 路 Change Detail 路 Draft",
-    sub: "What happened 路 choice 路 impact",
-    Component: F74_ChangeDetailDraft,
   },
   {
     id: "3888-11368",

@@ -44,7 +44,7 @@ export function F37_DailyChallenge() {
       <div className="px-5 pt-3 pb-2 flex items-center gap-3">
         <button
           type="button"
-          data-prototype-back="0:7"
+          data-prototype-back="3:0"
           className="flex h-8 w-8 items-center justify-center rounded-full bg-white/72 shadow-sm"
         >
           <ArrowLeft size={18} className="text-brand-purple" />

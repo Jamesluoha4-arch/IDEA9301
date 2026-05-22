@@ -1,21 +1,21 @@
 ﻿import { motion } from "framer-motion";
-import { ChevronLeft, Lightbulb, Edit3, Search, Hand, Info } from "lucide-react";
+import { ChevronLeft, Lightbulb, Edit3, Search, Hand, Info, Sparkles } from "lucide-react";
 
 export function F61_CopilotModeDetail() {
   return (
     <div className="relative w-full h-full pt-12 pb-12 overflow-y-auto font-sans text-brand-ink gradient-brand-soft">
       <div className="px-5 pt-3 pb-2 flex items-center gap-3">
-        <ChevronLeft size={20} className="text-brand-purple"/>
+        <button type="button" data-prototype-back="3:0" className="flex items-center">
+          <ChevronLeft size={20} className="text-brand-purple"/>
+        </button>
         <div className="flex-1 text-center text-[15px] font-bold">Co-pilot</div>
         <div className="w-5"/>
       </div>
 
       <div className="mt-6 mx-auto relative w-[200px] h-[200px] flex items-center justify-center">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 18, repeat: Infinity, ease: "linear" }} className="absolute inset-0 rounded-full border-2 border-dashed border-brand-lavender/60"/>
-        <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2.5, repeat: Infinity }} className="w-24 h-24 rounded-3xl gradient-brand flex items-center justify-center shadow-glow">
-          <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center">
-            <div className="text-3xl">馃</div>
-          </div>
+        <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2.5, repeat: Infinity }} className="w-24 h-24 rounded-[30px] gradient-brand flex items-center justify-center shadow-glow">
+          <Sparkles size={42} strokeWidth={2.3} className="text-white" />
         </motion.div>
       </div>
 

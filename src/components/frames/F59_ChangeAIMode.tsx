@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { X, ChevronRight, Eye, Sparkles, ShieldCheck, Zap, Check } from "lucide-react";
 
+const modeStorageKey = "second-self.ai-control-mode";
+
 const modes = [
   { Icon: Eye, t: "Observer", d: "AI only observes and shows insights. It won't suggest or interact.", tag: "MINIMAL AI", g: "from-slate-700 to-slate-900" },
   { Icon: Sparkles, t: "Co-pilot", d: "AI can suggest and draft, but won't act without your approval.", tag: "BALANCED", g: "from-brand-purple to-brand-pink" },
@@ -10,7 +12,10 @@ const modes = [
 ];
 
 export function F59_ChangeAIMode() {
-  const [selected, setSelected] = useState("Co-pilot");
+  const [selected, setSelected] = useState(() => {
+    const saved = window.sessionStorage.getItem(modeStorageKey);
+    return modes.some((mode) => mode.t === saved) ? saved || "Co-pilot" : "Co-pilot";
+  });
 
   return (
     <div className="relative w-full h-full pt-12 overflow-hidden font-sans text-brand-ink gradient-brand-soft">
@@ -23,7 +28,13 @@ export function F59_ChangeAIMode() {
             <div className="text-[18px] font-bold">Change AI Mode</div>
             <div className="text-[12px] text-brand-mute mt-1">Choose how much autonomy you want to give your AI.</div>
           </div>
-          <button className="w-7 h-7 rounded-full bg-brand-bg flex items-center justify-center"><X size={14}/></button>
+          <button
+            type="button"
+            data-prototype-back="3:0"
+            className="w-7 h-7 rounded-full bg-brand-bg flex items-center justify-center"
+          >
+            <X size={14}/>
+          </button>
         </div>
 
         <div className="mt-4 space-y-2.5">

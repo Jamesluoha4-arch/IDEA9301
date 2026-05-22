@@ -1,21 +1,48 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { Ban, Gift, Lightbulb, PenLine, Plus, Send, Settings } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronRight, Gift, Plus, Shield } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
 
-const modes = [
-  { Icon: Ban, t: "Off" },
-  { Icon: Lightbulb, t: "Suggest" },
-  { Icon: PenLine, t: "Draft" },
-  { Icon: Send, t: "Act" },
-];
+const modeStorageKey = "second-self.ai-control-mode";
+
+type AiMode = "Observer" | "Co-pilot" | "Assistant" | "Auto-pilot";
 
 type ShapingProfile = {
   name: string;
   id: string;
   intro: string;
 };
+
+const modeDetails: Record<AiMode, { summary: string; dot: string }> = {
+  Observer: {
+    summary: "I only observe and show patterns when you ask.",
+    dot: "bg-brand-mute",
+  },
+  "Co-pilot": {
+    summary: "I can suggest and draft while you stay in control.",
+    dot: "bg-brand-purple",
+  },
+  Assistant: {
+    summary: "I can draft. You approve every send.",
+    dot: "bg-brand-mint",
+  },
+  "Auto-pilot": {
+    summary: "I can act inside the boundaries you choose.",
+    dot: "bg-brand-peach",
+  },
+};
+
+function readAiMode(): AiMode {
+  const value =
+    typeof window === "undefined" ? "" : window.sessionStorage.getItem(modeStorageKey);
+  return value === "Observer" ||
+    value === "Co-pilot" ||
+    value === "Assistant" ||
+    value === "Auto-pilot"
+    ? value
+    : "Assistant";
+}
 
 function readShapingProfile(): ShapingProfile {
   if (typeof window === "undefined") {
@@ -30,14 +57,21 @@ function readShapingProfile(): ShapingProfile {
 }
 
 export function F36_AIControlCenter() {
-  const [mode, setMode] = useState(2);
+  const [aiMode] = useState<AiMode>(() => readAiMode());
+  const [challengeReady, setChallengeReady] = useState(false);
   const [savedProfile, setSavedProfile] = useState<ShapingProfile>(() => readShapingProfile());
   const [draftProfile, setDraftProfile] = useState<ShapingProfile>(() => readShapingProfile());
   const avatarUrl = readGeneratedAvatar() || defaultAvatarUrl;
+  const activeMode = modeDetails[aiMode];
   const hasProfileChanges =
     savedProfile.name !== draftProfile.name ||
     savedProfile.id !== draftProfile.id ||
     savedProfile.intro !== draftProfile.intro;
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setChallengeReady(true), 2000);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const updateProfile = (field: keyof ShapingProfile, value: string) => {
     setDraftProfile((profile) => ({ ...profile, [field]: value }));
@@ -62,44 +96,65 @@ export function F36_AIControlCenter() {
 
   return (
     <div className="relative w-full h-full pt-12 pb-20 overflow-y-auto font-sans text-brand-ink gradient-brand-soft">
-      <div className="px-5 pt-3 pb-4 flex items-center justify-between">
+      <div className="px-5 pt-3 pb-4">
         <div className="text-[22px] font-bold">AI Control</div>
-        <button className="w-9 h-9 rounded-full glass flex items-center justify-center shadow-soft">
-          <Settings size={16} className="text-brand-purple" />
-        </button>
       </div>
+
+      {challengeReady && (
+        <motion.button
+          type="button"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-4 mb-4 flex w-[calc(100%-2rem)] items-center gap-3 rounded-3xl border border-white bg-white/90 p-3 text-left shadow-soft backdrop-blur-xl"
+        >
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl gradient-pink-peach text-white shadow-soft">
+            <Shield size={18} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[12px] font-bold">Challenge ready</span>
+            <span className="mt-0.5 block text-[10px] leading-[14px] text-brand-mute">
+              Review one boundary choice before your next social move.
+            </span>
+          </span>
+          <span className="rounded-full gradient-brand px-3 py-1.5 text-[10px] font-bold text-white">
+            Continue
+          </span>
+        </motion.button>
+      )}
+
+      <motion.div
+        animate={{ y: [0, -4, 0], scale: [1, 1.02, 1] }}
+        transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+        className="relative mx-auto mb-3 flex h-28 w-28 items-center justify-center"
+      >
+        <motion.span
+          animate={{ scale: [0.8, 1.18, 0.8], opacity: [0.5, 0.05, 0.5] }}
+          transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute inset-0 rounded-full border border-brand-purple/25"
+        />
+        <span className="absolute inset-3 rounded-full border-2 border-dashed border-brand-lavender/85" />
+        <span className="relative h-[84px] w-[84px] overflow-hidden rounded-full border-[5px] border-white bg-white shadow-[0_18px_38px_rgba(108,92,231,0.22)]">
+          <img src={avatarUrl} alt="" className="h-full w-full object-contain object-bottom" />
+        </span>
+      </motion.div>
 
       <div className="mx-4 bg-white rounded-3xl p-4 shadow-soft border border-white">
         <div className="text-[10px] font-bold tracking-[0.2em] text-brand-mute">
           CURRENT HELP LEVEL
         </div>
-        <div className="mt-2 flex items-center justify-between gap-3">
-          <div>
-            <div className="text-[22px] font-bold gradient-brand bg-clip-text text-transparent">
-              Assistant
-            </div>
-            <div className="text-[11px] text-brand-mute">I can draft. You approve every send.</div>
+        <div className="mt-2">
+          <div className="text-[22px] font-bold gradient-brand bg-clip-text text-transparent">
+            {aiMode}
           </div>
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-            className="relative w-20 h-20 rounded-full border-2 border-dashed border-brand-lavender flex items-center justify-center"
-          >
-            <motion.div
-              animate={{ rotate: -360 }}
-              transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-              className="h-16 w-16 overflow-hidden rounded-full border border-white bg-white/88 shadow-glow"
-            >
-              <img src={avatarUrl} alt="" className="h-full w-full object-contain object-bottom" />
-            </motion.div>
-          </motion.div>
+          <div className="mt-1 text-[11px] text-brand-mute">{activeMode.summary}</div>
         </div>
         <div className="mt-3 flex items-center gap-2">
           <button className="flex-1 py-2.5 rounded-2xl bg-brand-ink text-white text-[12px] font-bold">
             Change Mode
           </button>
           <div className="px-3 py-1.5 rounded-full bg-brand-bg text-[10px] font-bold text-brand-purple flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-mint animate-pulse" /> Assistant
+            <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${activeMode.dot}`} />
+            {aiMode}
           </div>
         </div>
         <button
@@ -110,42 +165,6 @@ export function F36_AIControlCenter() {
           <Gift size={14} />
           Enter Frame Shop
         </button>
-      </div>
-
-      <div className="px-5 mt-5 text-[15px] font-bold">Custom Mode</div>
-      <div className="mx-4 mt-2 bg-white rounded-2xl p-3.5 shadow-soft border border-white">
-        <div className="text-[12px] font-bold">AI Communication Influence Level</div>
-        <div className="mt-3 grid grid-cols-4 gap-2">
-          {modes.map((item, index) => (
-            <button
-              key={item.t}
-              type="button"
-              onClick={() => setMode(index)}
-              className="flex flex-col items-center gap-1.5"
-            >
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                  index === mode ? "gradient-brand shadow-glow" : "bg-brand-bg"
-                }`}
-              >
-                <item.Icon
-                  size={16}
-                  className={index === mode ? "text-white" : "text-brand-mute"}
-                />
-              </div>
-              <div
-                className={`text-[10px] font-bold ${
-                  index === mode ? "text-brand-purple" : "text-brand-mute"
-                }`}
-              >
-                {item.t}
-              </div>
-            </button>
-          ))}
-        </div>
-        <div className="mt-3 text-[10px] text-brand-mute text-center">
-          Draft means I can write options. Nothing is sent until you choose it.
-        </div>
       </div>
 
       <div className="px-5 mt-5 text-[15px] font-bold">Basic Shaping</div>
@@ -206,6 +225,20 @@ export function F36_AIControlCenter() {
           Reshape avatar <Plus size={14} />
         </button>
       </div>
+
+      <button
+        type="button"
+        data-prototype-target="3:18"
+        className="mx-4 mt-4 flex w-[calc(100%-2rem)] items-center justify-between rounded-3xl border border-white bg-white/82 px-4 py-3.5 text-left shadow-soft backdrop-blur-xl"
+      >
+        <span>
+          <span className="block text-[13px] font-bold">Context Rules</span>
+          <span className="mt-0.5 block text-[10px] text-brand-mute">
+            See when I step back to keep sensitive moments human-led.
+          </span>
+        </span>
+        <ChevronRight size={16} className="text-brand-purple" />
+      </button>
     </div>
   );
 }

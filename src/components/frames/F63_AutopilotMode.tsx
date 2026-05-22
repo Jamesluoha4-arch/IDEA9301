@@ -1,11 +1,13 @@
 ﻿import { motion } from "framer-motion";
-import { ArrowLeft, Bot, Zap, Send, Clock, Bell, Info } from "lucide-react";
+import { ArrowLeft, Zap, Send, Clock, Bell, Info } from "lucide-react";
 
 export function F63_AutopilotMode() {
   return (
     <div className="relative w-full h-full pt-12 pb-16 overflow-y-auto font-sans text-brand-ink gradient-brand-soft">
       <div className="px-5 pt-3 pb-2 flex items-center gap-3">
-        <ArrowLeft size={18} className="text-brand-purple" />
+        <button type="button" data-prototype-back="3:0" className="flex items-center">
+          <ArrowLeft size={18} className="text-brand-purple" />
+        </button>
         <div className="flex-1 text-center text-[15px] font-bold">Auto-pilot</div>
         <div className="w-5" />
       </div>
@@ -17,8 +19,8 @@ export function F63_AutopilotMode() {
               <div key={i} className="absolute left-1/2 top-1/2 w-2 h-2 rounded bg-brand-peach/70" style={{ transform: `rotate(${deg}deg) translateY(-86px)` }} />
             ))}
           </motion.div>
-          <motion.div animate={{ scale: [1, 1.06, 1] }} transition={{ duration: 1.5, repeat: Infinity }} className="w-20 h-20 rounded-3xl gradient-pink-peach flex items-center justify-center shadow-glow">
-            <Bot size={36} className="text-white" />
+          <motion.div animate={{ scale: [1, 1.06, 1] }} transition={{ duration: 1.5, repeat: Infinity }} className="w-24 h-24 rounded-[30px] gradient-pink-peach flex items-center justify-center shadow-glow">
+            <Zap size={42} className="text-white" />
           </motion.div>
         </div>
         <div className="mt-4 px-3 py-1.5 rounded-full gradient-pink-peach text-white text-[11px] font-bold shadow-glow flex items-center gap-1.5">

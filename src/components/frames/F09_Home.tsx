@@ -373,7 +373,7 @@ function SideMenu({
   const [activeSheet, setActiveSheet] = useState<string | null>(null);
   const items = [
     { Icon: IdCard, label: "Personal Card" },
-    { Icon: BriefcaseBusiness, label: "Tasks" },
+    { Icon: BriefcaseBusiness, label: "Challenge" },
     { Icon: Search, label: "Search" },
     { Icon: QrCode, label: "Scan" },
     { Icon: MessageSquareWarning, label: "Feedback" },
@@ -470,10 +470,10 @@ function MenuBottomSheet({
       action: "Save Card",
       Icon: IdCard,
     },
-    Tasks: {
-      title: "Tasks",
-      subtitle: "Your gentle social tasks for today.",
-      action: "Start Task",
+    Challenge: {
+      title: "Challenge",
+      subtitle: "Your gentle social challenge for today.",
+      action: "Start Challenge",
       Icon: BriefcaseBusiness,
     },
     Search: {
@@ -553,7 +553,7 @@ function MenuBottomSheet({
               <Search size={19} className="text-brand-purple" />
               <div className="text-[14px] text-brand-mute">Search people, spaces, or drafts...</div>
             </div>
-          ) : active === "Tasks" ? (
+          ) : active === "Challenge" ? (
             <div className="w-full rounded-[28px] border border-brand-bg bg-brand-bg/50 p-4 space-y-3">
               {["Say hi to one new coworker", "Review one AI draft", "Join a community space"].map(
                 (task) => (
@@ -801,6 +801,20 @@ export function FloatingBottomNav({ active }: { active: string }) {
         aria-label="Second Self"
         data-prototype-target="3:0"
       >
+        {isAvatarActive && (
+          <>
+            <motion.span
+              className="absolute -inset-2 rounded-full border border-[#a78bfa]/55"
+              animate={{ scale: [0.9, 1.14, 0.9], opacity: [0.65, 0.05, 0.65] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.span
+              className="absolute inset-1 rounded-full bg-gradient-to-br from-[#a78bfa]/20 via-white/12 to-[#f6b4db]/22 blur-md"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 9, repeat: Infinity, ease: "linear" }}
+            />
+          </>
+        )}
         {avatarBubble && (
           <motion.span
             initial={{ opacity: 0, y: 8, scale: 0.95 }}

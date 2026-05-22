@@ -1,12 +1,14 @@
 ﻿import { motion } from "framer-motion";
-import { ArrowLeft, Bot, Edit3, Wand2, CheckSquare, Heart, Info } from "lucide-react";
+import { ArrowLeft, Edit3, Wand2, CheckSquare, Heart, Info, ShieldCheck } from "lucide-react";
 import { BottomNav } from "./F09_Home";
 
 export function F62_AssistantMode() {
   return (
     <div className="relative w-full h-full pt-12 pb-16 overflow-y-auto font-sans text-brand-ink gradient-brand-soft">
       <div className="px-5 pt-3 pb-2 flex items-center gap-3">
-        <ArrowLeft size={18} className="text-brand-purple" />
+        <button type="button" data-prototype-back="3:0" className="flex items-center">
+          <ArrowLeft size={18} className="text-brand-purple" />
+        </button>
         <div className="flex-1 text-center text-[15px] font-bold">Assistant</div>
         <div className="w-5" />
       </div>
@@ -29,9 +31,9 @@ export function F62_AssistantMode() {
           <motion.div
             animate={{ y: [0, -4, 0] }}
             transition={{ duration: 2.4, repeat: Infinity }}
-            className="w-20 h-20 rounded-3xl gradient-brand flex items-center justify-center shadow-glow"
+            className="w-24 h-24 rounded-[30px] bg-gradient-to-br from-brand-sky to-brand-mint flex items-center justify-center shadow-glow"
           >
-            <Bot size={36} className="text-white" />
+            <ShieldCheck size={40} className="text-white" />
           </motion.div>
         </div>
         <div className="mt-4 px-3 py-1.5 rounded-full bg-white border border-brand-bg text-[11px] font-bold text-brand-purple shadow-soft flex items-center gap-1.5">

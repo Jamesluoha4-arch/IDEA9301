@@ -16,6 +16,20 @@ type Rule = {
 
 const key = (flow: number, step: number) => `${flow}:${step}` as NodeKey;
 const home = key(0, 7);
+const aiModeStorageKey = "second-self.ai-control-mode";
+
+type AiMode = "Observer" | "Co-pilot" | "Assistant" | "Auto-pilot";
+
+function readSelectedAiMode(): AiMode {
+  const saved =
+    typeof window === "undefined" ? "" : window.sessionStorage.getItem(aiModeStorageKey);
+  return saved === "Observer" ||
+    saved === "Co-pilot" ||
+    saved === "Assistant" ||
+    saved === "Auto-pilot"
+    ? saved
+    : "Co-pilot";
+}
 
 const graph: Record<NodeKey, Rule[]> = {
   [key(0, 0)]: [{ match: "GET STARTED", target: key(0, 1) }],
@@ -99,6 +113,7 @@ const graph: Record<NodeKey, Rule[]> = {
   [key(3, 0)]: [
     { match: "Continue", target: key(6, 0) },
     { match: "Change Mode", target: key(3, 3) },
+    { match: "Context Rules", target: key(3, 18) },
     { match: "View details", target: key(3, 8) },
     { match: "Manage all", target: key(3, 15) },
     { match: "HOME", target: home },
@@ -338,7 +353,8 @@ function activeTabFor(node: NodeKey) {
   if (flowIdx === 1 && [1, 2, 3, 4, 5, 6].includes(stepIdx)) return "CHAT";
   if (flowIdx === 7 && [0, 1, 2, 3, 4].includes(stepIdx)) return "COMMUNITY";
   if (flowIdx === 7 && stepIdx >= 5) return "PRESENCE";
-  if (flowIdx === 3) return "SETTINGS";
+  if (flowIdx === 3 && stepIdx === 17) return "SETTINGS";
+  if (flowIdx === 3) return "AI";
   if (flowIdx === 5 && [0, 1].includes(stepIdx)) return "CHAT";
   if (flowIdx === 4) return "SETTINGS";
   if (flowIdx === 6 && [8, 9].includes(stepIdx)) return "SETTINGS";
@@ -348,9 +364,7 @@ function activeTabFor(node: NodeKey) {
 export function FlowPlayer({ onOpenGallery }: Props) {
   const [node, setNode] = useState<NodeKey>(key(0, 0));
   const [history, setHistory] = useState<NodeKey[]>([]);
-  const [selectedAiMode, setSelectedAiMode] = useState<
-    "Observer" | "Co-pilot" | "Assistant" | "Auto-pilot"
-  >("Co-pilot");
+  const [selectedAiMode, setSelectedAiMode] = useState<AiMode>(() => readSelectedAiMode());
   const [direction, setDirection] = useState<1 | -1>(1);
   const [tapPulse, setTapPulse] = useState(false);
   const [flowIdx, stepIdx] = node.split(":").map(Number);
@@ -508,6 +522,19 @@ export function FlowPlayer({ onOpenGallery }: Props) {
         navigate(targetByMode[selectedAiMode]);
         return;
       }
+    }
+
+    if (node === key(3, 4) && normalizedText.includes("switch to observer")) {
+      window.sessionStorage.setItem(aiModeStorageKey, "Observer");
+    }
+    if (node === key(3, 5) && normalizedText.includes("switch to co-pilot")) {
+      window.sessionStorage.setItem(aiModeStorageKey, "Co-pilot");
+    }
+    if (node === key(3, 6) && normalizedText.includes("switch to assistant")) {
+      window.sessionStorage.setItem(aiModeStorageKey, "Assistant");
+    }
+    if (node === key(3, 7) && normalizedText.includes("switch to auto-pilot")) {
+      window.sessionStorage.setItem(aiModeStorageKey, "Auto-pilot");
     }
 
     if (node === key(3, 15) && normalizedText.includes("apply changes")) {

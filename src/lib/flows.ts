@@ -45,6 +45,7 @@ import { F60_ObserverMode } from "@/components/frames/F60_ObserverMode";
 import { F61_CopilotModeDetail } from "@/components/frames/F61_CopilotModeDetail";
 import { F62_AssistantMode } from "@/components/frames/F62_AssistantMode";
 import { F63_AutopilotMode } from "@/components/frames/F63_AutopilotMode";
+import { F71_ContextRules } from "@/components/frames/F71_ContextRules";
 import {
   F64_InfluenceOff,
   F65_InfluenceSuggest,
@@ -149,6 +150,7 @@ export const flows: Flow[] = [
         Component: F41_CopilotMode,
       },
       { label: "Settings", hint: "Account / help / diagnostics", Component: F83_Settings },
+      { label: "Context Rules", hint: "Sensitive moments stay human-led", Component: F71_ContextRules },
     ],
   },
   {

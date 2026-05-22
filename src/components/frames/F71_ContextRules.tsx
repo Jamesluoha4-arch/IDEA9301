@@ -11,7 +11,9 @@ export function F71_ContextRules() {
   return (
     <div className="relative w-full h-full pt-12 pb-12 overflow-y-auto font-sans text-brand-ink gradient-brand-soft">
       <div className="px-5 pt-3 pb-2 flex items-center gap-3">
-        <ChevronLeft size={18} className="text-brand-purple"/>
+        <button type="button" data-prototype-back="3:0" className="flex items-center">
+          <ChevronLeft size={18} className="text-brand-purple"/>
+        </button>
         <div className="flex-1 text-center text-[15px] font-bold">Context Rules</div>
         <div className="w-5"/>
       </div>

@@ -58,7 +58,7 @@ const graph: Record<NodeKey, Rule[]> = {
     { match: ["COMMUNITY", "SPACE", "绀惧尯"], target: key(7, 0) },
     { match: "AI", target: key(3, 0) },
     { match: "PRESENCE", target: key(7, 5) },
-    { match: ["SETTINGS", "PROFILE"], target: key(3, 18) },
+    { match: ["SETTINGS", "PROFILE"], target: key(3, 17) },
   ],
 
   [key(1, 1)]: [
@@ -282,8 +282,8 @@ const tabTargets: Record<string, NodeKey> = {
   social: key(1, 1),
   ai: key(3, 0),
   presence: key(7, 5),
-  settings: key(3, 18),
-  profile: key(3, 18),
+  settings: key(3, 17),
+  profile: key(3, 17),
 };
 
 function tabFromText(text: string) {

@@ -135,10 +135,13 @@ function readCustomPosts(spaceKey: SpaceKey): SpacePostData[] {
   }
 }
 
+function composerSeenKey(spaceKey: SpaceKey) {
+  return `second-self.space-intro-seen.${spaceKey}`;
+}
+
 export function F25_SpacesFeed() {
   const [showComposer, setShowComposer] = useState(false);
   const [composerGone, setComposerGone] = useState(false);
-  const [publishedStarter, setPublishedStarter] = useState<SpacePostData | null>(null);
   const [mode, setMode] = useState<FeedMode>("Friends");
   const [filterOpen, setFilterOpen] = useState(false);
   const [customPosts, setCustomPosts] = useState<SpacePostData[]>([]);
@@ -151,14 +154,19 @@ export function F25_SpacesFeed() {
   useEffect(() => {
     setShowComposer(false);
     setComposerGone(false);
-    setPublishedStarter(null);
     setCustomPosts(readCustomPosts(spaceKey));
-    const timer = window.setTimeout(() => setShowComposer(true), 1000);
+    if (window.sessionStorage.getItem(composerSeenKey(spaceKey))) return;
+    const timer = window.setTimeout(() => {
+      window.sessionStorage.setItem(composerSeenKey(spaceKey), "true");
+      setShowComposer(true);
+    }, 1000);
     return () => window.clearTimeout(timer);
   }, [spaceKey]);
 
+  const closeComposer = () => setComposerGone(true);
+
   const approve = () => {
-    setPublishedStarter({
+    const starterPost: SpacePostData = {
       ...space,
       id: "starter-post",
       user: userName,
@@ -169,12 +177,14 @@ export function F25_SpacesFeed() {
       tags: ["AI-created", "Approved opening"],
       time: "JUST NOW",
       starter,
-    });
-    setComposerGone(true);
+    };
+    const nextPosts = [starterPost, ...customPosts.filter((post) => post.id !== "starter-post")];
+    setCustomPosts(nextPosts);
+    window.sessionStorage.setItem(`second-self.posts.${spaceKey}`, JSON.stringify(nextPosts));
+    closeComposer();
   };
 
   const friendPosts: SpacePostData[] = [
-    ...(publishedStarter ? [publishedStarter] : []),
     ...customPosts,
     space,
     {
@@ -190,150 +200,153 @@ export function F25_SpacesFeed() {
   const posts = mode === "Friends" ? friendPosts : curatedPosts;
 
   return (
-    <div className="relative w-full h-full pt-12 pb-24 overflow-y-auto font-sans text-brand-ink gradient-brand-soft prototype-scroll">
-      <div className="px-4 py-3 flex items-center gap-3 glass border-b border-brand-bg">
-        <button
-          type="button"
-          data-prototype-back="7:0"
-          className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center"
-        >
-          <ArrowLeft size={15} className="text-brand-purple" />
-        </button>
-        <label className="flex-1 h-9 rounded-full bg-white/90 shadow-sm border border-white px-3 flex items-center gap-2">
-          <Search size={14} className="text-brand-mute" />
-          <input
-            className="w-full bg-transparent outline-none text-[12px]"
-            placeholder={`Search ${space.name}`}
-          />
-        </label>
-        <button
-          data-prototype-target="7:3"
-          className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center"
-        >
-          <Info size={14} className="text-brand-purple" />
-        </button>
-      </div>
-
-      <div className="px-5 pt-4">
-        <h1 className="text-[22px] font-bold">{space.name} Space</h1>
-        <p className="mt-1 text-[12px] text-brand-mute">
-          A curated room built from approved interests and transparent identity labels.
-        </p>
-
-        <div className="mt-4 flex items-center gap-2">
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setFilterOpen((value) => !value)}
-              className="rounded-full gradient-brand px-4 py-2 text-[11px] font-bold text-white shadow-soft flex items-center gap-1.5"
-            >
-              {mode}
-              <ChevronDown size={12} />
-            </button>
-            <AnimatePresence>
-              {filterOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -6, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -4, scale: 0.96 }}
-                  className="absolute left-0 top-10 z-40 w-28 rounded-2xl bg-white shadow-soft border border-brand-bg p-1"
-                >
-                  {(["Friends", "Featured"] as FeedMode[]).map((item) => (
-                    <button
-                      key={item}
-                      type="button"
-                      onClick={() => {
-                        setMode(item);
-                        setFilterOpen(false);
-                      }}
-                      className={`w-full rounded-xl px-3 py-2 text-left text-[11px] font-bold ${
-                        mode === item ? "bg-brand-bg text-brand-purple" : "text-brand-ink"
-                      }`}
-                    >
-                      {item}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-          <button className="rounded-full bg-white/80 px-4 py-2 text-[11px] font-bold text-brand-mute shadow-sm">
-            Pending
+    <div className="relative w-full h-full overflow-hidden font-sans text-brand-ink gradient-brand-soft">
+      <div className="h-full pt-12 pb-24 overflow-y-auto prototype-scroll">
+        <div className="px-4 py-3 flex items-center gap-3 glass border-b border-brand-bg">
+          <button
+            type="button"
+            data-prototype-back="7:0"
+            className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center"
+          >
+            <ArrowLeft size={15} className="text-brand-purple" />
           </button>
-          <button className="rounded-full bg-white/80 px-4 py-2 text-[11px] font-bold text-brand-mute shadow-sm">
-            Mine
-          </button>
-          <button className="ml-auto h-9 w-9 rounded-full bg-white/80 shadow-sm flex items-center justify-center">
-            <Search size={15} className="text-brand-mint" />
+          <label className="flex-1 h-9 rounded-full bg-white/90 shadow-sm border border-white px-3 flex items-center gap-2">
+            <Search size={14} className="text-brand-mute" />
+            <input
+              className="w-full bg-transparent outline-none text-[12px]"
+              placeholder={`Search ${space.name}`}
+            />
+          </label>
+          <button
+            data-prototype-target="7:3"
+            className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center"
+          >
+            <Info size={14} className="text-brand-purple" />
           </button>
         </div>
-      </div>
 
-      <AnimatePresence>
-        {showComposer && !composerGone && mode === "Friends" && (
-          <motion.section
-            initial={{ opacity: 0, y: -18 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -14 }}
-            className="mx-5 mt-4 rounded-3xl border border-white/80 bg-white/78 p-4 shadow-soft backdrop-blur-2xl"
-          >
-            <div className="flex items-center gap-3">
-              <span className="h-11 w-11 rounded-2xl bg-white shadow-sm overflow-hidden flex items-center justify-center shrink-0">
-                <img
-                  src={userAvatar}
-                  alt=""
-                  className="h-[125%] w-[125%] object-cover object-top"
-                />
-              </span>
-              <div className="flex-1">
-                <div className="text-[13px] font-bold">
-                  Welcome to {space.name} Space, {userName}
-                </div>
-                <div className="text-[10px] text-brand-mute">
-                  Let&apos;s begin with this prepared opening.
+        <div className="px-5 pt-4">
+          <h1 className="text-[22px] font-bold">{space.name} Space</h1>
+          <p className="mt-1 text-[12px] text-brand-mute">
+            A curated room built from approved interests and transparent identity labels.
+          </p>
+
+          <div className="mt-4 flex items-center gap-2">
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setFilterOpen((value) => !value)}
+                className="rounded-full gradient-brand px-4 py-2 text-[11px] font-bold text-white shadow-soft flex items-center gap-1.5"
+              >
+                {mode}
+                <ChevronDown size={12} />
+              </button>
+              <AnimatePresence>
+                {filterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -4, scale: 0.96 }}
+                    className="absolute left-0 top-10 z-40 w-28 rounded-2xl bg-white shadow-soft border border-brand-bg p-1"
+                  >
+                    {(["Friends", "Featured"] as FeedMode[]).map((item) => (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => {
+                          setMode(item);
+                          setFilterOpen(false);
+                        }}
+                        className={`w-full rounded-xl px-3 py-2 text-left text-[11px] font-bold ${
+                          mode === item ? "bg-brand-bg text-brand-purple" : "text-brand-ink"
+                        }`}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            <button className="rounded-full bg-white/80 px-4 py-2 text-[11px] font-bold text-brand-mute shadow-sm">
+              Pending
+            </button>
+            <button className="rounded-full bg-white/80 px-4 py-2 text-[11px] font-bold text-brand-mute shadow-sm">
+              Mine
+            </button>
+            <button className="ml-auto h-9 w-9 rounded-full bg-white/80 shadow-sm flex items-center justify-center">
+              <Search size={15} className="text-brand-mint" />
+            </button>
+          </div>
+        </div>
+
+        <AnimatePresence>
+          {showComposer && !composerGone && mode === "Friends" && (
+            <motion.section
+              initial={{ opacity: 0, y: -18 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -14 }}
+              className="mx-5 mt-4 rounded-3xl border border-white/80 bg-white/78 p-4 shadow-soft backdrop-blur-2xl"
+            >
+              <div className="flex items-center gap-3">
+                <span className="h-11 w-11 rounded-2xl bg-white shadow-sm overflow-hidden flex items-center justify-center shrink-0">
+                  <img
+                    src={userAvatar}
+                    alt=""
+                    className="h-[125%] w-[125%] object-cover object-top"
+                  />
+                </span>
+                <div className="flex-1">
+                  <div className="text-[13px] font-bold">
+                    Welcome to {space.name} Space, {userName}
+                  </div>
+                  <div className="text-[10px] text-brand-mute">
+                    Let&apos;s begin with this prepared opening.
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="mt-3 rounded-2xl bg-brand-bg/70 p-3 text-[12px] leading-[17px]">
-              {starter}
-            </div>
-            <div className="mt-3 flex gap-2">
-              <button
-                type="button"
-                onClick={() => setComposerGone(true)}
-                className="flex-1 rounded-full bg-white py-3 text-[12px] font-bold text-brand-mute shadow-sm"
-              >
-                Cancel post
-              </button>
-              <button
-                type="button"
-                className="relative flex-1 overflow-hidden rounded-full gradient-brand py-3 text-[12px] font-bold text-white shadow-soft"
-              >
-                <motion.span
-                  className="absolute inset-y-0 left-0 bg-brand-ink/35"
-                  initial={{ width: "0%" }}
-                  animate={{ width: "100%" }}
-                  transition={{ duration: 2.2, ease: "easeInOut" }}
-                  onAnimationComplete={approve}
-                />
-                <span className="relative">Approved</span>
-              </button>
-            </div>
-          </motion.section>
-        )}
-      </AnimatePresence>
-
-      <div className="px-4 mt-4 space-y-3 relative">
-        <AnimatePresence initial={false}>
-          {posts.map((post, index) => (
-            <SpacePost key={post.id ?? `${post.key}-${index}`} space={post} index={index} />
-          ))}
+              <div className="mt-3 rounded-2xl bg-brand-bg/70 p-3 text-[12px] leading-[17px]">
+                {starter}
+              </div>
+              <div className="mt-3 flex gap-2">
+                <button
+                  type="button"
+                  onClick={closeComposer}
+                  className="flex-1 rounded-full bg-white py-3 text-[12px] font-bold text-brand-mute shadow-sm"
+                >
+                  Cancel post
+                </button>
+                <button
+                  type="button"
+                  onClick={approve}
+                  className="relative flex-1 overflow-hidden rounded-full gradient-brand py-3 text-[12px] font-bold text-white shadow-soft"
+                >
+                  <motion.span
+                    className="absolute inset-y-0 left-0 bg-brand-ink/35"
+                    initial={{ width: "0%" }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 2.2, ease: "easeInOut" }}
+                    onAnimationComplete={closeComposer}
+                  />
+                  <span className="relative">Approved</span>
+                </button>
+              </div>
+            </motion.section>
+          )}
         </AnimatePresence>
+
+        <div className="px-4 mt-4 space-y-3 relative">
+          <AnimatePresence initial={false}>
+            {posts.map((post, index) => (
+              <SpacePost key={post.id ?? `${post.key}-${index}`} space={post} index={index} />
+            ))}
+          </AnimatePresence>
+        </div>
       </div>
 
       <button
         data-prototype-target="7:2"
-        className="absolute bottom-24 right-5 h-14 w-14 rounded-full bg-gradient-to-br from-brand-mint to-brand-sky text-white shadow-glow flex items-center justify-center z-30 border-[4px] border-white/70"
+        className="absolute bottom-[94px] right-5 h-14 w-14 rounded-full bg-gradient-to-br from-brand-mint to-brand-sky text-white shadow-glow flex items-center justify-center z-30 border-[4px] border-white/70"
       >
         <Edit3 size={22} />
       </button>

@@ -30,7 +30,7 @@ export function F27_NewSpace() {
       user: userName,
       avatar: readGeneratedAvatar() || defaultAvatarUrl,
       auth: "AI Second Self" as const,
-      cover: imageUrl ? ("photo" as const) : ("design" as const),
+      cover: imageUrl ? ("photo" as const) : ("none" as const),
       imageUrl: imageUrl || undefined,
       body:
         text.trim() || `Hi, I am ${userName}. I am sharing a small observation from this space.`,

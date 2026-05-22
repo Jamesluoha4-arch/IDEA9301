@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Ban, Lightbulb, Mic, PenLine, Plus, Send, Settings } from "lucide-react";
+import { Ban, Gift, Lightbulb, PenLine, Plus, Send, Settings } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
 
@@ -31,7 +31,6 @@ function readShapingProfile(): ShapingProfile {
 
 export function F36_AIControlCenter() {
   const [mode, setMode] = useState(2);
-  const [adaptive, setAdaptive] = useState(true);
   const [savedProfile, setSavedProfile] = useState<ShapingProfile>(() => readShapingProfile());
   const [draftProfile, setDraftProfile] = useState<ShapingProfile>(() => readShapingProfile());
   const avatarUrl = readGeneratedAvatar() || defaultAvatarUrl;
@@ -103,23 +102,14 @@ export function F36_AIControlCenter() {
             <span className="w-1.5 h-1.5 rounded-full bg-brand-mint animate-pulse" /> Assistant
           </div>
         </div>
-        <div className="mt-3 flex items-center gap-2 pt-3 border-t border-brand-bg">
-          <span className="text-[11px] text-brand-mute flex-1">Adaptive mode</span>
-          <button
-            type="button"
-            onClick={() => setAdaptive(!adaptive)}
-            className={`relative w-10 h-6 rounded-full transition-colors ${
-              adaptive ? "gradient-brand" : "bg-brand-bg"
-            }`}
-          >
-            <motion.div
-              layout
-              className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow ${
-                adaptive ? "right-0.5" : "left-0.5"
-              }`}
-            />
-          </button>
-        </div>
+        <button
+          type="button"
+          data-prototype-target="6:8"
+          className="mt-2.5 flex w-full items-center justify-center gap-2 rounded-2xl border border-brand-lavender/25 bg-gradient-to-r from-brand-bg via-white to-brand-pink/15 py-2.5 text-[12px] font-bold text-brand-purple shadow-sm"
+        >
+          <Gift size={14} />
+          Enter Frame Shop
+        </button>
       </div>
 
       <div className="px-5 mt-5 text-[15px] font-bold">Custom Mode</div>
@@ -215,24 +205,6 @@ export function F36_AIControlCenter() {
         >
           Reshape avatar <Plus size={14} />
         </button>
-      </div>
-
-      <div className="mx-4 mt-3 bg-white rounded-2xl p-3.5 shadow-soft border border-white">
-        <div className="text-center text-[12px] font-bold mb-3">Record Your Voice</div>
-        <div className="space-y-2">
-          {["Voice", "Voice self-introduction"].map((voice) => (
-            <button
-              key={voice}
-              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-brand-bg/50"
-            >
-              <span className="text-[11px] flex items-center gap-2">
-                <Mic size={12} className="text-brand-purple" />
-                {voice}
-              </span>
-              <Plus size={14} className="text-brand-purple" />
-            </button>
-          ))}
-        </div>
       </div>
     </div>
   );

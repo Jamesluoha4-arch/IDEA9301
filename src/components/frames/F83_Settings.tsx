@@ -7,6 +7,7 @@ import {
   ChevronRight,
   Copy,
   FileText,
+  Gift,
   Globe2,
   Lock,
   LogOut,
@@ -32,12 +33,29 @@ import { readGeneratedAvatar } from "@/lib/avatar-generation";
 
 type Panel = "settings" | "feedback" | "network";
 
+type ShapingProfile = {
+  name: string;
+  id: string;
+  intro: string;
+};
+
 const rowIconClass =
   "h-8 w-8 rounded-full bg-gradient-to-br from-white to-[#f1ecff] border border-white shadow-sm flex items-center justify-center text-brand-purple";
 
 function getUserName() {
   if (typeof window === "undefined") return "David";
   return window.sessionStorage.getItem("second-self.user-name") || "David";
+}
+
+function readShapingProfile(): ShapingProfile {
+  if (typeof window === "undefined") {
+    return { name: "Sabrina", id: "gakajo", intro: "" };
+  }
+  return {
+    name: window.localStorage.getItem("second-self-shaping-name") || "Sabrina",
+    id: window.localStorage.getItem("second-self-shaping-id") || "gakajo",
+    intro: window.localStorage.getItem("second-self-shaping-intro") || "",
+  };
 }
 
 function SettingsRow({
@@ -106,8 +124,35 @@ function StatusLine({ title, meta }: { title: string; meta: string }) {
 export function F83_Settings() {
   const [panel, setPanel] = useState<Panel>("settings");
   const [showLogout, setShowLogout] = useState(false);
+  const [savedProfile, setSavedProfile] = useState<ShapingProfile>(() => readShapingProfile());
+  const [draftProfile, setDraftProfile] = useState<ShapingProfile>(() => readShapingProfile());
   const userName = useMemo(getUserName, []);
   const avatar = readGeneratedAvatar() || defaultAvatarUrl;
+  const hasProfileChanges =
+    savedProfile.name !== draftProfile.name ||
+    savedProfile.id !== draftProfile.id ||
+    savedProfile.intro !== draftProfile.intro;
+
+  const updateProfile = (field: keyof ShapingProfile, value: string) => {
+    setDraftProfile((profile) => ({ ...profile, [field]: value }));
+  };
+
+  const saveProfile = () => {
+    const nextProfile = {
+      name: draftProfile.name.trim() || savedProfile.name,
+      id: draftProfile.id.trim() || savedProfile.id,
+      intro: draftProfile.intro.trim(),
+    };
+    setSavedProfile(nextProfile);
+    setDraftProfile(nextProfile);
+    window.localStorage.setItem("second-self-shaping-name", nextProfile.name);
+    window.localStorage.setItem("second-self-shaping-id", nextProfile.id);
+    window.localStorage.setItem("second-self-shaping-intro", nextProfile.intro);
+  };
+
+  const prepareReshape = () => {
+    window.sessionStorage.setItem("second-self.face-scan-return", "3:0");
+  };
 
   if (panel === "network") return <NetworkDiagnostics onBack={() => setPanel("settings")} />;
   if (panel === "feedback")
@@ -144,6 +189,82 @@ export function F83_Settings() {
           <SettingsRow icon={Bell} title="Notifications" />
           <SettingsRow icon={Lock} title="Minor Mode" />
           <SettingsRow icon={Vibrate} title="Haptic Feedback" toggle />
+        </SettingsSection>
+
+        <SettingsSection title="Second Self">
+          <div className="bg-white/88 px-4 py-4">
+            <div className="text-center text-[12px] font-bold mb-3">Edit your Second Self</div>
+            <div className="space-y-2.5">
+              <label className="block rounded-2xl bg-brand-bg/55 px-3 py-2.5">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-brand-mute">
+                  Name
+                </span>
+                <input
+                  value={draftProfile.name}
+                  onChange={(event) => updateProfile("name", event.target.value)}
+                  className="mt-1 w-full bg-transparent text-[13px] font-semibold outline-none placeholder:text-brand-mute"
+                  placeholder="Name your Second Self"
+                />
+              </label>
+              <label className="block rounded-2xl bg-brand-bg/55 px-3 py-2.5">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-brand-mute">
+                  ID
+                </span>
+                <input
+                  value={draftProfile.id}
+                  onChange={(event) => updateProfile("id", event.target.value)}
+                  className="mt-1 w-full bg-transparent text-[13px] font-semibold outline-none placeholder:text-brand-mute"
+                  placeholder="Choose an ID"
+                />
+              </label>
+              <label className="block rounded-2xl bg-brand-bg/55 px-3 py-2.5">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-brand-mute">
+                  Personal intro
+                </span>
+                <textarea
+                  value={draftProfile.intro}
+                  onChange={(event) => updateProfile("intro", event.target.value)}
+                  className="mt-1 min-h-16 w-full resize-none bg-transparent text-[12px] leading-[17px] outline-none placeholder:text-brand-mute"
+                  placeholder="Describe how your Second Self should introduce itself."
+                />
+              </label>
+            </div>
+            {hasProfileChanges && (
+              <motion.button
+                type="button"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                onClick={saveProfile}
+                className="mt-3 w-full rounded-2xl gradient-brand py-3 text-[12px] font-bold text-white shadow-soft"
+              >
+                Save
+              </motion.button>
+            )}
+            <button
+              type="button"
+              data-prototype-target="0:5"
+              onPointerDown={prepareReshape}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-brand-lavender/30 gradient-brand-soft py-2.5 text-[12px] font-bold text-brand-purple"
+            >
+              Reshape avatar <Plus size={14} />
+            </button>
+          </div>
+          <button
+            type="button"
+            data-prototype-target="3:10"
+            className="flex w-full items-center gap-3 border-t border-brand-bg/80 bg-white/88 px-4 py-3 text-left"
+          >
+            <span className="h-8 w-8 rounded-full bg-gradient-to-br from-white to-[#f1ecff] border border-white shadow-sm flex items-center justify-center text-brand-purple">
+              <Gift size={17} />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[14px] font-bold text-brand-ink">Context Rules</span>
+              <span className="mt-0.5 block text-[10px] text-brand-mute">
+                See when I step back to keep sensitive moments human-led.
+              </span>
+            </span>
+            <ChevronRight size={17} className="text-brand-mute/70" />
+          </button>
         </SettingsSection>
 
         <SettingsSection title="Help Center">

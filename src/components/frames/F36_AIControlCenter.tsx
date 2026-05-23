@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Bot, ChevronRight, Delete, Gift, Plus, Send, Shield, UserRound } from "lucide-react";
+import { Bot, Delete, Gift, Send, Shield, UserRound } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
 import {
   AvatarFrameEffect,
@@ -74,8 +74,7 @@ function readShapingProfile(): ShapingProfile {
 export function F36_AIControlCenter() {
   const [aiMode] = useState<AiMode>(() => readAiMode());
   const [challengeReady, setChallengeReady] = useState(false);
-  const [savedProfile, setSavedProfile] = useState<ShapingProfile>(() => readShapingProfile());
-  const [draftProfile, setDraftProfile] = useState<ShapingProfile>(() => readShapingProfile());
+  const [savedProfile] = useState<ShapingProfile>(() => readShapingProfile());
   const [avatarFrame, setAvatarFrame] = useState(readAppliedAvatarFrame);
   const [personaInput, setPersonaInput] = useState("");
   const [personaKeyboardOpen, setPersonaKeyboardOpen] = useState(false);
@@ -87,10 +86,6 @@ export function F36_AIControlCenter() {
   ]);
   const avatarUrl = readGeneratedAvatar() || defaultAvatarUrl;
   const activeMode = modeDetails[aiMode];
-  const hasProfileChanges =
-    savedProfile.name !== draftProfile.name ||
-    savedProfile.id !== draftProfile.id ||
-    savedProfile.intro !== draftProfile.intro;
 
   useEffect(() => {
     const timer = window.setTimeout(() => setChallengeReady(true), 2000);
@@ -102,27 +97,6 @@ export function F36_AIControlCenter() {
     window.addEventListener(frameUpdatedEvent, refreshFrame);
     return () => window.removeEventListener(frameUpdatedEvent, refreshFrame);
   }, []);
-
-  const updateProfile = (field: keyof ShapingProfile, value: string) => {
-    setDraftProfile((profile) => ({ ...profile, [field]: value }));
-  };
-
-  const saveProfile = () => {
-    const nextProfile = {
-      name: draftProfile.name.trim() || savedProfile.name,
-      id: draftProfile.id.trim() || savedProfile.id,
-      intro: draftProfile.intro.trim(),
-    };
-    setSavedProfile(nextProfile);
-    setDraftProfile(nextProfile);
-    window.localStorage.setItem("second-self-shaping-name", nextProfile.name);
-    window.localStorage.setItem("second-self-shaping-id", nextProfile.id);
-    window.localStorage.setItem("second-self-shaping-intro", nextProfile.intro);
-  };
-
-  const prepareReshape = () => {
-    window.sessionStorage.setItem("second-self.face-scan-return", "3:0");
-  };
 
   const sendPersonaMessage = () => {
     const text = personaInput.trim();
@@ -157,7 +131,7 @@ export function F36_AIControlCenter() {
   return (
     <div className="relative w-full h-full pt-12 pb-20 overflow-y-auto font-sans text-brand-ink gradient-brand-soft">
       <div className="px-5 pt-3 pb-4">
-        <div className="text-[22px] font-bold">AI Control</div>
+        <div className="text-[22px] font-bold">{savedProfile.name}</div>
       </div>
 
       {challengeReady && (
@@ -276,79 +250,6 @@ export function F36_AIControlCenter() {
           </button>
         </div>
       </div>
-
-      <div className="px-5 mt-5 text-[15px] font-bold">Basic Shaping</div>
-      <div className="mx-4 mt-2 bg-white rounded-2xl p-3.5 shadow-soft border border-white">
-        <div className="text-center text-[12px] font-bold mb-3">Edit your Second Self</div>
-        <div className="space-y-2.5">
-          <label className="block rounded-2xl bg-brand-bg/55 px-3 py-2.5">
-            <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-brand-mute">
-              Name
-            </span>
-            <input
-              value={draftProfile.name}
-              onChange={(event) => updateProfile("name", event.target.value)}
-              className="mt-1 w-full bg-transparent text-[13px] font-semibold outline-none placeholder:text-brand-mute"
-              placeholder="Name your Second Self"
-            />
-          </label>
-          <label className="block rounded-2xl bg-brand-bg/55 px-3 py-2.5">
-            <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-brand-mute">
-              ID
-            </span>
-            <input
-              value={draftProfile.id}
-              onChange={(event) => updateProfile("id", event.target.value)}
-              className="mt-1 w-full bg-transparent text-[13px] font-semibold outline-none placeholder:text-brand-mute"
-              placeholder="Choose an ID"
-            />
-          </label>
-          <label className="block rounded-2xl bg-brand-bg/55 px-3 py-2.5">
-            <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-brand-mute">
-              Personal intro
-            </span>
-            <textarea
-              value={draftProfile.intro}
-              onChange={(event) => updateProfile("intro", event.target.value)}
-              className="mt-1 min-h-16 w-full resize-none bg-transparent text-[12px] leading-[17px] outline-none placeholder:text-brand-mute"
-              placeholder="Describe how your Second Self should introduce itself."
-            />
-          </label>
-        </div>
-        {hasProfileChanges && (
-          <motion.button
-            type="button"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            onClick={saveProfile}
-            className="mt-3 w-full rounded-2xl gradient-brand py-3 text-[12px] font-bold text-white shadow-soft"
-          >
-            Save
-          </motion.button>
-        )}
-        <button
-          type="button"
-          data-prototype-target="0:5"
-          onPointerDown={prepareReshape}
-          className="mt-3 w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl gradient-brand-soft border border-brand-lavender/30 text-[12px] font-bold text-brand-purple"
-        >
-          Reshape avatar <Plus size={14} />
-        </button>
-      </div>
-
-      <button
-        type="button"
-        data-prototype-target="3:10"
-        className="mx-4 mt-4 flex w-[calc(100%-2rem)] items-center justify-between rounded-3xl border border-white bg-white/82 px-4 py-3.5 text-left shadow-soft backdrop-blur-xl"
-      >
-        <span>
-          <span className="block text-[13px] font-bold">Context Rules</span>
-          <span className="mt-0.5 block text-[10px] text-brand-mute">
-            See when I step back to keep sensitive moments human-led.
-          </span>
-        </span>
-        <ChevronRight size={16} className="text-brand-purple" />
-      </button>
 
       <AnimatePresence>
         {personaKeyboardOpen && (

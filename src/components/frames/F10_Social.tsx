@@ -57,7 +57,7 @@ const candidates = [
     ring: "from-brand-sky to-brand-mint",
   },
   {
-    name: "Mia",
+    name: "Winnie",
     role: "possible creative match",
     signal: "Shared design taste - community energy - friendly opener ready",
     match: "69%",

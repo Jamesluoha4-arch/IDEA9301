@@ -104,21 +104,21 @@ const candidateOpeners = {
       Warm: "Hi, James. I am {user}. I noticed we may be working near the same area. I would be glad to share any useful notes I find.",
     },
   },
-  Mia: {
-    title: "Mia AI",
+  Winnie: {
+    title: "Winnie AI",
     relationship: "Possible creative match",
     avatar: miaUrl,
     reason: "Shared design taste - community energy",
     preview: "Shared design taste - community energy - friendly opener ready",
     drafts: {
       Friendly:
-        "Hi, Mia. I am {user}. I noticed we may both care about visual design and community energy. Want to swap one idea that made this week feel easier?",
+        "Hi, Winnie. I am {user}. I noticed we may both care about visual design and community energy. Want to swap one idea that made this week feel easier?",
       Direct:
-        "Hi, Mia. I am {user}. It looks like our design interests overlap. Want to compare one useful resource?",
+        "Hi, Winnie. I am {user}. It looks like our design interests overlap. Want to compare one useful resource?",
       Playful:
-        "Hey Mia, I am {user}. Creative radar says we might have good notes to trade. Want to swap one?",
-      Brief: "Hi, Mia. I am {user}. Want to compare one design note from this week?",
-      Warm: "Hi, Mia. I am {user}. I noticed we may share similar creative interests. It could be nice to compare what has inspired us this week.",
+        "Hey Winnie, I am {user}. Creative radar says we might have good notes to trade. Want to swap one?",
+      Brief: "Hi, Winnie. I am {user}. Want to compare one design note from this week?",
+      Warm: "Hi, Winnie. I am {user}. I noticed we may share similar creative interests. It could be nice to compare what has inspired us this week.",
     },
   },
 };
@@ -148,7 +148,7 @@ const replyVariants: Record<CandidateName, string[]> = {
     "That is a clear starting point. I can keep it warm but structured, so it feels thoughtful rather than too formal.",
     "Good direction. We can make the message specific enough to be useful, but not so formal that it feels like work.",
   ],
-  Mia: [
+  Winnie: [
     "That sounds friendly. I would keep the first message creative but simple, with one shared interest and one easy question.",
     "Nice. We can make it feel low-pressure: swap one inspiration, then see if the conversation grows naturally.",
     "Good idea. I would mention the shared design signal and ask for one small recommendation.",

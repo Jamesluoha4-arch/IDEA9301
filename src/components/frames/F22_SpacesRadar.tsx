@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bot, Camera, CheckCircle2, Code2, Info, Music, RefreshCw } from "lucide-react";
+import { Bell, Bot, Camera, CheckCircle2, Code2, Music, RefreshCw } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
 import JimUrl from "@/assets/radar-avatar-1.png";
 import joeUrl from "@/assets/radar-avatar-2.png";
@@ -77,6 +77,48 @@ const spaceTopics = [
 ];
 
 type SpaceTopic = (typeof spaceTopics)[number];
+type SpaceActivity = {
+  viewed: SpaceTopic[];
+  posts: { spaceName: string; body: string; time: string }[];
+};
+
+const viewedSpacesKey = "second-self.viewed-spaces";
+
+function readViewedSpaceKeys() {
+  if (typeof window === "undefined") return [];
+  try {
+    const saved = JSON.parse(window.sessionStorage.getItem(viewedSpacesKey) || "[]");
+    return Array.isArray(saved) ? (saved as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function recordViewedSpace(key: string) {
+  const next = Array.from(new Set([key, ...readViewedSpaceKeys()])).slice(0, 4);
+  window.sessionStorage.setItem(viewedSpacesKey, JSON.stringify(next));
+}
+
+function readSpaceActivity(): SpaceActivity {
+  if (typeof window === "undefined") return { viewed: [], posts: [] };
+  const viewed = readViewedSpaceKeys()
+    .map((key) => spaceTopics.find((topic) => topic.key === key))
+    .filter(Boolean) as SpaceTopic[];
+  const posts = spaceTopics.flatMap((topic) => {
+    try {
+      const saved = JSON.parse(window.sessionStorage.getItem(`second-self.posts.${topic.key}`) || "[]");
+      if (!Array.isArray(saved)) return [];
+      return saved.map((post) => ({
+        spaceName: topic.name,
+        body: String(post.body || post.starter || "New approved post"),
+        time: String(post.time || "JUST NOW"),
+      }));
+    } catch {
+      return [];
+    }
+  });
+  return { viewed, posts: posts.slice(0, 3) };
+}
 
 export function F22_SpacesRadar() {
   const [visibleNodes, setVisibleNodes] = useState(false);
@@ -85,6 +127,7 @@ export function F22_SpacesRadar() {
   const [refreshCycle, setRefreshCycle] = useState(0);
   const [toast, setToast] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [activity, setActivity] = useState<SpaceActivity>(() => readSpaceActivity());
   const userAvatar = readGeneratedAvatar() || defaultAvatarUrl;
 
   useEffect(() => {
@@ -101,6 +144,8 @@ export function F22_SpacesRadar() {
     setSelected(topic);
     setShowSignal(true);
     window.sessionStorage.setItem("second-self.selected-space", topic.key);
+    recordViewedSpace(topic.key);
+    setActivity(readSpaceActivity());
   };
 
   const refreshSpaces = () => {
@@ -111,6 +156,7 @@ export function F22_SpacesRadar() {
     setShowSignal(false);
     window.setTimeout(() => {
       setRefreshCycle((value) => value + 1);
+      setActivity(readSpaceActivity());
       setVisibleNodes(true);
       setShowSignal(true);
       setRefreshing(false);
@@ -130,33 +176,17 @@ export function F22_SpacesRadar() {
                 spaces that may surprise you
               </span>
             </h2>
-            <p className="text-[11px] text-brand-mute mt-1.5">
-              Approved interests only.
-              <br />
-              Tap any topic to preview the space.
-            </p>
+            <ActivitiesPanel activity={activity} />
+            <p className="text-[11px] text-brand-mute mt-1.5">Tap any topic to preview the space.</p>
           </div>
-          <div className="mt-1 flex items-center gap-2">
-            <button
-              type="button"
-              onClick={refreshSpaces}
-              className="w-9 h-9 rounded-full bg-white shadow-soft flex items-center justify-center"
-              aria-label="Refresh spaces"
-            >
-              <motion.span
-                animate={refreshing ? { rotate: 360 } : { rotate: 0 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-              >
-                <RefreshCw size={15} className="text-brand-purple" />
-              </motion.span>
-            </button>
-            <button
-              data-prototype-target="7:3"
-              className="w-9 h-9 rounded-full bg-white shadow-soft flex items-center justify-center"
-            >
-              <Info size={15} className="text-brand-purple" />
-            </button>
-          </div>
+          <button
+            type="button"
+            data-prototype-target="7:3"
+            className="mt-1 w-9 h-9 rounded-full bg-white shadow-soft flex items-center justify-center"
+            aria-label="Notifications"
+          >
+            <Bell size={15} className="text-brand-purple" />
+          </button>
         </div>
 
         <AnimatePresence>
@@ -174,6 +204,19 @@ export function F22_SpacesRadar() {
 
         <div className="mx-5 mt-4 h-[330px] rounded-3xl bg-white/84 shadow-soft relative overflow-hidden border border-white/80">
           <div className="absolute inset-0 gradient-brand-soft opacity-65" />
+          <button
+            type="button"
+            onClick={refreshSpaces}
+            className="absolute right-4 top-4 z-40 w-9 h-9 rounded-full bg-white shadow-soft flex items-center justify-center"
+            aria-label="Refresh spaces"
+          >
+            <motion.span
+              animate={refreshing ? { rotate: 360 } : { rotate: 0 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+            >
+              <RefreshCw size={15} className="text-brand-purple" />
+            </motion.span>
+          </button>
           {[1, 0.72, 0.45, 0.24].map((s, i) => (
             <motion.div
               key={i}
@@ -246,6 +289,10 @@ export function F22_SpacesRadar() {
               type="button"
               data-prototype-target="7:1"
               data-prototype-space={selected.key}
+              onPointerDown={() => {
+                recordViewedSpace(selected.key);
+                setActivity(readSpaceActivity());
+              }}
               whileTap={{ scale: 0.98 }}
               whileHover={{ y: -1 }}
               className="mt-3 w-full py-3 rounded-full gradient-brand text-white text-[13px] font-bold shadow-soft"
@@ -258,6 +305,60 @@ export function F22_SpacesRadar() {
       </div>
 
       <BottomNav active="COMMUNITY" />
+    </div>
+  );
+}
+
+function ActivitiesPanel({ activity }: { activity: SpaceActivity }) {
+  const hasViewed = activity.viewed.length > 0;
+  const hasPosts = activity.posts.length > 0;
+  return (
+    <div className="mt-2 w-[248px] rounded-2xl border border-white/80 bg-white/70 p-2.5 shadow-[0_10px_26px_rgba(108,92,231,0.08)] backdrop-blur-xl">
+      <div className="text-[9px] font-bold uppercase tracking-[0.16em] text-brand-purple">
+        Activities
+      </div>
+      <div className="mt-2 grid grid-cols-2 gap-2">
+        <div className="rounded-xl bg-brand-bg/55 px-2 py-2">
+          <div className="text-[8px] font-bold uppercase tracking-[0.12em] text-brand-mute">
+            Viewed spaces
+          </div>
+          {hasViewed ? (
+            <div className="mt-1 flex flex-wrap gap-1">
+              {activity.viewed.slice(0, 3).map((space) => (
+                <span
+                  key={space.key}
+                  className="rounded-full bg-white px-1.5 py-0.5 text-[8px] font-bold text-brand-purple shadow-sm"
+                >
+                  {space.name}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-1 text-[8px] leading-[11px] text-brand-mute">
+              No spaces viewed yet.
+            </div>
+          )}
+        </div>
+        <div className="rounded-xl bg-brand-bg/55 px-2 py-2">
+          <div className="text-[8px] font-bold uppercase tracking-[0.12em] text-brand-mute">
+            Your posts
+          </div>
+          {hasPosts ? (
+            <div className="mt-1 space-y-1">
+              {activity.posts.slice(0, 2).map((post, index) => (
+                <div key={`${post.spaceName}-${index}`} className="text-[8px] leading-[11px]">
+                  <span className="font-bold text-brand-purple">{post.spaceName}: </span>
+                  <span className="text-brand-ink">{post.body.slice(0, 34)}...</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-1 text-[8px] leading-[11px] text-brand-mute">
+              No posts published yet.
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

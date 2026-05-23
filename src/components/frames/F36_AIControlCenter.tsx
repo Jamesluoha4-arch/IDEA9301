@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Bot, ChevronRight, Gift, Plus, Send, Shield, UserRound } from "lucide-react";
+import { Bot, ChevronRight, Delete, Gift, Plus, Send, Shield, UserRound } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
 import {
   AvatarFrameEffect,
@@ -10,6 +10,11 @@ import {
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
 
 const modeStorageKey = "second-self.ai-control-mode";
+const qwertyRows = [
+  ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+  ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+  ["z", "x", "c", "v", "b", "n", "m"],
+];
 
 type AiMode = "Observer" | "Co-pilot" | "Assistant" | "Auto-pilot";
 
@@ -73,10 +78,11 @@ export function F36_AIControlCenter() {
   const [draftProfile, setDraftProfile] = useState<ShapingProfile>(() => readShapingProfile());
   const [avatarFrame, setAvatarFrame] = useState(readAppliedAvatarFrame);
   const [personaInput, setPersonaInput] = useState("");
+  const [personaKeyboardOpen, setPersonaKeyboardOpen] = useState(false);
   const [personaMessages, setPersonaMessages] = useState<PersonaMessage[]>([
     {
       from: "ai",
-      text: "Hi, I am your Second Self. Ask me how I would introduce you, reply to Jim, or handle a social situation.",
+      text: "Hi, I am your AI Self. Ask me how I would introduce you, reply to Jim, or handle a social situation.",
     },
   ]);
   const avatarUrl = readGeneratedAvatar() || defaultAvatarUrl;
@@ -137,6 +143,15 @@ export function F36_AIControlCenter() {
       { from: "ai", text: reply },
     ]);
     setPersonaInput("");
+    setPersonaKeyboardOpen(false);
+  };
+
+  const appendPersonaInput = (value: string) => {
+    setPersonaInput((current) => `${current}${value}`);
+  };
+
+  const deletePersonaInput = () => {
+    setPersonaInput((current) => current.slice(0, -1));
   };
 
   return (
@@ -210,7 +225,7 @@ export function F36_AIControlCenter() {
         </button>
       </div>
 
-      <div className="px-5 mt-5 text-[15px] font-bold">Talk to your AI Double</div>
+      <div className="px-5 mt-5 text-[15px] font-bold">Talk to your AI Self</div>
       <div className="mx-4 mt-2 rounded-3xl border border-white bg-white/88 p-3.5 shadow-soft backdrop-blur-xl">
         <div className="max-h-[178px] space-y-2 overflow-y-auto pr-1 prototype-scroll">
           {personaMessages.map((message, index) => {
@@ -244,20 +259,18 @@ export function F36_AIControlCenter() {
           })}
         </div>
         <div className="mt-3 flex items-center gap-2 rounded-2xl bg-brand-bg/70 px-3 py-2">
-          <input
-            value={personaInput}
-            onChange={(event) => setPersonaInput(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") sendPersonaMessage();
-            }}
-            placeholder="Message your AI double..."
-            className="min-w-0 flex-1 bg-transparent text-[12px] font-semibold text-brand-ink outline-none placeholder:text-brand-mute"
-          />
+          <button
+            type="button"
+            onClick={() => setPersonaKeyboardOpen(true)}
+            className="min-w-0 flex-1 bg-transparent py-1 text-left text-[12px] font-semibold text-brand-ink outline-none"
+          >
+            {personaInput || <span className="text-brand-mute">Message your AI self...</span>}
+          </button>
           <button
             type="button"
             onClick={sendPersonaMessage}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full gradient-brand text-white shadow-soft"
-            aria-label="Send message to AI double"
+            aria-label="Send message to AI self"
           >
             <Send size={14} />
           </button>
@@ -336,6 +349,119 @@ export function F36_AIControlCenter() {
         </span>
         <ChevronRight size={16} className="text-brand-purple" />
       </button>
+
+      <AnimatePresence>
+        {personaKeyboardOpen && (
+          <AiSelfKeyboard
+            value={personaInput}
+            onType={appendPersonaInput}
+            onDelete={deletePersonaInput}
+            onSend={sendPersonaMessage}
+            onClose={() => setPersonaKeyboardOpen(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
+  );
+}
+
+function AiSelfKeyboard({
+  value,
+  onType,
+  onDelete,
+  onSend,
+  onClose,
+}: {
+  value: string;
+  onType: (value: string) => void;
+  onDelete: () => void;
+  onSend: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <motion.div
+      initial={{ y: 280 }}
+      animate={{ y: 0 }}
+      exit={{ y: 280 }}
+      transition={{ type: "spring", stiffness: 360, damping: 38 }}
+      data-prototype-keyboard
+      className="absolute bottom-0 left-0 right-0 z-[110] border-t border-white/75 bg-gradient-to-b from-[#f6f1ff] via-[#eee8fb] to-[#dfe8f5] px-2 pt-2 pb-3 shadow-[0_-18px_34px_rgba(108,92,231,0.18)]"
+    >
+      <div className="mb-2 flex items-center gap-2 px-1">
+        <div className="flex-1 rounded-2xl bg-white/80 px-3 py-2 text-[12px] font-semibold text-brand-ink shadow-sm">
+          {value || <span className="text-brand-mute">Message your AI self...</span>}
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="h-9 w-9 rounded-full bg-white/70 text-[14px] font-bold text-brand-purple shadow-sm"
+        >
+          v
+        </button>
+      </div>
+      <div className="mb-2 flex justify-around text-[17px] text-brand-ink/80">
+        {["I", "you", "we", "this", "good", "not", "in", "yes"].map((word) => (
+          <button key={word} type="button" onClick={() => onType(`${word} `)}>
+            {word}
+          </button>
+        ))}
+      </div>
+      <div className="space-y-2">
+        {qwertyRows.map((row, rowIndex) => (
+          <div key={row.join("")} className="flex justify-center gap-1.5">
+            {rowIndex === 2 && (
+              <button
+                type="button"
+                onClick={() => onType("")}
+                className="h-11 w-11 rounded-xl border border-white/70 bg-white/55 text-[18px] text-brand-purple shadow-sm"
+              >
+                Aa
+              </button>
+            )}
+            {row.map((key) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => onType(key)}
+                className="h-11 min-w-[30px] flex-1 rounded-xl border border-white bg-white/92 text-[22px] text-brand-ink shadow-sm"
+              >
+                {key}
+              </button>
+            ))}
+            {rowIndex === 2 && (
+              <button
+                type="button"
+                onClick={onDelete}
+                className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/70 bg-white/55 text-brand-purple shadow-sm"
+              >
+                <Delete size={20} />
+              </button>
+            )}
+          </div>
+        ))}
+        <div className="flex gap-2">
+          <button
+            type="button"
+            className="h-11 w-16 rounded-xl border border-white/70 bg-white/55 text-[16px] text-brand-ink shadow-sm"
+          >
+            123
+          </button>
+          <button
+            type="button"
+            onClick={() => onType(" ")}
+            className="h-11 flex-1 rounded-xl border border-white bg-white/92 text-[17px] text-brand-ink shadow-sm"
+          >
+            space
+          </button>
+          <button
+            type="button"
+            onClick={onSend}
+            className="h-11 w-20 rounded-xl gradient-brand text-[16px] font-bold text-white shadow-soft"
+          >
+            send
+          </button>
+        </div>
+      </div>
+    </motion.div>
   );
 }

@@ -2,13 +2,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import {
   ArrowUpRight,
+  Archive,
   Brain,
   Clock3,
   HeartHandshake,
   MessageCircle,
   Pause,
   Play,
+  RotateCcw,
   Sparkles,
+  Trash2,
   UsersRound,
 } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
@@ -42,21 +45,30 @@ const activityTrail = [
 
 const memoryTrail = [
   {
+    id: "ai-synth-entry",
     time: "Today",
+    triggeredAt: "2026-05-24 10:18",
     title: "You entered AI Synth Space",
     detail: "Your first post framed identity and transparency as the conversation starter.",
   },
   {
+    id: "jim-warm-signal",
     time: "Today",
+    triggeredAt: "2026-05-24 10:26",
     title: "Jim became a warm signal",
     detail: "A shared onboarding context made one simple opener feel safer.",
   },
   {
+    id: "review-before-send",
     time: "This week",
+    triggeredAt: "2026-05-22 16:40",
     title: "You prefer review before send",
     detail: "Draft help is useful when the final message still feels like yours.",
   },
 ] as const;
+
+type MemoryStatus = "all" | "deleted" | "archived";
+type ManagedMemory = (typeof memoryTrail)[number] & { status: MemoryStatus };
 
 const relationshipSignals = [
   {
@@ -79,8 +91,13 @@ const relationshipSignals = [
 export function F30_SystemVisibility() {
   const [paused, setPaused] = useState(false);
   const [showMemory, setShowMemory] = useState(true);
+  const [showMemoryManager, setShowMemoryManager] = useState(false);
   const avatar = readGeneratedAvatar() || defaultAvatarUrl;
   const avatarFrame = readAppliedAvatarFrame();
+
+  if (showMemoryManager) {
+    return <MemoriesManager onBack={() => setShowMemoryManager(false)} />;
+  }
 
   return (
     <div className="relative h-full w-full overflow-y-auto pb-24 pt-12 font-sans text-brand-ink gradient-brand-soft prototype-scroll">
@@ -273,6 +290,13 @@ export function F30_SystemVisibility() {
         <div className="flex items-center gap-2">
           <Brain size={15} className="text-brand-purple" />
           <div className="text-[13px] font-bold">Key memories</div>
+          <button
+            type="button"
+            onClick={() => setShowMemoryManager(true)}
+            className="ml-auto rounded-full bg-brand-bg px-3 py-1.5 text-[9px] font-bold text-brand-purple"
+          >
+            Manage memories
+          </button>
         </div>
         <div className="mt-3 space-y-2.5">
           {memoryTrail.map((memory, index) => (
@@ -327,6 +351,124 @@ export function F30_SystemVisibility() {
       </div>
 
       <BottomNav active="PRESENCE" />
+    </div>
+  );
+}
+
+function MemoriesManager({ onBack }: { onBack: () => void }) {
+  const [tab, setTab] = useState<MemoryStatus>("all");
+  const [memories, setMemories] = useState<ManagedMemory[]>(() =>
+    memoryTrail.map((memory) => ({ ...memory, status: "all" })),
+  );
+  const visible = memories.filter((memory) => memory.status === tab);
+
+  const updateMemory = (id: string, status: MemoryStatus) => {
+    setMemories((items) => items.map((memory) => (memory.id === id ? { ...memory, status } : memory)));
+  };
+  const removeMemory = (id: string) => {
+    setMemories((items) => items.filter((memory) => memory.id !== id));
+  };
+
+  return (
+    <div className="relative h-full w-full overflow-y-auto pb-24 pt-12 font-sans text-brand-ink gradient-brand-soft prototype-scroll">
+      <div className="sticky top-0 z-20 border-b border-white/70 bg-white/60 px-5 pb-3 pt-3 backdrop-blur-2xl">
+        <button
+          type="button"
+          onClick={onBack}
+          className="mb-3 h-9 rounded-full bg-white px-3 text-[12px] font-bold text-brand-purple shadow-sm"
+        >
+          Back
+        </button>
+        <div className="text-[24px] font-bold">Manage memories</div>
+        <div className="mt-2 grid grid-cols-3 gap-2">
+          {[
+            ["all", "All memories"],
+            ["deleted", "Deleted"],
+            ["archived", "Archived"],
+          ].map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setTab(key as MemoryStatus)}
+              className={`rounded-2xl px-2 py-2 text-[11px] font-bold ${
+                tab === key ? "gradient-brand text-white shadow-soft" : "bg-white/75 text-brand-purple"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="mx-4 mt-4 space-y-3">
+        {visible.length ? (
+          visible.map((memory) => (
+            <motion.div
+              key={memory.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-[26px] border border-white bg-white/84 p-4 shadow-soft backdrop-blur-xl"
+            >
+              <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-brand-purple">
+                {memory.time} / {memory.triggeredAt}
+              </div>
+              <div className="mt-1.5 text-[14px] font-bold">{memory.title}</div>
+              <div className="mt-1 text-[11px] leading-[16px] text-brand-mute">{memory.detail}</div>
+              <div className="mt-3 flex gap-2">
+                {tab === "all" && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => updateMemory(memory.id, "archived")}
+                      className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-brand-bg py-2.5 text-[11px] font-bold text-brand-purple"
+                    >
+                      <Archive size={13} /> Archive
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => updateMemory(memory.id, "deleted")}
+                      className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#fff0f4] py-2.5 text-[11px] font-bold text-[#ef6b82]"
+                    >
+                      <Trash2 size={13} /> Delete
+                    </button>
+                  </>
+                )}
+                {tab === "deleted" && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => updateMemory(memory.id, "all")}
+                      className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-brand-bg py-2.5 text-[11px] font-bold text-brand-purple"
+                    >
+                      <RotateCcw size={13} /> Restore
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeMemory(memory.id)}
+                      className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#fff0f4] py-2.5 text-[11px] font-bold text-[#ef6b82]"
+                    >
+                      <Trash2 size={13} /> Delete forever
+                    </button>
+                  </>
+                )}
+                {tab === "archived" && (
+                  <button
+                    type="button"
+                    onClick={() => updateMemory(memory.id, "all")}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-brand-bg py-2.5 text-[11px] font-bold text-brand-purple"
+                  >
+                    <RotateCcw size={13} /> Restore
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          ))
+        ) : (
+          <div className="rounded-[26px] border border-white bg-white/76 p-6 text-center text-[12px] font-bold text-brand-mute shadow-soft">
+            No memories in this view.
+          </div>
+        )}
+      </div>
     </div>
   );
 }

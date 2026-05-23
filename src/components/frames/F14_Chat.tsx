@@ -28,6 +28,11 @@ const initialMessages = [
   { from: "them", text: "Good idea. Maybe we can compare notes after the session." },
 ];
 
+function readUserName() {
+  if (typeof window === "undefined") return "David";
+  return window.localStorage.getItem("second-self-user-name")?.trim() || "David";
+}
+
 export function ChatScaffold({
   showFinishedDivider = false,
   reactionOnLast = false,
@@ -45,14 +50,15 @@ export function ChatScaffold({
   const [sheetOpen, setSheetOpen] = useState(false);
   const [findSecondSelf, setFindSecondSelf] = useState(false);
   const [presenceToast, setPresenceToast] = useState("");
+  const userName = readUserName();
   const userAvatar = readGeneratedAvatar();
   const replyLabel = findSecondSelf ? "Human Reply" : "AI Reply";
   const selectedDrafts: Record<StyleTab, string> = {
-    Friendly: "That sounds good. Want to compare notes after the onboarding session?",
-    Direct: "Yes, let's compare notes after onboarding.",
-    Playful: "Deal. New-starter notes exchange after the session?",
-    Brief: "Sure. Let's compare notes after onboarding.",
-    Warm: "That would be great. I am still getting oriented too, so comparing notes would help.",
+    Friendly: `Hi, Jim. I am ${userName}. I noticed we may be in the same onboarding group. Want to compare notes on what has been most helpful so far?`,
+    Direct: `Hi, Jim. I am ${userName}. It looks like our onboarding overlaps. Want to exchange useful notes after the next session?`,
+    Playful: `Hey Jim, I am ${userName}. Fellow onboarding explorer here. Want to trade one survival tip after the next session?`,
+    Brief: `Hi, Jim. I am ${userName}. Want to compare onboarding notes sometime today?`,
+    Warm: `Hi, Jim. I am ${userName}. I am also getting oriented this week. I would be happy to compare notes if that feels useful.`,
   };
   const visibleSuggestions = [selectedDrafts[selectedStyle], selectedDrafts.Warm];
 

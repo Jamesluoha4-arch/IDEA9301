@@ -1,5 +1,7 @@
 ﻿import { motion } from "framer-motion";
 
+import secondSelfLogo from "@/assets/second-self-logo.png";
+
 export function F1_Welcome() {
   return (
     <div className="relative w-full h-full overflow-hidden bg-gradient-to-b from-[#f1eefb] via-white to-white">
@@ -61,13 +63,11 @@ export function F1_Welcome() {
           transition={{ duration: 3.1, repeat: Infinity, delay: 0.9, ease: "easeOut" }}
         />
         <motion.div
-          className="relative w-[100px] h-[100px] rounded-full gradient-brand shadow-glow flex items-center justify-center"
+          className="relative w-[132px] h-[132px] rounded-[34px] bg-white/78 shadow-glow flex items-center justify-center overflow-hidden"
           animate={{ y: [0, -8, 0], scale: [1, 1.13, 1] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         >
-          <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center">
-            <div className="w-6 h-6 rounded-full bg-white" />
-          </div>
+          <img src={secondSelfLogo} alt="Second Self" className="h-[118%] w-[118%] object-contain" />
         </motion.div>
       </div>
 
@@ -87,11 +87,9 @@ export function F1_Welcome() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
         >
-          Create an AI persona that
+          Create an AI self and explore
           <br />
-          you can name, shape, and grow
-          <br />
-          into your second self.
+          new ways to connect.
         </motion.p>
         <motion.p
           className="pt-4 text-[15px] text-brand-mute text-center leading-[22px]"
@@ -99,11 +97,11 @@ export function F1_Welcome() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          I will learn how you want me to speak,
+          I will help you find people with similar
           <br />
-          support conversations, and reflect your
+          interests, support conversations, break
           <br />
-          personality with care.
+          social barriers, and bridge AI with people.
         </motion.p>
       </div>
 

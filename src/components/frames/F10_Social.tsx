@@ -4,6 +4,7 @@ import JimUrl from "@/assets/radar-avatar-1.png";
 import joeUrl from "@/assets/radar-avatar-2.png";
 import jamesUrl from "@/assets/radar-avatar-3.png";
 import sabrinaUrl from "@/assets/radar-avatar-4.png";
+import miaUrl from "@/assets/avatar-mia.png";
 import { BottomNav } from "./F09_Home";
 
 const candidates = [
@@ -54,6 +55,18 @@ const candidates = [
     duration: 38,
     img: sabrinaUrl,
     ring: "from-brand-sky to-brand-mint",
+  },
+  {
+    name: "Mia",
+    role: "possible creative match",
+    signal: "Shared design taste - community energy - friendly opener ready",
+    match: "69%",
+    size: 48,
+    distance: 124,
+    angle: 76,
+    duration: 44,
+    img: miaUrl,
+    ring: "from-brand-lavender to-brand-sky",
   },
 ];
 

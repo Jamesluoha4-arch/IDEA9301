@@ -22,6 +22,7 @@ import JimUrl from "@/assets/radar-avatar-1.png";
 import joeUrl from "@/assets/radar-avatar-2.png";
 import sabrinaUrl from "@/assets/radar-avatar-3.png";
 import jamesUrl from "@/assets/radar-avatar-4.png";
+import miaUrl from "@/assets/avatar-mia.png";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
 import { recordJimIcebreakerMessage } from "@/lib/icebreaking-challenge";
 
@@ -44,13 +45,13 @@ const candidateOpeners = {
     preview: "Same workplace context - shared onboarding signal - draft ready",
     drafts: {
       Friendly:
-        "Hi, {user}. I am Jim. I noticed we may be in the same onboarding group. Want to compare notes on what has been most helpful so far?",
+        "Hi, Jim. I am {user}. I noticed we may be in the same onboarding group. Want to compare notes on what has been most helpful so far?",
       Direct:
-        "Hi, {user}. I am Jim. It looks like our onboarding overlaps. Want to exchange useful notes after the next session?",
+        "Hi, Jim. I am {user}. It looks like our onboarding overlaps. Want to exchange useful notes after the next session?",
       Playful:
-        "Hey {user}, I am Jim. Fellow onboarding explorer here. Want to trade one survival tip after the next session?",
-      Brief: "Hi, {user}. I am Jim. Want to compare onboarding notes sometime today?",
-      Warm: "Hi, {user}. I am Jim. I am also getting oriented this week. I would be happy to compare notes if that feels useful.",
+        "Hey Jim, I am {user}. Fellow onboarding explorer here. Want to trade one survival tip after the next session?",
+      Brief: "Hi, Jim. I am {user}. Want to compare onboarding notes sometime today?",
+      Warm: "Hi, Jim. I am {user}. I am also getting oriented this week. I would be happy to compare notes if that feels useful.",
     },
   },
   Joe: {
@@ -61,13 +62,13 @@ const candidateOpeners = {
     preview: "Shared graduate cohort - similar portfolio interests - intro ready",
     drafts: {
       Friendly:
-        "Hi, {user}. I am Joe. I saw we may share a design background. Maybe we can trade one useful resource from onboarding this week.",
+        "Hi, Joe. I am {user}. I saw we may share a design background. Maybe we can trade one useful resource from onboarding this week.",
       Direct:
-        "Hi, {user}. I am Joe. It looks like we both connect to design work. Want to share onboarding resources?",
+        "Hi, Joe. I am {user}. It looks like we both connect to design work. Want to share onboarding resources?",
       Playful:
-        "Hi, {user}. I am Joe. Design-brain check-in: want to swap the best onboarding thing we found this week?",
-      Brief: "Hi, {user}. I am Joe. Want to swap one useful design onboarding resource?",
-      Warm: "Hi, {user}. I am Joe. I noticed we may share a design background. I would love to exchange anything helpful we find this week.",
+        "Hi, Joe. I am {user}. Design-brain check-in: want to swap the best onboarding thing we found this week?",
+      Brief: "Hi, Joe. I am {user}. Want to swap one useful design onboarding resource?",
+      Warm: "Hi, Joe. I am {user}. I noticed we may share a design background. I would love to exchange anything helpful we find this week.",
     },
   },
   Sabrina: {
@@ -78,13 +79,13 @@ const candidateOpeners = {
     preview: "Same company space - lunch group overlap - topic idea ready",
     drafts: {
       Friendly:
-        "Hi, {user}. I am Sabrina. Looks like we may be in the same company space. Want to compare good lunch spots or first-week survival tips?",
+        "Hi, Sabrina. I am {user}. Looks like we may be in the same company space. Want to compare good lunch spots or first-week survival tips?",
       Direct:
-        "Hi, {user}. I am Sabrina. Our company spaces overlap. Want to compare first-week tips?",
+        "Hi, Sabrina. I am {user}. Our company spaces overlap. Want to compare first-week tips?",
       Playful:
-        "Hey {user}, I am Sabrina. New-starter radar says we might be nearby. Want to trade lunch intel?",
-      Brief: "Hi, {user}. I am Sabrina. Want to compare first-week tips?",
-      Warm: "Hi, {user}. I am Sabrina. I am still learning the space too. It could be nice to compare what we find useful.",
+        "Hey Sabrina, I am {user}. New-starter radar says we might be nearby. Want to trade lunch intel?",
+      Brief: "Hi, Sabrina. I am {user}. Want to compare first-week tips?",
+      Warm: "Hi, Sabrina. I am {user}. I am still learning the space too. It could be nice to compare what we find useful.",
     },
   },
   James: {
@@ -95,12 +96,29 @@ const candidateOpeners = {
     preview: "Adjacent team context - shared onboarding task - warm note ready",
     drafts: {
       Friendly:
-        "Hi, {user}. I am James. I noticed our onboarding tasks may overlap. I would be happy to trade notes if that helps us both get oriented faster.",
-      Direct: "Hi, {user}. I am James. Our onboarding tasks may overlap. Want to compare notes?",
+        "Hi, James. I am {user}. I noticed our onboarding tasks may overlap. I would be happy to trade notes if that helps us both get oriented faster.",
+      Direct: "Hi, James. I am {user}. Our onboarding tasks may overlap. Want to compare notes?",
       Playful:
-        "Hi, {user}. I am James. Looks like our onboarding maps may cross. Want to solve a bit of it together?",
-      Brief: "Hi, {user}. I am James. Want to compare onboarding notes?",
-      Warm: "Hi, {user}. I am James. I noticed we may be working near the same area. I would be glad to share any useful notes I find.",
+        "Hi, James. I am {user}. Looks like our onboarding maps may cross. Want to solve a bit of it together?",
+      Brief: "Hi, James. I am {user}. Want to compare onboarding notes?",
+      Warm: "Hi, James. I am {user}. I noticed we may be working near the same area. I would be glad to share any useful notes I find.",
+    },
+  },
+  Mia: {
+    title: "Mia AI",
+    relationship: "Possible creative match",
+    avatar: miaUrl,
+    reason: "Shared design taste - community energy",
+    preview: "Shared design taste - community energy - friendly opener ready",
+    drafts: {
+      Friendly:
+        "Hi, Mia. I am {user}. I noticed we may both care about visual design and community energy. Want to swap one idea that made this week feel easier?",
+      Direct:
+        "Hi, Mia. I am {user}. It looks like our design interests overlap. Want to compare one useful resource?",
+      Playful:
+        "Hey Mia, I am {user}. Creative radar says we might have good notes to trade. Want to swap one?",
+      Brief: "Hi, Mia. I am {user}. Want to compare one design note from this week?",
+      Warm: "Hi, Mia. I am {user}. I noticed we may share similar creative interests. It could be nice to compare what has inspired us this week.",
     },
   },
 };
@@ -129,6 +147,12 @@ const replyVariants: Record<CandidateName, string[]> = {
     "I think so. I would suggest a gentle first step: share one note from onboarding and ask whether it matches their experience.",
     "That is a clear starting point. I can keep it warm but structured, so it feels thoughtful rather than too formal.",
     "Good direction. We can make the message specific enough to be useful, but not so formal that it feels like work.",
+  ],
+  Mia: [
+    "That sounds friendly. I would keep the first message creative but simple, with one shared interest and one easy question.",
+    "Nice. We can make it feel low-pressure: swap one inspiration, then see if the conversation grows naturally.",
+    "Good idea. I would mention the shared design signal and ask for one small recommendation.",
+    "That feels warm. A short note about creative overlap should make the first step easier.",
   ],
 };
 
@@ -240,24 +264,24 @@ function buildRegeneratedDraft(
   const base = candidateOpeners[candidateName];
   const variants: Record<StyleTab, string[]> = {
     Friendly: [
-      `Hi, ${userName}. I am ${candidateName}. I noticed we may have overlapping onboarding context. Want to compare one useful note from this week?`,
-      `Hi, ${userName}. I am ${candidateName}. We seem to share a low-pressure work signal. Want to swap what has helped us settle in so far?`,
+      `Hi, ${candidateName}. I am ${userName}. I noticed we may have overlapping onboarding context. Want to compare one useful note from this week?`,
+      `Hi, ${candidateName}. I am ${userName}. We seem to share a low-pressure work signal. Want to swap what has helped us settle in so far?`,
     ],
     Direct: [
-      `Hi, ${userName}. I am ${candidateName}. Our onboarding context overlaps. Want to compare notes after the next session?`,
-      `Hi, ${userName}. I am ${candidateName}. Want to exchange one practical first-week tip today?`,
+      `Hi, ${candidateName}. I am ${userName}. Our onboarding context overlaps. Want to compare notes after the next session?`,
+      `Hi, ${candidateName}. I am ${userName}. Want to exchange one practical first-week tip today?`,
     ],
     Playful: [
-      `Hey ${userName}, I am ${candidateName}. New-starter radar says we may have useful notes to trade. Want to swap one?`,
-      `Hi ${userName}, I am ${candidateName}. Want to trade one tiny survival tip from onboarding?`,
+      `Hey ${candidateName}, I am ${userName}. New-starter radar says we may have useful notes to trade. Want to swap one?`,
+      `Hi ${candidateName}, I am ${userName}. Want to trade one tiny survival tip from onboarding?`,
     ],
     Brief: [
-      `Hi, ${userName}. I am ${candidateName}. Want to compare onboarding notes?`,
-      `Hi, ${userName}. I am ${candidateName}. Want to swap one useful first-week tip?`,
+      `Hi, ${candidateName}. I am ${userName}. Want to compare onboarding notes?`,
+      `Hi, ${candidateName}. I am ${userName}. Want to swap one useful first-week tip?`,
     ],
     Warm: [
-      `Hi, ${userName}. I am ${candidateName}. I am still getting oriented too, and I would be happy to compare notes if that feels useful.`,
-      `Hi, ${userName}. I am ${candidateName}. It might be nice to share what has helped us feel more settled this week.`,
+      `Hi, ${candidateName}. I am ${userName}. I am still getting oriented too, and I would be happy to compare notes if that feels useful.`,
+      `Hi, ${candidateName}. I am ${userName}. It might be nice to share what has helped us feel more settled this week.`,
     ],
   };
   return (

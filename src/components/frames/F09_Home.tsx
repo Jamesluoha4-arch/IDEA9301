@@ -6,6 +6,7 @@ import {
   Clipboard,
   Gift,
   IdCard,
+  LogOut,
   Menu,
   Pin,
   MessageSquareWarning,
@@ -178,7 +179,7 @@ export function F09_Home() {
               transition={{ delay: 0.12 }}
               className="mt-4 max-w-[310px] text-[15px] leading-[23px] text-brand-mute"
             >
-              Today is {dateLine}. Let&apos;s begin a wonderful social journey together.
+              Today is {dateLine}. Let&apos;s add a wonderful social journey together.
             </motion.p>
 
             <motion.button
@@ -444,6 +445,14 @@ function SideMenu({
             </motion.button>
           ))}
         </div>
+        <button
+          type="button"
+          data-prototype-target="0:0"
+          className="mt-6 mb-2 flex w-full items-center justify-center gap-2 rounded-2xl border border-[#ffd6df] bg-white/70 px-4 py-3 text-[13px] font-bold text-[#ef6b82] shadow-[0_10px_30px_rgba(239,107,130,0.10)]"
+        >
+          <LogOut size={16} />
+          Log out
+        </button>
       </motion.aside>
 
       {activeSheet && (
@@ -728,6 +737,7 @@ export function FloatingBottomNav({ active }: { active: string }) {
   };
   const [avatarUrl, setAvatarUrl] = useState(() => resolveAvatarUrl());
   const [avatarBubble, setAvatarBubble] = useState(false);
+  const [avatarBubbleText, setAvatarBubbleText] = useState("");
   const [avatarFrame, setAvatarFrame] = useState(readAppliedAvatarFrame);
 
   useEffect(() => {
@@ -739,6 +749,7 @@ export function FloatingBottomNav({ active }: { active: string }) {
     const handleAvatarReady = (event: Event) => {
       const imageUrl = (event as CustomEvent<{ imageUrl?: string }>).detail?.imageUrl;
       setAvatarUrl(imageUrl || readGeneratedAvatar());
+      setAvatarBubbleText(`Hi, I am ${readUserName()} as well.`);
       setAvatarBubble(true);
       window.clearTimeout(timer);
       timer = window.setTimeout(() => setAvatarBubble(false), 2000);
@@ -748,6 +759,29 @@ export function FloatingBottomNav({ active }: { active: string }) {
     return () => {
       window.removeEventListener("second-self-avatar-ready", handleAvatarReady);
       window.clearTimeout(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    const greetings = [
+      "Ready when you are.",
+      "I found a gentle opening.",
+      "Want to explore a new connection?",
+      "I can help with the next hello.",
+    ];
+    let index = 0;
+    let hideTimer: number | undefined;
+    const showGreeting = () => {
+      setAvatarBubbleText(greetings[index % greetings.length]);
+      index += 1;
+      setAvatarBubble(true);
+      window.clearTimeout(hideTimer);
+      hideTimer = window.setTimeout(() => setAvatarBubble(false), 3200);
+    };
+    const interval = window.setInterval(showGreeting, 30000);
+    return () => {
+      window.clearInterval(interval);
+      window.clearTimeout(hideTimer);
     };
   }, []);
 
@@ -834,7 +868,7 @@ export function FloatingBottomNav({ active }: { active: string }) {
             exit={{ opacity: 0, y: 8 }}
             className="absolute bottom-[92px] left-1/2 w-[188px] -translate-x-1/2 rounded-2xl border border-white/80 bg-white/88 px-3 py-2 text-[11px] font-bold text-brand-ink shadow-soft backdrop-blur-xl"
           >
-            Hi, I am {readUserName()} as well.
+            {avatarBubbleText}
           </motion.span>
         )}
         <span className="sr-only">AI</span>

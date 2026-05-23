@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { Bot, Camera, CheckCircle2, Code2, Info, Music, Sparkles } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Bot, Camera, CheckCircle2, Code2, Info, Music, RefreshCw } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
 import JimUrl from "@/assets/radar-avatar-1.png";
 import joeUrl from "@/assets/radar-avatar-2.png";
@@ -82,6 +82,9 @@ export function F22_SpacesRadar() {
   const [visibleNodes, setVisibleNodes] = useState(false);
   const [showSignal, setShowSignal] = useState(false);
   const [selected, setSelected] = useState<SpaceTopic>(spaceTopics[0]);
+  const [refreshCycle, setRefreshCycle] = useState(0);
+  const [toast, setToast] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
   const userAvatar = readGeneratedAvatar() || defaultAvatarUrl;
 
   useEffect(() => {
@@ -98,6 +101,21 @@ export function F22_SpacesRadar() {
     setSelected(topic);
     setShowSignal(true);
     window.sessionStorage.setItem("second-self.selected-space", topic.key);
+  };
+
+  const refreshSpaces = () => {
+    if (refreshing) return;
+    setRefreshing(true);
+    setToast("No more availability for now.");
+    setVisibleNodes(false);
+    setShowSignal(false);
+    window.setTimeout(() => {
+      setRefreshCycle((value) => value + 1);
+      setVisibleNodes(true);
+      setShowSignal(true);
+      setRefreshing(false);
+    }, 500);
+    window.setTimeout(() => setToast(""), 1000);
   };
 
   return (
@@ -118,13 +136,41 @@ export function F22_SpacesRadar() {
               Tap any topic to preview the space.
             </p>
           </div>
-          <button
-            data-prototype-target="7:3"
-            className="w-9 h-9 rounded-full bg-white shadow-soft flex items-center justify-center"
-          >
-            <Info size={15} className="text-brand-purple" />
-          </button>
+          <div className="mt-1 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={refreshSpaces}
+              className="w-9 h-9 rounded-full bg-white shadow-soft flex items-center justify-center"
+              aria-label="Refresh spaces"
+            >
+              <motion.span
+                animate={refreshing ? { rotate: 360 } : { rotate: 0 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              >
+                <RefreshCw size={15} className="text-brand-purple" />
+              </motion.span>
+            </button>
+            <button
+              data-prototype-target="7:3"
+              className="w-9 h-9 rounded-full bg-white shadow-soft flex items-center justify-center"
+            >
+              <Info size={15} className="text-brand-purple" />
+            </button>
+          </div>
         </div>
+
+        <AnimatePresence>
+          {toast && (
+            <motion.div
+              initial={{ opacity: 0, y: -8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.98 }}
+              className="absolute left-5 right-5 top-[92px] z-50 rounded-2xl border border-white/80 bg-white/92 px-4 py-2 text-center text-[11px] font-bold text-brand-purple shadow-soft backdrop-blur-xl"
+            >
+              {toast}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div className="mx-5 mt-4 h-[330px] rounded-3xl bg-white/84 shadow-soft relative overflow-hidden border border-white/80">
           <div className="absolute inset-0 gradient-brand-soft opacity-65" />
@@ -165,22 +211,26 @@ export function F22_SpacesRadar() {
             </div>
           </div>
 
-          {visibleNodes &&
+          <AnimatePresence>
+            {visibleNodes &&
             spaceTopics.map((topic, index) => (
               <SpaceNode
-                key={topic.key}
+                key={`${refreshCycle}-${topic.key}`}
                 topic={topic}
                 index={index}
                 selected={selected.key === topic.key}
                 onChoose={() => chooseTopic(topic)}
               />
             ))}
+          </AnimatePresence>
         </div>
 
-        {showSignal && (
+        <AnimatePresence>
+          {showSignal && (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
             className="mx-5 mt-4 bg-white rounded-2xl p-4 shadow-soft border border-brand-bg"
           >
             <div className="flex items-center gap-2">
@@ -204,6 +254,7 @@ export function F22_SpacesRadar() {
             </motion.button>
           </motion.div>
         )}
+        </AnimatePresence>
       </div>
 
       <BottomNav active="COMMUNITY" />
@@ -244,6 +295,7 @@ function SpaceNode({
         x: { duration: 6.8 + index, repeat: Infinity, ease: "easeInOut", delay: index * 0.36 },
         y: { duration: 7.6 + index, repeat: Infinity, ease: "easeInOut", delay: index * 0.36 },
       }}
+      exit={{ opacity: 0, scale: 0.42, x: 0, y: 0 }}
       className="absolute left-1/2 top-1/2 z-30 flex h-[64px] w-[84px] -translate-x-1/2 -translate-y-1/2 flex-col items-center"
     >
       <span

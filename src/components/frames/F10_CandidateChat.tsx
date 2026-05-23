@@ -703,6 +703,7 @@ function PrototypeKeyboard({
       animate={{ y: 0 }}
       exit={{ y: 280 }}
       transition={{ type: "spring", stiffness: 360, damping: 38 }}
+      data-prototype-keyboard
       className="absolute bottom-0 left-0 right-0 z-[110] bg-gradient-to-b from-[#f6f1ff] via-[#eee8fb] to-[#dfe8f5] px-2 pt-2 pb-3 shadow-[0_-18px_34px_rgba(108,92,231,0.18)] border-t border-white/75"
     >
       <div className="hidden">

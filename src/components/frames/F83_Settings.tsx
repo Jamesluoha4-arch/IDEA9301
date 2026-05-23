@@ -116,7 +116,7 @@ export function F83_Settings() {
   return (
     <div className="relative h-full w-full overflow-hidden gradient-brand-soft text-brand-ink">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(167,139,250,0.22),transparent_34%),radial-gradient(circle_at_90%_45%,rgba(246,180,219,0.18),transparent_34%),radial-gradient(circle_at_20%_80%,rgba(167,219,255,0.18),transparent_30%)]" />
-      <div className="relative h-full overflow-y-auto pb-10 pt-10 prototype-scroll">
+      <div className="relative h-full overflow-y-auto pb-40 pt-10 prototype-scroll">
         <div className="relative h-10 px-5 flex items-center justify-center">
           <button
             type="button"
@@ -165,7 +165,7 @@ export function F83_Settings() {
           <SettingsRow icon={FileText} title="Terms of Use" />
         </SettingsSection>
 
-        <div className="mx-5 mt-8 overflow-hidden rounded-[18px] border border-white/70 shadow-[0_12px_28px_rgba(108,92,231,0.08)]">
+        <div className="mx-5 mt-8 mb-8 overflow-hidden rounded-[18px] border border-white/70 shadow-[0_12px_28px_rgba(108,92,231,0.08)]">
           <SettingsRow icon={LogOut} title="Log Out" danger onClick={() => setShowLogout(true)} />
         </div>
       </div>

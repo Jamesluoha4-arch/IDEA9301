@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { ChevronRight, Gift, Plus, Shield } from "lucide-react";
+import { Bot, ChevronRight, Gift, Plus, Send, Shield, UserRound } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
 import {
   AvatarFrameEffect,
@@ -17,6 +17,11 @@ type ShapingProfile = {
   name: string;
   id: string;
   intro: string;
+};
+
+type PersonaMessage = {
+  from: "user" | "ai";
+  text: string;
 };
 
 const modeDetails: Record<AiMode, { summary: string; dot: string }> = {
@@ -67,6 +72,13 @@ export function F36_AIControlCenter() {
   const [savedProfile, setSavedProfile] = useState<ShapingProfile>(() => readShapingProfile());
   const [draftProfile, setDraftProfile] = useState<ShapingProfile>(() => readShapingProfile());
   const [avatarFrame, setAvatarFrame] = useState(readAppliedAvatarFrame);
+  const [personaInput, setPersonaInput] = useState("");
+  const [personaMessages, setPersonaMessages] = useState<PersonaMessage[]>([
+    {
+      from: "ai",
+      text: "Hi, I am your Second Self. Ask me how I would introduce you, reply to Jim, or handle a social situation.",
+    },
+  ]);
   const avatarUrl = readGeneratedAvatar() || defaultAvatarUrl;
   const activeMode = modeDetails[aiMode];
   const hasProfileChanges =
@@ -104,6 +116,27 @@ export function F36_AIControlCenter() {
 
   const prepareReshape = () => {
     window.sessionStorage.setItem("second-self.face-scan-return", "3:0");
+  };
+
+  const sendPersonaMessage = () => {
+    const text = personaInput.trim();
+    if (!text) return;
+
+    const lower = text.toLowerCase();
+    const reply = lower.includes("jim")
+      ? "I would keep it warm and low-pressure: mention the shared context, ask one simple question, and let Jim choose whether to continue."
+      : lower.includes("introduce") || lower.includes("intro")
+        ? `I can introduce myself as ${savedProfile.name}: ${savedProfile.intro || "a careful, friendly version of you that helps start conversations while you stay in control."}`
+        : lower.includes("safe") || lower.includes("privacy")
+          ? "I will avoid private chats, blocked topics, and anything you have not approved. If a moment feels sensitive, I should step back and ask you first."
+          : "I hear you. I would turn that into a short, human-sounding reply with one clear intention and no pressure to over-share.";
+
+    setPersonaMessages((messages) => [
+      ...messages,
+      { from: "user", text },
+      { from: "ai", text: reply },
+    ]);
+    setPersonaInput("");
   };
 
   return (
@@ -175,6 +208,60 @@ export function F36_AIControlCenter() {
           <Gift size={14} />
           Enter Frame Shop
         </button>
+      </div>
+
+      <div className="px-5 mt-5 text-[15px] font-bold">Talk to your AI Double</div>
+      <div className="mx-4 mt-2 rounded-3xl border border-white bg-white/88 p-3.5 shadow-soft backdrop-blur-xl">
+        <div className="max-h-[178px] space-y-2 overflow-y-auto pr-1 prototype-scroll">
+          {personaMessages.map((message, index) => {
+            const isUser = message.from === "user";
+            return (
+              <div
+                key={`${message.from}-${index}-${message.text}`}
+                className={`flex items-start gap-2 ${isUser ? "justify-end" : "justify-start"}`}
+              >
+                {!isUser && (
+                  <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-bg text-brand-purple">
+                    <Bot size={14} />
+                  </span>
+                )}
+                <div
+                  className={`max-w-[78%] rounded-2xl px-3 py-2 text-[11px] leading-[16px] shadow-sm ${
+                    isUser
+                      ? "gradient-brand text-white"
+                      : "border border-brand-bg bg-white text-brand-ink"
+                  }`}
+                >
+                  {message.text}
+                </div>
+                {isUser && (
+                  <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-purple/12 text-brand-purple">
+                    <UserRound size={14} />
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        <div className="mt-3 flex items-center gap-2 rounded-2xl bg-brand-bg/70 px-3 py-2">
+          <input
+            value={personaInput}
+            onChange={(event) => setPersonaInput(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") sendPersonaMessage();
+            }}
+            placeholder="Message your AI double..."
+            className="min-w-0 flex-1 bg-transparent text-[12px] font-semibold text-brand-ink outline-none placeholder:text-brand-mute"
+          />
+          <button
+            type="button"
+            onClick={sendPersonaMessage}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full gradient-brand text-white shadow-soft"
+            aria-label="Send message to AI double"
+          >
+            <Send size={14} />
+          </button>
+        </div>
       </div>
 
       <div className="px-5 mt-5 text-[15px] font-bold">Basic Shaping</div>

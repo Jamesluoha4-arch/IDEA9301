@@ -51,7 +51,14 @@ export function F27_NewSpace() {
   return (
     <div className="relative w-full h-full pt-12 pb-6 overflow-y-auto font-sans text-brand-ink gradient-brand-soft">
       <div className="px-5 pt-2 flex items-center justify-between">
-        <ArrowLeft size={18} className="text-brand-purple" />
+        <button
+          type="button"
+          data-prototype-back
+          aria-label="Back to previous page"
+          className="h-10 w-10 rounded-2xl bg-white/72 shadow-soft flex items-center justify-center"
+        >
+          <ArrowLeft size={18} className="text-brand-purple" />
+        </button>
       </div>
       <div className="px-5 mt-2 flex items-center justify-between">
         <h1 className="text-[26px] font-bold tracking-[-0.5px]">

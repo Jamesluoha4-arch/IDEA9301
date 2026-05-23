@@ -331,6 +331,7 @@ export function FlowPlayer({ onOpenGallery }: Props) {
 
   const handlePrototypeTap = (event: MouseEvent<HTMLDivElement>) => {
     const target = event.target as HTMLElement;
+    if (target.closest("[data-prototype-keyboard]")) return;
     if (target.closest("input,textarea,select")) return;
 
     const text = readClickText(target);

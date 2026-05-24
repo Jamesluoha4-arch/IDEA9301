@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import type { MouseEvent, PointerEvent } from "react";
+import type { PointerEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Delete, Gift, RefreshCcw, Send, Shield, UserRound } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
@@ -215,14 +215,6 @@ export function F36_AIControlCenter() {
     setPersonaMessages([{ from: "ai", text: persona.intro }]);
   };
 
-  const chooseCreativePersona = (event: MouseEvent<HTMLButtonElement>, persona: CreativePersona) => {
-    if (personaDrag.current.moved) {
-      event.preventDefault();
-      return;
-    }
-    selectCreativePersona(persona);
-  };
-
   const resetCreativePersona = () => {
     setActivePersona(null);
     setPersonaInput("");
@@ -266,6 +258,14 @@ export function F36_AIControlCenter() {
     if (rail?.hasPointerCapture(event.pointerId)) {
       rail.releasePointerCapture(event.pointerId);
     }
+  };
+
+  const chooseCreativePersona = (event: PointerEvent<HTMLButtonElement>, persona: CreativePersona) => {
+    if (personaDrag.current.moved) {
+      event.preventDefault();
+      return;
+    }
+    selectCreativePersona(persona);
   };
 
   return (
@@ -346,16 +346,16 @@ export function F36_AIControlCenter() {
             Swipe to choose a temporary AI role for this chat.
           </div>
         </div>
-        {activePersona && (
-          <button
-            type="button"
-            onClick={resetCreativePersona}
-            className="flex items-center gap-1 rounded-full bg-white px-3 py-1.5 text-[10px] font-bold text-brand-purple shadow-sm"
-          >
-            <RefreshCcw size={11} />
-            Reset
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={resetCreativePersona}
+          className={`flex items-center gap-1 rounded-full bg-white px-3 py-1.5 text-[10px] font-bold shadow-sm transition ${
+            activePersona ? "text-brand-purple" : "text-brand-mute"
+          }`}
+        >
+          <RefreshCcw size={11} />
+          Reset
+        </button>
       </div>
       <div
         ref={personaRailRef}
@@ -370,7 +370,7 @@ export function F36_AIControlCenter() {
             <motion.button
               key={persona.id}
               type="button"
-              onClick={(event) => chooseCreativePersona(event, persona)}
+              onPointerUp={(event) => chooseCreativePersona(event, persona)}
               initial={{ opacity: 0, x: 18 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.04 }}

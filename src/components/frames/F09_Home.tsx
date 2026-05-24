@@ -731,9 +731,7 @@ export function FloatingBottomNav({ active }: { active: string }) {
   const resolveAvatarUrl = () => {
     const generated = window.sessionStorage.getItem(generatedAvatarStorageKey) || "";
     if (generated) return generated;
-    return window.sessionStorage.getItem("second-self.avatar-nav-mode") === "default"
-      ? defaultAvatarUrl
-      : "";
+    return defaultAvatarUrl;
   };
   const [avatarUrl, setAvatarUrl] = useState(() => resolveAvatarUrl());
   const [avatarBubble, setAvatarBubble] = useState(false);

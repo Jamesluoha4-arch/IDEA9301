@@ -130,6 +130,53 @@
   }
 }
 
+@layer components {
+  .prototype-shell {
+    padding: 34px;
+  }
+
+  .prototype-export-shell {
+    padding: 0;
+    background: transparent !important;
+  }
+
+  .prototype-phone-stage {
+    width: 456px;
+    height: 972px;
+  }
+
+  @media (max-width: 480px), (max-height: 760px) {
+    .prototype-shell {
+      align-items: stretch;
+      justify-content: flex-start;
+      min-height: 100dvh;
+      padding: 0;
+      background: #ffffff !important;
+    }
+
+    .prototype-phone-stage,
+    .prototype-phone-wrapper,
+    .prototype-phone-screen {
+      width: 100vw !important;
+      height: 100dvh !important;
+    }
+
+    .prototype-phone-stage {
+      display: block;
+    }
+
+    .prototype-phone-screen {
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .prototype-phone-notch,
+    .prototype-phone-camera {
+      display: none !important;
+    }
+  }
+}
+
 /* ===== Animations ===== */
 @keyframes float-slow {
   0%,

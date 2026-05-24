@@ -1,6 +1,5 @@
 ﻿import { useMemo, useState, type MouseEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Home, Layers, RotateCcw } from "lucide-react";
 import { FloatingBottomNav } from "@/components/frames/F09_Home";
 import { PhoneFrame } from "@/components/PhoneFrame";
 import { flows } from "@/lib/flows";
@@ -288,7 +287,15 @@ function activeTabFor(node: NodeKey) {
 }
 
 export function FlowPlayer({ onOpenGallery }: Props) {
-  const [node, setNode] = useState<NodeKey>(key(0, 0));
+  void onOpenGallery;
+  const initialNode = (() => {
+    if (typeof window === "undefined") return key(0, 0);
+    const frame = new URLSearchParams(window.location.search).get("exportFrame");
+    return frame && frame.includes(":") ? (frame as NodeKey) : key(0, 0);
+  })();
+  const isExportMode =
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).has("exportFrame");
+  const [node, setNode] = useState<NodeKey>(initialNode);
   const [history, setHistory] = useState<NodeKey[]>([]);
   const [selectedAiMode, setSelectedAiMode] = useState<AiMode>(() => readSelectedAiMode());
   const [direction, setDirection] = useState<1 | -1>(1);
@@ -298,7 +305,7 @@ export function FlowPlayer({ onOpenGallery }: Props) {
   const step = flow.steps[stepIdx];
   const StepComponent = step.Component;
   const rules = graph[node] ?? [];
-  const displayScale = 0.66;
+  const displayScale = 1;
   const activeTab = activeTabFor(node);
 
   const allNodes = useMemo(
@@ -321,12 +328,6 @@ export function FlowPlayer({ onOpenGallery }: Props) {
     setDirection(previousIndex <= currentIndex ? -1 : 1);
     setHistory((items) => items.slice(0, -1));
     setNode(previous);
-  };
-
-  const restart = () => {
-    setDirection(-1);
-    setHistory([]);
-    setNode(key(0, 0));
   };
 
   const handlePrototypeTap = (event: MouseEvent<HTMLDivElement>) => {
@@ -480,54 +481,15 @@ export function FlowPlayer({ onOpenGallery }: Props) {
 
   return (
     <div
-      className="min-h-screen w-full flex flex-col"
+      className={`prototype-shell min-h-screen w-full flex items-center justify-center ${
+        isExportMode ? "prototype-export-shell" : ""
+      }`}
       style={{ background: "linear-gradient(180deg, #f7f6fb 0%, #fbfaff 54%, #f5f8fc 100%)" }}
     >
-      <div className="px-6 pt-6 pb-3 flex items-center gap-3 max-w-6xl mx-auto w-full">
-        <div className="flex-1" />
-        <button
-          onClick={restart}
-          className="px-3 py-2 rounded-xl bg-white/70 backdrop-blur border border-white text-[12px] font-bold text-brand-ink flex items-center gap-2 hover:bg-white"
-        >
-          <RotateCcw size={14} /> Restart
-        </button>
-        <button
-          onClick={onOpenGallery}
-          className="px-3 py-2 rounded-xl bg-brand-ink text-white text-[12px] font-bold flex items-center gap-2"
-        >
-          <Home size={14} /> Gallery
-        </button>
-      </div>
-
-      <div className="max-w-6xl mx-auto w-full px-6">
-        <div className="rounded-2xl bg-white/70 border border-white px-4 py-3 flex flex-wrap items-center gap-2 shadow-soft">
-          <div className="flex items-center gap-2 text-[10px] font-bold tracking-[0.18em] uppercase text-brand-mute">
-            <Layers size={13} /> Valid taps on this screen
-          </div>
-          {rules.length ? (
-            rules.map((rule, i) => {
-              const label = rule.label ?? (Array.isArray(rule.match) ? rule.match[0] : rule.match);
-              return (
-                <span
-                  key={`${label}-${i}`}
-                  className="px-2.5 py-1 rounded-full bg-white border border-brand-bg text-[10px] font-bold text-brand-ink"
-                >
-                  {label}
-                </span>
-              );
-            })
-          ) : (
-            <span className="text-[11px] text-brand-mute">
-              This screen keeps local controls only.
-            </span>
-          )}
-        </div>
-      </div>
-
-      <div className="flex-1 flex items-start justify-center px-6 py-5">
+      <div className="prototype-phone-stage flex items-start justify-center">
         <div
           className="relative"
-          style={{ width: 440 * displayScale, height: 1026 * displayScale }}
+          style={{ width: 440 * displayScale, height: 956 * displayScale }}
         >
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
@@ -547,6 +509,8 @@ export function FlowPlayer({ onOpenGallery }: Props) {
                 <PhoneFrame
                   title={`${flow.id.toUpperCase()} 路 ${step.label}`}
                   subtitle={step.hint}
+                  showLabel={false}
+                  showChrome={!isExportMode}
                 >
                   <StepComponent />
                   {activeTab && <FloatingBottomNav active={activeTab} />}

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import type { PointerEvent } from "react";
+import type { MouseEvent, PointerEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Delete, Gift, RefreshCcw, Send, Shield, UserRound } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
@@ -171,7 +171,7 @@ export function F36_AIControlCenter() {
   const chatAvatarUrl = activePersona?.avatar || avatarUrl;
   const activeMode = modeDetails[aiMode];
   const personaRailRef = useRef<HTMLDivElement>(null);
-  const personaDrag = useRef({ active: false, startX: 0, scrollLeft: 0 });
+  const personaDrag = useRef({ active: false, moved: false, startX: 0, scrollLeft: 0 });
 
   useEffect(() => {
     const timer = window.setTimeout(() => setChallengeReady(true), 2000);
@@ -215,6 +215,14 @@ export function F36_AIControlCenter() {
     setPersonaMessages([{ from: "ai", text: persona.intro }]);
   };
 
+  const chooseCreativePersona = (event: MouseEvent<HTMLButtonElement>, persona: CreativePersona) => {
+    if (personaDrag.current.moved) {
+      event.preventDefault();
+      return;
+    }
+    selectCreativePersona(persona);
+  };
+
   const resetCreativePersona = () => {
     setActivePersona(null);
     setPersonaInput("");
@@ -235,6 +243,7 @@ export function F36_AIControlCenter() {
     if (!rail) return;
     personaDrag.current = {
       active: true,
+      moved: false,
       startX: event.clientX,
       scrollLeft: rail.scrollLeft,
     };
@@ -245,6 +254,9 @@ export function F36_AIControlCenter() {
     const rail = personaRailRef.current;
     if (!rail || !personaDrag.current.active) return;
     const distance = event.clientX - personaDrag.current.startX;
+    if (Math.abs(distance) > 6) {
+      personaDrag.current.moved = true;
+    }
     rail.scrollLeft = personaDrag.current.scrollLeft - distance;
   };
 
@@ -358,7 +370,7 @@ export function F36_AIControlCenter() {
             <motion.button
               key={persona.id}
               type="button"
-              onClick={() => selectCreativePersona(persona)}
+              onClick={(event) => chooseCreativePersona(event, persona)}
               initial={{ opacity: 0, x: 18 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.04 }}
@@ -392,57 +404,78 @@ export function F36_AIControlCenter() {
 
       <div className="px-5 mt-5 text-[15px] font-bold">Talk to your AI Self</div>
       <div className="mx-4 mt-2 rounded-3xl border border-white bg-white/88 p-4 shadow-soft backdrop-blur-xl">
-        {activePersona && (
-          <div className="mb-3 flex items-center gap-2 rounded-2xl bg-brand-bg/65 px-3 py-2">
-            <img src={activePersona.avatar} alt="" className="h-9 w-9 rounded-full object-cover object-top" />
-            <div className="min-w-0 flex-1">
-              <div className="text-[11px] font-bold">{activePersona.label}</div>
-              <div className="text-[9px] leading-[12px] text-brand-mute">{activePersona.title}</div>
-            </div>
-            <button
-              type="button"
-              onClick={resetCreativePersona}
-              className="rounded-full bg-white px-2.5 py-1 text-[9px] font-bold text-brand-purple shadow-sm"
-            >
-              Reset
-            </button>
-          </div>
-        )}
-        <div className="min-h-[220px] max-h-[290px] space-y-2 overflow-y-auto pr-1 prototype-scroll">
-          {personaMessages.map((message, index) => {
-            const isUser = message.from === "user";
-            return (
-              <div
-                key={`${message.from}-${index}-${message.text}`}
-                className={`flex items-start gap-2 ${isUser ? "justify-end" : "justify-start"}`}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={activePersona?.id ?? "default-ai-self"}
+            initial={{ opacity: 0, y: 16, scale: 0.97, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -10, scale: 0.98, filter: "blur(4px)" }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+          >
+            {activePersona && (
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="mb-3 flex items-center gap-2 rounded-2xl bg-brand-bg/65 px-3 py-2"
               >
-                {!isUser && (
-                  <span className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-bg text-brand-purple shadow-sm">
-                    <img
-                      src={chatAvatarUrl}
-                      alt=""
-                      className="h-[120%] w-[120%] object-cover object-top"
-                    />
-                  </span>
-                )}
-                <div
-                  className={`max-w-[78%] rounded-2xl px-3 py-2 text-[11px] leading-[16px] shadow-sm ${
-                    isUser
-                      ? "gradient-brand text-white"
-                      : "border border-brand-bg bg-white text-brand-ink"
-                  }`}
-                >
-                  {message.text}
+                <img src={activePersona.avatar} alt="" className="h-9 w-9 rounded-full object-cover object-top" />
+                <div className="min-w-0 flex-1">
+                  <div className="text-[11px] font-bold">{activePersona.label}</div>
+                  <div className="text-[9px] leading-[12px] text-brand-mute">{activePersona.title}</div>
                 </div>
-                {isUser && (
-                  <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-purple/12 text-brand-purple">
-                    <UserRound size={14} />
-                  </span>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                <button
+                  type="button"
+                  onClick={resetCreativePersona}
+                  className="rounded-full bg-white px-2.5 py-1 text-[9px] font-bold text-brand-purple shadow-sm"
+                >
+                  Reset
+                </button>
+              </motion.div>
+            )}
+            <div className="min-h-[220px] max-h-[290px] space-y-2 overflow-y-auto pr-1 prototype-scroll">
+              {personaMessages.map((message, index) => {
+                const isUser = message.from === "user";
+                return (
+                  <motion.div
+                    key={`${activePersona?.id ?? "default"}-${message.from}-${index}-${message.text}`}
+                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ delay: index * 0.04, duration: 0.22 }}
+                    className={`flex items-start gap-2 ${isUser ? "justify-end" : "justify-start"}`}
+                  >
+                    {!isUser && (
+                      <motion.span
+                        initial={{ rotate: -6, scale: 0.85 }}
+                        animate={{ rotate: 0, scale: 1 }}
+                        className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-bg text-brand-purple shadow-sm"
+                      >
+                        <img
+                          src={chatAvatarUrl}
+                          alt=""
+                          className="h-[120%] w-[120%] object-cover object-top"
+                        />
+                      </motion.span>
+                    )}
+                    <div
+                      className={`max-w-[78%] rounded-2xl px-3 py-2 text-[11px] leading-[16px] shadow-sm ${
+                        isUser
+                          ? "gradient-brand text-white"
+                          : "border border-brand-bg bg-white text-brand-ink"
+                      }`}
+                    >
+                      {message.text}
+                    </div>
+                    {isUser && (
+                      <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-purple/12 text-brand-purple">
+                        <UserRound size={14} />
+                      </span>
+                    )}
+                  </motion.div>
+                );
+              })}
+            </div>
+          </motion.div>
+        </AnimatePresence>
         <div className="mt-3 flex items-center gap-2 rounded-2xl bg-brand-bg/70 px-3 py-2">
           <button
             type="button"

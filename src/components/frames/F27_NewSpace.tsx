@@ -1,7 +1,7 @@
 ﻿import { motion } from "framer-motion";
 import { ArrowLeft, Image as ImageIcon, Camera, X } from "lucide-react";
 import { useState } from "react";
-import defaultAvatarUrl from "@/assets/default-ai-self.svg";
+import defaultAvatarUrl from "@/assets/default-ai-self.png";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";
 
 function readUserName() {

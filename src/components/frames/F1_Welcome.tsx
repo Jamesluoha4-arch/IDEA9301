@@ -1,6 +1,6 @@
 ﻿import { motion } from "framer-motion";
 
-import secondSelfLogo from "@/assets/second-self-logo-cropped.png";
+import secondSelfLogo from "@/assets/second-self-logo.png";
 
 export function F1_Welcome() {
   return (

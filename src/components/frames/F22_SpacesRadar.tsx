@@ -11,7 +11,7 @@ import {
   Music,
   RefreshCw,
 } from "lucide-react";
-import defaultAvatarUrl from "@/assets/default-ai-self.svg";
+import defaultAvatarUrl from "@/assets/default-ai-self.png";
 import JimUrl from "@/assets/radar-avatar-1.png";
 import joeUrl from "@/assets/radar-avatar-2.png";
 import sabrinaUrl from "@/assets/radar-avatar-3.png";

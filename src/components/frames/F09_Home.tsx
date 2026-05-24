@@ -20,7 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import defaultAvatarUrl from "@/assets/default-ai-self.svg";
+import defaultAvatarUrl from "@/assets/default-ai-self.png";
 import {
   AvatarFrameEffect,
   frameUpdatedEvent,

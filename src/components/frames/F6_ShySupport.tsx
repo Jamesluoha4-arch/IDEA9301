@@ -1,6 +1,6 @@
 ﻿import { motion } from "framer-motion";
 
-import defaultAvatarUrl from "@/assets/default-ai-self.svg";
+import defaultAvatarUrl from "@/assets/default-ai-self.png";
 
 export function F6_ShySupport() {
   return (

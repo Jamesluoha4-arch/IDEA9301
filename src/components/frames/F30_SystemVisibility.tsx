@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import {
+  ArrowLeft,
   ArrowUpRight,
   Archive,
   Brain,
@@ -67,8 +68,39 @@ const memoryTrail = [
   },
 ] as const;
 
-type MemoryStatus = "all" | "deleted" | "archived";
+type MemoryStatus = "all" | "deleted" | "archived" | "purged";
 type ManagedMemory = (typeof memoryTrail)[number] & { status: MemoryStatus };
+
+const managedMemoriesKey = "second-self.managed-memories";
+
+function defaultManagedMemories(): ManagedMemory[] {
+  return memoryTrail.map((memory) => ({ ...memory, status: "all" }));
+}
+
+function readManagedMemories(): ManagedMemory[] {
+  if (typeof window === "undefined") return defaultManagedMemories();
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(managedMemoriesKey) || "[]");
+    const savedStatus = new Map<string, MemoryStatus>(
+      Array.isArray(saved)
+        ? saved.map((item) => [String(item.id), item.status as MemoryStatus])
+        : [],
+    );
+    return defaultManagedMemories()
+      .map((memory) => ({ ...memory, status: savedStatus.get(memory.id) ?? memory.status }))
+      .filter((memory) => memory.status !== "purged");
+  } catch {
+    return defaultManagedMemories();
+  }
+}
+
+function writeManagedMemories(memories: ManagedMemory[]) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(
+    managedMemoriesKey,
+    JSON.stringify(memories.map(({ id, status }) => ({ id, status }))),
+  );
+}
 
 const relationshipSignals = [
   {
@@ -356,17 +388,29 @@ export function F30_SystemVisibility() {
 }
 
 function MemoriesManager({ onBack }: { onBack: () => void }) {
-  const [tab, setTab] = useState<MemoryStatus>("all");
-  const [memories, setMemories] = useState<ManagedMemory[]>(() =>
-    memoryTrail.map((memory) => ({ ...memory, status: "all" })),
-  );
+  const [tab, setTab] = useState<Exclude<MemoryStatus, "purged">>("all");
+  const [memories, setMemories] = useState<ManagedMemory[]>(readManagedMemories);
   const visible = memories.filter((memory) => memory.status === tab);
 
   const updateMemory = (id: string, status: MemoryStatus) => {
-    setMemories((items) => items.map((memory) => (memory.id === id ? { ...memory, status } : memory)));
+    setMemories((items) => {
+      const next = items.map((memory) => (memory.id === id ? { ...memory, status } : memory));
+      writeManagedMemories(next);
+      return next.filter((memory) => memory.status !== "purged");
+    });
   };
   const removeMemory = (id: string) => {
-    setMemories((items) => items.filter((memory) => memory.id !== id));
+    const purgedMemory = memoryTrail.find((memory) => memory.id === id);
+    setMemories((items) => {
+      const next = purgedMemory
+        ? [
+            ...items.filter((memory) => memory.id !== id),
+            { ...purgedMemory, status: "purged" as const },
+          ]
+        : items.filter((memory) => memory.id !== id);
+      writeManagedMemories(next);
+      return next.filter((memory) => memory.status !== "purged");
+    });
   };
 
   return (
@@ -375,9 +419,10 @@ function MemoriesManager({ onBack }: { onBack: () => void }) {
         <button
           type="button"
           onClick={onBack}
-          className="mb-3 h-9 rounded-full bg-white px-3 text-[12px] font-bold text-brand-purple shadow-sm"
+          className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-white text-brand-purple shadow-sm"
+          aria-label="Back"
         >
-          Back
+          <ArrowLeft size={16} />
         </button>
         <div className="text-[24px] font-bold">Manage memories</div>
         <div className="mt-2 grid grid-cols-3 gap-2">
@@ -389,7 +434,7 @@ function MemoriesManager({ onBack }: { onBack: () => void }) {
             <button
               key={key}
               type="button"
-              onClick={() => setTab(key as MemoryStatus)}
+              onClick={() => setTab(key as Exclude<MemoryStatus, "purged">)}
               className={`rounded-2xl px-2 py-2 text-[11px] font-bold ${
                 tab === key ? "gradient-brand text-white shadow-soft" : "bg-white/75 text-brand-purple"
               }`}

@@ -2,11 +2,12 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeft,
+  Bell,
   Bot,
   ChevronDown,
+  Clock3,
   Edit3,
   Heart,
-  Info,
   MessageSquare,
   Search,
   Send,
@@ -89,6 +90,7 @@ const spaceData: Record<string, SpacePostData> = {
 
 type SpaceKey = keyof typeof spaceData;
 type FeedMode = "Friends" | "Featured";
+type ActivityPost = { spaceName: string; body: string; time: string };
 
 const curatedPosts: SpacePostData[] = [
   {
@@ -135,6 +137,40 @@ function readCustomPosts(spaceKey: SpaceKey): SpacePostData[] {
   }
 }
 
+const viewedSpacesKey = "second-self.viewed-spaces";
+
+function readViewedSpaceKeys() {
+  if (typeof window === "undefined") return [];
+  try {
+    const saved = JSON.parse(window.sessionStorage.getItem(viewedSpacesKey) || "[]");
+    return Array.isArray(saved) ? (saved as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function recordViewedSpace(key: SpaceKey) {
+  const next = Array.from(new Set([key, ...readViewedSpaceKeys()])).slice(0, 6);
+  window.sessionStorage.setItem(viewedSpacesKey, JSON.stringify(next));
+}
+
+function readActivityPosts(): ActivityPost[] {
+  if (typeof window === "undefined") return [];
+  return (Object.keys(spaceData) as SpaceKey[]).flatMap((key) => {
+    try {
+      const saved = JSON.parse(window.sessionStorage.getItem(`second-self.posts.${key}`) || "[]");
+      if (!Array.isArray(saved)) return [];
+      return saved.map((post) => ({
+        spaceName: spaceData[key].name,
+        body: String(post.body || post.starter || "New approved post"),
+        time: String(post.time || "JUST NOW"),
+      }));
+    } catch {
+      return [];
+    }
+  });
+}
+
 function composerSeenKey(spaceKey: SpaceKey) {
   return `second-self.space-intro-seen.${spaceKey}`;
 }
@@ -145,6 +181,7 @@ export function F25_SpacesFeed() {
   const [mode, setMode] = useState<FeedMode>("Friends");
   const [filterOpen, setFilterOpen] = useState(false);
   const [customPosts, setCustomPosts] = useState<SpacePostData[]>([]);
+  const [showActivities, setShowActivities] = useState(false);
   const spaceKey = readSpaceKey();
   const space = spaceData[spaceKey];
   const userName = readUserName();
@@ -155,6 +192,7 @@ export function F25_SpacesFeed() {
     setShowComposer(false);
     setComposerGone(false);
     setCustomPosts(readCustomPosts(spaceKey));
+    recordViewedSpace(spaceKey);
     if (window.sessionStorage.getItem(composerSeenKey(spaceKey))) return;
     const timer = window.setTimeout(() => {
       window.sessionStorage.setItem(composerSeenKey(spaceKey), "true");
@@ -199,6 +237,10 @@ export function F25_SpacesFeed() {
   ];
   const posts = mode === "Friends" ? friendPosts : curatedPosts;
 
+  if (showActivities) {
+    return <ActivityHistory onBack={() => setShowActivities(false)} />;
+  }
+
   return (
     <div className="relative w-full h-full overflow-hidden font-sans text-brand-ink gradient-brand-soft">
       <div className="h-full pt-12 pb-24 overflow-y-auto prototype-scroll">
@@ -218,10 +260,20 @@ export function F25_SpacesFeed() {
             />
           </label>
           <button
+            type="button"
+            onClick={() => setShowActivities(true)}
+            className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center"
+            aria-label="View activity history"
+          >
+            <Clock3 size={14} className="text-brand-purple" />
+          </button>
+          <button
+            type="button"
             data-prototype-target="7:3"
             className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center"
+            aria-label="Notifications"
           >
-            <Info size={14} className="text-brand-purple" />
+            <Bell size={14} className="text-brand-purple" />
           </button>
         </div>
 
@@ -352,6 +404,79 @@ export function F25_SpacesFeed() {
       </button>
 
       <BottomNav active="COMMUNITY" />
+    </div>
+  );
+}
+
+function ActivityHistory({ onBack }: { onBack: () => void }) {
+  const viewed = readViewedSpaceKeys()
+    .map((key) => spaceData[key as SpaceKey])
+    .filter(Boolean);
+  const posts = readActivityPosts();
+
+  return (
+    <div className="relative h-full w-full overflow-y-auto pb-24 pt-12 font-sans text-brand-ink gradient-brand-soft prototype-scroll">
+      <div className="sticky top-0 z-20 border-b border-white/70 bg-white/60 px-5 pb-3 pt-3 backdrop-blur-2xl">
+        <button
+          type="button"
+          onClick={onBack}
+          className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-white text-brand-purple shadow-sm"
+          aria-label="Back"
+        >
+          <ArrowLeft size={16} />
+        </button>
+        <div className="text-[24px] font-bold">Activities</div>
+        <div className="mt-1 text-[11px] leading-[15px] text-brand-mute">
+          Review the spaces you visited and the posts your Second Self prepared with your approval.
+        </div>
+      </div>
+
+      <div className="mx-4 mt-4 space-y-4">
+        <section className="rounded-[28px] border border-white bg-white/82 p-4 shadow-soft backdrop-blur-xl">
+          <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-purple">
+            Viewed spaces
+          </div>
+          <div className="mt-3 space-y-2">
+            {viewed.length ? (
+              viewed.map((space) => (
+                <div key={space.key} className="rounded-2xl bg-brand-bg/60 px-3 py-2.5">
+                  <div className="text-[12px] font-bold">{space.name} Space</div>
+                  <div className="mt-0.5 text-[10px] leading-[14px] text-brand-mute">
+                    {space.body.slice(0, 92)}...
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-2xl bg-brand-bg/50 px-3 py-3 text-[11px] font-bold text-brand-mute">
+                No spaces viewed yet.
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="rounded-[28px] border border-white bg-white/82 p-4 shadow-soft backdrop-blur-xl">
+          <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-purple">
+            Your posts
+          </div>
+          <div className="mt-3 space-y-2">
+            {posts.length ? (
+              posts.map((post, index) => (
+                <div key={`${post.spaceName}-${index}`} className="rounded-2xl bg-white px-3 py-3 shadow-sm">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="text-[12px] font-bold">{post.spaceName}</div>
+                    <div className="text-[9px] font-bold text-brand-purple">{post.time}</div>
+                  </div>
+                  <div className="mt-1 text-[10px] leading-[14px] text-brand-mute">{post.body}</div>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-2xl bg-brand-bg/50 px-3 py-3 text-[11px] font-bold text-brand-mute">
+                No posts published yet.
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

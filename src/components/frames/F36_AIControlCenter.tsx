@@ -2,8 +2,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Delete, Gift, RefreshCcw, Send, Shield, UserRound } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
-import greenAvatarUrl from "@/assets/chibi-figurine-green.png";
 import winnieAvatarUrl from "@/assets/avatar-mia.png";
+import joeAvatarUrl from "@/assets/radar-avatar-2.png";
 import sabrinaAvatarUrl from "@/assets/radar-avatar-3.png";
 import jamesAvatarUrl from "@/assets/radar-avatar-4.png";
 import {
@@ -81,7 +81,7 @@ const creativePersonas: CreativePersona[] = [
     id: "supervisor",
     label: "Department Supervisor",
     title: "Workplace guidance",
-    avatar: greenAvatarUrl,
+    avatar: joeAvatarUrl,
     tone: "from-brand-sky to-brand-mint",
     intro:
       "I can respond like a supportive supervisor, keeping the conversation practical, respectful, and outcome-focused.",

@@ -254,18 +254,22 @@ export function F36_AIControlCenter() {
 
   const endPersonaDrag = (event: PointerEvent<HTMLDivElement>) => {
     const rail = personaRailRef.current;
+    const wasDrag = personaDrag.current.moved;
     personaDrag.current.active = false;
     if (rail?.hasPointerCapture(event.pointerId)) {
       rail.releasePointerCapture(event.pointerId);
     }
-  };
 
-  const chooseCreativePersona = (event: PointerEvent<HTMLButtonElement>, persona: CreativePersona) => {
-    if (personaDrag.current.moved) {
-      event.preventDefault();
+    if (wasDrag) {
       return;
     }
-    selectCreativePersona(persona);
+
+    const target = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement | null;
+    const personaId = target?.closest("[data-creative-persona-id]")?.getAttribute("data-creative-persona-id");
+    const persona = creativePersonas.find((item) => item.id === personaId);
+    if (persona) {
+      selectCreativePersona(persona);
+    }
   };
 
   return (
@@ -348,7 +352,10 @@ export function F36_AIControlCenter() {
         </div>
         <button
           type="button"
-          onClick={resetCreativePersona}
+          onPointerDown={(event) => {
+            event.stopPropagation();
+            resetCreativePersona();
+          }}
           className={`flex items-center gap-1 rounded-full bg-white px-3 py-1.5 text-[10px] font-bold shadow-sm transition ${
             activePersona ? "text-brand-purple" : "text-brand-mute"
           }`}
@@ -370,7 +377,7 @@ export function F36_AIControlCenter() {
             <motion.button
               key={persona.id}
               type="button"
-              onPointerUp={(event) => chooseCreativePersona(event, persona)}
+              data-creative-persona-id={persona.id}
               initial={{ opacity: 0, x: 18 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.04 }}
@@ -425,7 +432,10 @@ export function F36_AIControlCenter() {
                 </div>
                 <button
                   type="button"
-                  onClick={resetCreativePersona}
+                  onPointerDown={(event) => {
+                    event.stopPropagation();
+                    resetCreativePersona();
+                  }}
                   className="rounded-full bg-white px-2.5 py-1 text-[9px] font-bold text-brand-purple shadow-sm"
                 >
                   Reset

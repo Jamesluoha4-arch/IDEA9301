@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, Coins, LockKeyhole, Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import defaultAvatarUrl from "@/assets/chibi-figurine.png";
+import defaultAvatarUrl from "@/assets/default-ai-self.svg";
 import {
   AvatarFrameEffect,
   FrameSpec,

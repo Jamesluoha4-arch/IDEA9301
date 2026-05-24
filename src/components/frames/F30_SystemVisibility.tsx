@@ -15,7 +15,7 @@ import {
   Trash2,
   UsersRound,
 } from "lucide-react";
-import defaultAvatarUrl from "@/assets/chibi-figurine.png";
+import defaultAvatarUrl from "@/assets/default-ai-self.svg";
 import { AvatarFrameEffect, readAppliedAvatarFrame } from "@/components/AvatarFrameEffect";
 import { BottomNav } from "./F09_Home";
 import { readGeneratedAvatar } from "@/lib/avatar-generation";

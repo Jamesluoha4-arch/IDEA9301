@@ -1,5 +1,7 @@
 ﻿import { motion } from "framer-motion";
 
+import defaultAvatarUrl from "@/assets/default-ai-self.svg";
+
 export function F6_ShySupport() {
   return (
     <div className="relative w-full h-full bg-gradient-to-b from-[#f3efff] via-white to-white pt-12 overflow-hidden">
@@ -60,14 +62,13 @@ export function F6_ShySupport() {
             animate={{ scale: [0.82, 2.05, 0.82], opacity: [0.35, 0, 0.35] }}
             transition={{ duration: 3.1, repeat: Infinity, delay: 0.9, ease: "easeOut" }}
           />
-          <motion.div
-            className="absolute w-[100px] h-[100px] rounded-full bg-gradient-to-br from-brand-purple via-brand-lavender to-brand-pink opacity-82 shadow-glow"
-            animate={{ y: [0, -8, 0], scale: [1, 1.13, 1] }}
+          <motion.img
+            src={defaultAvatarUrl}
+            alt="AI Self avatar"
+            className="relative h-[214px] w-[214px] object-contain drop-shadow-[0_20px_38px_rgba(108,92,231,0.22)]"
+            animate={{ y: [0, -8, 0], scale: [1, 1.04, 1] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           />
-          <div className="relative w-[58px] h-[58px] rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center">
-            <div className="w-[28px] h-[28px] rounded-full bg-white shadow-sm" />
-          </div>
         </div>
       </div>
 

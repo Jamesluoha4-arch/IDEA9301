@@ -1,6 +1,6 @@
 ﻿import { motion } from "framer-motion";
 
-import secondSelfLogo from "@/assets/second-self-logo.png";
+import secondSelfLogo from "@/assets/second-self-logo-cropped.png";
 
 export function F1_Welcome() {
   return (
@@ -27,8 +27,8 @@ export function F1_Welcome() {
         />
       </div>
 
-      {/* Persona orb (replaces animation placeholder) */}
-      <div className="absolute top-[80px] left-1/2 -translate-x-1/2 w-[180px] h-[180px] flex items-center justify-center">
+      {/* Brand logo */}
+      <div className="absolute top-[108px] left-1/2 -translate-x-1/2 w-[192px] h-[192px] flex items-center justify-center">
         <motion.div
           className="absolute -inset-8 rounded-full opacity-50 blur-3xl"
           style={{
@@ -63,16 +63,20 @@ export function F1_Welcome() {
           transition={{ duration: 3.1, repeat: Infinity, delay: 0.9, ease: "easeOut" }}
         />
         <motion.div
-          className="relative w-[132px] h-[132px] rounded-[34px] bg-white/78 shadow-glow flex items-center justify-center overflow-hidden"
-          animate={{ y: [0, -8, 0], scale: [1, 1.13, 1] }}
+          className="relative flex h-[176px] w-[176px] items-center justify-center"
+          animate={{ y: [0, -8, 0], scale: [1, 1.06, 1] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         >
-          <img src={secondSelfLogo} alt="Second Self" className="h-[118%] w-[118%] object-contain" />
+          <img
+            src={secondSelfLogo}
+            alt="Second Self"
+            className="h-full w-full object-contain drop-shadow-[0_18px_34px_rgba(108,92,231,0.18)]"
+          />
         </motion.div>
       </div>
 
       {/* Content 鈥?preserve original positions */}
-      <div className="absolute left-6 right-6 top-[300px] flex flex-col items-center gap-2">
+      <div className="absolute left-6 right-6 top-[330px] flex flex-col items-center gap-2">
         <motion.h1
           className="text-[28px] font-bold text-brand-ink leading-[32px]"
           initial={{ opacity: 0, y: 10 }}

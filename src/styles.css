@@ -147,22 +147,26 @@
 
   @media (max-width: 480px), (max-height: 760px) {
     .prototype-shell {
-      align-items: stretch;
-      justify-content: flex-start;
-      min-height: 100dvh;
-      padding: 0;
+      align-items: flex-start !important;
+      justify-content: flex-start !important;
+      width: 100vw !important;
+      height: 100dvh !important;
+      min-height: 100dvh !important;
+      padding: 0 !important;
+      overflow: hidden !important;
       background: #ffffff !important;
     }
 
-    .prototype-phone-stage,
-    .prototype-phone-wrapper,
-    .prototype-phone-screen {
+    .prototype-phone-stage {
+      display: block !important;
       width: 100vw !important;
       height: 100dvh !important;
+      overflow: hidden !important;
     }
 
-    .prototype-phone-stage {
-      display: block;
+    .prototype-phone-wrapper {
+      align-items: flex-start;
+      gap: 0;
     }
 
     .prototype-phone-screen {

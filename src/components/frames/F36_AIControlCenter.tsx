@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { PointerEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Delete, Gift, RefreshCcw, Send, Shield, UserRound } from "lucide-react";
-import defaultAvatarUrl from "@/assets/chibi-figurine.png";
+import defaultAvatarUrl from "@/assets/default-ai-self.svg";
 import creativeInterviewerUrl from "@/assets/creative-interviewer.png";
 import creativeSupervisorUrl from "@/assets/creative-supervisor.png";
 import creativeInfluencerUrl from "@/assets/creative-influencer.png";

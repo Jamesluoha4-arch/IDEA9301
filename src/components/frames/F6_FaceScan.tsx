@@ -1,7 +1,7 @@
 ﻿import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import figurineUrl from "@/assets/chibi-figurine.png";
+import figurineUrl from "@/assets/default-ai-self.svg";
 import { generateAvatarFromPhoto } from "@/lib/avatar-generation";
 
 export function F6_FaceScan() {

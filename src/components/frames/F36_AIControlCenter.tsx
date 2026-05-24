@@ -1,11 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import type { PointerEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Delete, Gift, RefreshCcw, Send, Shield, UserRound } from "lucide-react";
 import defaultAvatarUrl from "@/assets/chibi-figurine.png";
-import winnieAvatarUrl from "@/assets/avatar-mia.png";
-import joeAvatarUrl from "@/assets/radar-avatar-2.png";
-import sabrinaAvatarUrl from "@/assets/radar-avatar-3.png";
-import jamesAvatarUrl from "@/assets/radar-avatar-4.png";
+import creativeInterviewerUrl from "@/assets/creative-interviewer.png";
+import creativeSupervisorUrl from "@/assets/creative-supervisor.png";
+import creativeInfluencerUrl from "@/assets/creative-influencer.png";
+import creativeCeoUrl from "@/assets/creative-ceo.png";
+import creativeAiDesignerUrl from "@/assets/creative-ai-designer.png";
 import {
   AvatarFrameEffect,
   frameUpdatedEvent,
@@ -70,7 +72,7 @@ const creativePersonas: CreativePersona[] = [
     id: "interviewer",
     label: "Interviewer",
     title: "Interview practice",
-    avatar: winnieAvatarUrl,
+    avatar: creativeInterviewerUrl,
     tone: "from-brand-purple to-brand-pink",
     intro:
       "I can act as a calm interviewer, ask focused follow-up questions, and help you shape confident answers.",
@@ -81,7 +83,7 @@ const creativePersonas: CreativePersona[] = [
     id: "supervisor",
     label: "Department Supervisor",
     title: "Workplace guidance",
-    avatar: joeAvatarUrl,
+    avatar: creativeSupervisorUrl,
     tone: "from-brand-sky to-brand-mint",
     intro:
       "I can respond like a supportive supervisor, keeping the conversation practical, respectful, and outcome-focused.",
@@ -92,7 +94,7 @@ const creativePersonas: CreativePersona[] = [
     id: "influencer",
     label: "Influencer",
     title: "Public voice",
-    avatar: sabrinaAvatarUrl,
+    avatar: creativeInfluencerUrl,
     tone: "from-brand-pink to-brand-peach",
     intro:
       "I can help you turn ideas into warm, engaging social content with a confident but natural voice.",
@@ -103,7 +105,7 @@ const creativePersonas: CreativePersona[] = [
     id: "ceo",
     label: "CEO",
     title: "Strategic lens",
-    avatar: jamesAvatarUrl,
+    avatar: creativeCeoUrl,
     tone: "from-brand-ink to-brand-purple",
     intro:
       "I can think like a CEO, summarising priorities, risks, and the decision that moves the situation forward.",
@@ -114,7 +116,7 @@ const creativePersonas: CreativePersona[] = [
     id: "ai-designer",
     label: "AI Industry Designer",
     title: "AI design critique",
-    avatar: defaultAvatarUrl,
+    avatar: creativeAiDesignerUrl,
     tone: "from-brand-purple to-brand-sky",
     intro:
       "I can review AI product ideas through interaction design, trust, data boundaries, and user control.",
@@ -168,6 +170,8 @@ export function F36_AIControlCenter() {
   const avatarUrl = readGeneratedAvatar() || defaultAvatarUrl;
   const chatAvatarUrl = activePersona?.avatar || avatarUrl;
   const activeMode = modeDetails[aiMode];
+  const personaRailRef = useRef<HTMLDivElement>(null);
+  const personaDrag = useRef({ active: false, startX: 0, scrollLeft: 0 });
 
   useEffect(() => {
     const timer = window.setTimeout(() => setChallengeReady(true), 2000);
@@ -224,6 +228,32 @@ export function F36_AIControlCenter() {
 
   const deletePersonaInput = () => {
     setPersonaInput((current) => current.slice(0, -1));
+  };
+
+  const startPersonaDrag = (event: PointerEvent<HTMLDivElement>) => {
+    const rail = personaRailRef.current;
+    if (!rail) return;
+    personaDrag.current = {
+      active: true,
+      startX: event.clientX,
+      scrollLeft: rail.scrollLeft,
+    };
+    rail.setPointerCapture(event.pointerId);
+  };
+
+  const movePersonaDrag = (event: PointerEvent<HTMLDivElement>) => {
+    const rail = personaRailRef.current;
+    if (!rail || !personaDrag.current.active) return;
+    const distance = event.clientX - personaDrag.current.startX;
+    rail.scrollLeft = personaDrag.current.scrollLeft - distance;
+  };
+
+  const endPersonaDrag = (event: PointerEvent<HTMLDivElement>) => {
+    const rail = personaRailRef.current;
+    personaDrag.current.active = false;
+    if (rail?.hasPointerCapture(event.pointerId)) {
+      rail.releasePointerCapture(event.pointerId);
+    }
   };
 
   return (
@@ -315,7 +345,14 @@ export function F36_AIControlCenter() {
           </button>
         )}
       </div>
-      <div className="mt-2 overflow-x-auto px-4 pb-2 prototype-scroll">
+      <div
+        ref={personaRailRef}
+        onPointerDown={startPersonaDrag}
+        onPointerMove={movePersonaDrag}
+        onPointerUp={endPersonaDrag}
+        onPointerCancel={endPersonaDrag}
+        className="scrollbar-none mt-2 cursor-grab overflow-x-auto px-4 pb-2 active:cursor-grabbing"
+      >
         <div className="flex w-max gap-3">
           {creativePersonas.map((persona, index) => (
             <motion.button

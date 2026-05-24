@@ -148,20 +148,20 @@
   @media (max-width: 480px), (max-height: 760px) {
     .prototype-shell {
       align-items: flex-start !important;
-      justify-content: flex-start !important;
+      justify-content: center !important;
       width: 100vw !important;
-      height: 100dvh !important;
       min-height: 100dvh !important;
       padding: 0 !important;
-      overflow: hidden !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
       background: #ffffff !important;
     }
 
     .prototype-phone-stage {
       display: block !important;
-      width: 100vw !important;
-      height: 100dvh !important;
-      overflow: hidden !important;
+      width: auto !important;
+      height: auto !important;
+      overflow: visible !important;
     }
 
     .prototype-phone-wrapper {

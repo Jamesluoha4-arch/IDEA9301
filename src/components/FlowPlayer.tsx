@@ -300,7 +300,7 @@ export function FlowPlayer({ onOpenGallery }: Props) {
   const [selectedAiMode, setSelectedAiMode] = useState<AiMode>(() => readSelectedAiMode());
   const [direction, setDirection] = useState<1 | -1>(1);
   const [tapPulse, setTapPulse] = useState(false);
-  const [viewportScale, setViewportScale] = useState({ x: 1, y: 1, isMobile: false });
+  const [viewportScale, setViewportScale] = useState({ scale: 1, isMobile: false });
   const [flowIdx, stepIdx] = node.split(":").map(Number);
   const flow = flows[flowIdx];
   const step = flow.steps[stepIdx];
@@ -317,11 +317,10 @@ export function FlowPlayer({ onOpenGallery }: Props) {
       setViewportScale(
         isMobile
           ? {
-              x: width / 440,
-              y: height / 956,
+              scale: width / 440,
               isMobile: true,
             }
-          : { x: 1, y: 1, isMobile: false },
+          : { scale: 1, isMobile: false },
       );
     };
 
@@ -335,8 +334,7 @@ export function FlowPlayer({ onOpenGallery }: Props) {
     };
   }, [isExportMode]);
 
-  const displayScaleX = isExportMode ? 1 : viewportScale.x;
-  const displayScaleY = isExportMode ? 1 : viewportScale.y;
+  const displayScale = isExportMode ? 1 : viewportScale.scale;
   const isMobileViewport = !isExportMode && viewportScale.isMobile;
   const activeTab = activeTabFor(node);
 
@@ -521,7 +519,7 @@ export function FlowPlayer({ onOpenGallery }: Props) {
       <div className="prototype-phone-stage flex items-start justify-center">
         <div
           className="relative"
-          style={{ width: 440 * displayScaleX, height: 956 * displayScaleY }}
+          style={{ width: 440 * displayScale, height: 956 * displayScale }}
         >
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
@@ -531,14 +529,12 @@ export function FlowPlayer({ onOpenGallery }: Props) {
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: -direction * 36, scale: 0.98 }}
               transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
-              className={`absolute inset-0 flex items-start ${
-                isMobileViewport ? "justify-start" : "justify-center"
-              }`}
+              className="absolute inset-0 flex items-start justify-center"
             >
               <div
                 className="relative origin-top"
                 style={{
-                  transform: `scale(${displayScaleX}, ${displayScaleY})`,
+                  transform: `scale(${displayScale})`,
                   transformOrigin: "top left",
                 }}
                 onClickCapture={handlePrototypeTap}

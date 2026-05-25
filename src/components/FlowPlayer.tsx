@@ -300,7 +300,12 @@ export function FlowPlayer({ onOpenGallery }: Props) {
   const [selectedAiMode, setSelectedAiMode] = useState<AiMode>(() => readSelectedAiMode());
   const [direction, setDirection] = useState<1 | -1>(1);
   const [tapPulse, setTapPulse] = useState(false);
-  const [viewportScale, setViewportScale] = useState({ scale: 1, isMobile: false });
+  const [viewportScale, setViewportScale] = useState({
+    scale: 1,
+    isMobile: false,
+    width: 440,
+    height: 956,
+  });
   const [flowIdx, stepIdx] = node.split(":").map(Number);
   const flow = flows[flowIdx];
   const step = flow.steps[stepIdx];
@@ -310,17 +315,19 @@ export function FlowPlayer({ onOpenGallery }: Props) {
     if (isExportMode || typeof window === "undefined") return;
 
     const updateScale = () => {
-      const width = window.visualViewport?.width ?? window.innerWidth;
-      const height = window.visualViewport?.height ?? window.innerHeight;
-      const isMobile = width <= 520;
+      const width = Math.floor(window.visualViewport?.width ?? window.innerWidth);
+      const height = Math.floor(window.visualViewport?.height ?? window.innerHeight);
+      const isMobile = width <= 560;
 
       setViewportScale(
         isMobile
           ? {
-              scale: width / 440,
+              scale: 1,
               isMobile: true,
+              width: Math.max(320, width),
+              height: Math.max(560, height),
             }
-          : { scale: 1, isMobile: false },
+          : { scale: 1, isMobile: false, width: 440, height: 956 },
       );
     };
 
@@ -336,6 +343,8 @@ export function FlowPlayer({ onOpenGallery }: Props) {
 
   const displayScale = isExportMode ? 1 : viewportScale.scale;
   const isMobileViewport = !isExportMode && viewportScale.isMobile;
+  const phoneWidth = isMobileViewport ? viewportScale.width : 440;
+  const phoneHeight = isMobileViewport ? viewportScale.height : 956;
   const activeTab = activeTabFor(node);
 
   const allNodes = useMemo(
@@ -519,7 +528,10 @@ export function FlowPlayer({ onOpenGallery }: Props) {
       <div className="prototype-phone-stage flex items-start justify-center">
         <div
           className="relative"
-          style={{ width: 440 * displayScale, height: 956 * displayScale }}
+          style={{
+            width: isMobileViewport ? phoneWidth : 440 * displayScale,
+            height: isMobileViewport ? phoneHeight : 956 * displayScale,
+          }}
         >
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
@@ -542,6 +554,8 @@ export function FlowPlayer({ onOpenGallery }: Props) {
                 <PhoneFrame
                   title={`${flow.id.toUpperCase()} 路 ${step.label}`}
                   subtitle={step.hint}
+                  width={phoneWidth}
+                  height={phoneHeight}
                   showLabel={false}
                   showChrome={!isExportMode && !isMobileViewport}
                 >

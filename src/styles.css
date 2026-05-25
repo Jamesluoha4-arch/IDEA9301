@@ -86,6 +86,11 @@
 
   html,
   body {
+    width: 100%;
+    min-width: 320px;
+    min-height: 100%;
+    margin: 0;
+    overflow-x: hidden;
     background-color: #e9e6f3;
     color: var(--color-foreground);
     font-family:
@@ -94,6 +99,12 @@
       -apple-system,
       sans-serif;
     -webkit-font-smoothing: antialiased;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100dvh;
+    overflow-x: hidden;
   }
 
   * {
@@ -145,31 +156,50 @@
     height: 972px;
   }
 
-  @media (max-width: 480px), (max-height: 760px) {
+  @media (max-width: 560px) {
+    html,
+    body,
+    #root {
+      width: 100dvw;
+      min-width: 0;
+      height: 100dvh;
+      min-height: 100dvh;
+      overflow: hidden;
+      overscroll-behavior: none;
+      background: #ffffff;
+    }
+
     .prototype-shell {
+      position: fixed !important;
+      inset: 0 !important;
       align-items: flex-start !important;
       justify-content: center !important;
-      width: 100vw !important;
-      min-height: 100dvh !important;
+      width: 100dvw !important;
+      height: 100dvh !important;
+      min-height: 0 !important;
       padding: 0 !important;
       overflow-x: hidden !important;
-      overflow-y: auto !important;
+      overflow-y: hidden !important;
       background: #ffffff !important;
     }
 
     .prototype-phone-stage {
       display: block !important;
-      width: auto !important;
-      height: auto !important;
-      overflow: visible !important;
+      width: 100dvw !important;
+      height: 100dvh !important;
+      overflow: hidden !important;
     }
 
     .prototype-phone-wrapper {
       align-items: flex-start;
       gap: 0;
+      width: 100%;
+      height: 100%;
     }
 
     .prototype-phone-screen {
+      width: 100dvw !important;
+      height: 100dvh !important;
       border-radius: 0 !important;
       box-shadow: none !important;
     }
